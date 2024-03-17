@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_skills">Получайте новые навыки, выполняя интересные практические задания</string>
+    <string name="go_back">Назад</string>
+    <string name="logo">Логотип</string>
+    <string name="get_started">Начать</string>
+</resources>
