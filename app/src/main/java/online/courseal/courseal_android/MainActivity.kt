@@ -1,15 +1,26 @@
 package online.courseal.courseal_android
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+import online.courseal.courseal_android.data.api.ServerInfo
+import online.courseal.courseal_android.ui.screens.WelcomeScreen
 import online.courseal.courseal_android.ui.theme.CoursealTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,26 +28,33 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CoursealTheme {
-            }
-            Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                Greeting("Android")
+                var statusBarColor by rememberSaveable { mutableIntStateOf(0) }
+                var statusBarTextDark by rememberSaveable { mutableStateOf(true) }
+
+                MainApp { color, isTextDark ->
+                    statusBarColor = color.toArgb()
+                    statusBarTextDark = isTextDark
+                }
+
+                val view = LocalView.current
+                if (!view.isInEditMode) {
+                    SideEffect {
+                        val window = (view.context as Activity).window
+                        window.statusBarColor = statusBarColor
+                        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = statusBarTextDark
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CoursealTheme {
-        Greeting("Android")
+fun MainApp(setStatusBarColor: (color: Color, isTextDark: Boolean) -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        WelcomeScreen(setStatusBarColor = setStatusBarColor, onStart = { _: String, _: ServerInfo -> /* TODO */ })
     }
 }
