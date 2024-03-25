@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="learn_skills">Получайте новые навыки, выполняя интересные практические задания</string>
+    <string name="go_back">Назад</string>
+    <string name="logo">Логотип</string>
+    <string name="get_started">Начать</string>
+    <string name="connecting_to">Вход на</string>
+    <string name="connection_failed">Соединение провалилось</string>
+    <string name="server_url">URL сервера</string>
+</resources>
