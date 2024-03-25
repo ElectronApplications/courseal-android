@@ -4,4 +4,7 @@
     <string name="go_back">Go back</string>
     <string name="logo">Logo</string>
     <string name="get_started">Get started</string>
+    <string name="connecting_to">Connecting to</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="server_url">Server instance\'s URL</string>
 </resources>
