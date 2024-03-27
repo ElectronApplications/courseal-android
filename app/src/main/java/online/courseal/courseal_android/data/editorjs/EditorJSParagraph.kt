@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("paragraph")
-class EditorJSParagraph(
+data class EditorJSParagraph(
     override val id: String,
     val data: EditorJSParagraphData
 ) : EditorJSBlock()

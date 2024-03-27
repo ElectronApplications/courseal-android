@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("header")
-class EditorJSHeader (
+data class EditorJSHeader (
     override val id: String,
     val data: EditorJSHeaderData
 ) : EditorJSBlock()
@@ -13,5 +13,15 @@ class EditorJSHeader (
 @Serializable
 data class EditorJSHeaderData(
     val text: String,
-    val level: Int
+    val level: EditorJSHeaderLevel
 )
+
+@Serializable
+enum class EditorJSHeaderLevel {
+    @SerialName("1") H1,
+    @SerialName("2") H2,
+    @SerialName("3") H3,
+    @SerialName("4") H4,
+    @SerialName("5") H5,
+    @SerialName("6") H6
+}

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("quote")
-class EditorJSQuote (
+data class EditorJSQuote (
     override val id: String,
     val data: EditorJSQuoteData
 ) : EditorJSBlock()
@@ -17,7 +17,8 @@ data class EditorJSQuoteData(
     val alignment: EditorJSQuoteAlignment
 )
 
-enum class EditorJSQuoteAlignment(val alignment: String) {
-    LEFT("left"),
-    RIGHT("right")
+@Serializable
+enum class EditorJSQuoteAlignment {
+    @SerialName("left") LEFT,
+    @SerialName("right") RIGHT
 }

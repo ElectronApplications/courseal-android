@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("list")
-class EditorJSList (
+data class EditorJSList (
     override val id: String,
     val data: EditorJSListData
 ) : EditorJSBlock()
@@ -16,7 +16,8 @@ data class EditorJSListData(
     val items: List<String>
 )
 
-enum class EditorJSListStyle(val style: String) {
-    ORDERED("ordered"),
-    UNORDERED("unordered")
+@Serializable
+enum class EditorJSListStyle {
+    @SerialName("ordered") ORDERED,
+    @SerialName("unordered") UNORDERED
 }

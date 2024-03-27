@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("warning")
-class EditorJSWarning(
+data class EditorJSWarning(
     override val id: String,
     val data: EditorJSWarningData
 ) : EditorJSBlock()

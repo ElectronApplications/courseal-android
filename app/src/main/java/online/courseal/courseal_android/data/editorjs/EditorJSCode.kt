@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("code")
-class EditorJSCode (
+data class EditorJSCode (
     override val id: String,
     val data: EditorJSCodeData
 ) : EditorJSBlock()
