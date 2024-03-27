@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("delimiter")
-class EditorJSDelimiter(
+data class EditorJSDelimiter(
     override val id: String,
-    val data: Nothing
+    val data: Unit
 ) : EditorJSBlock()

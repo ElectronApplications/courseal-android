@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("image")
-class EditorJSImage (
+data class EditorJSImage (
     override val id: String,
     val data: EditorJSImageData
 ) : EditorJSBlock()
