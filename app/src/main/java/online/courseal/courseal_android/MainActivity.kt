@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -19,8 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import online.courseal.courseal_android.data.api.ServerInfo
-import online.courseal.courseal_android.ui.screens.WelcomeScreen
 import online.courseal.courseal_android.ui.theme.CoursealTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,9 +28,14 @@ class MainActivity : ComponentActivity() {
                 var statusBarColor by rememberSaveable { mutableIntStateOf(0) }
                 var statusBarTextDark by rememberSaveable { mutableStateOf(true) }
 
-                MainApp { color, isTextDark ->
-                    statusBarColor = color.toArgb()
-                    statusBarTextDark = isTextDark
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MainApp { color, isTextDark ->
+                        statusBarColor = color.toArgb()
+                        statusBarTextDark = isTextDark
+                    }
                 }
 
                 val view = LocalView.current
@@ -49,12 +51,4 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun MainApp(setStatusBarColor: (color: Color, isTextDark: Boolean) -> Unit) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        WelcomeScreen(setStatusBarColor = setStatusBarColor, onStart = { _: String, _: ServerInfo -> /* TODO */ })
-    }
-}
+typealias SetStatusBarColor = (color: Color, isTextDark: Boolean) -> Unit
