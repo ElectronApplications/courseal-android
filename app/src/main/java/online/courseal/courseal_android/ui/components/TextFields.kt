@@ -6,11 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,7 +17,8 @@ fun CoursealTextField(
     onValueChange: (String) -> Unit,
     enabled: Boolean = true,
     label: String? = null,
-    placeholder: String? = null
+    placeholder: String? = null,
+    singleLine: Boolean = true
 ) {
     val labelContent: @Composable (() -> Unit)? = if (label != null) {
         { Text(
@@ -45,6 +43,7 @@ fun CoursealTextField(
         enabled = enabled,
         label = labelContent,
         placeholder = placeholderContent,
+        singleLine = singleLine,
         shape = RoundedCornerShape(size = 10.dp),
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,

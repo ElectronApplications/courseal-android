@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
+import online.courseal.courseal_android.SetStatusBarColor
 import online.courseal.courseal_android.data.api.ServerInfo
 import online.courseal.courseal_android.data.api.coursealInfo
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
@@ -50,7 +51,7 @@ fun WelcomeScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
     onStart: ((url: String, serverInfo: ServerInfo) -> Unit),
-    setStatusBarColor: (color: Color, isTextDark: Boolean) -> Unit
+    setStatusBarColor: SetStatusBarColor
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -125,7 +126,7 @@ fun WelcomeScreen(
                 .align(Alignment.CenterHorizontally)
                 .padding(top = 15.dp, start = 25.dp, end = 25.dp)
                 .fillMaxWidth(),
-            text = context.getString(R.string.get_started),
+            text = if (startButtonEnabled) context.getString(R.string.get_started) else context.getString(R.string.loading),
             enabled = startButtonEnabled,
             onClick = {
                 startButtonEnabled = false
@@ -151,7 +152,7 @@ fun WelcomeScreen(
 fun CoursealGradient(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    setStatusBarColor: (color: Color, isTextDark: Boolean) -> Unit
+    setStatusBarColor: SetStatusBarColor
 ) {
     val context = LocalContext.current
 
