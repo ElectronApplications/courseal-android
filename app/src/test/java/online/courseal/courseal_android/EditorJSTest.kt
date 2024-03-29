@@ -159,6 +159,7 @@ class EditorJSTest {
               "version": "2.29.1"
             }
         """
+
     @Test
     fun `check that deserialization works correctly`() {
         val deserialized = Json.decodeFromString<EditorJSContent>(sampleJson)
