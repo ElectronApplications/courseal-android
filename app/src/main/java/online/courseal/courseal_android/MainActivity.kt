@@ -20,35 +20,31 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import online.courseal.courseal_android.ui.theme.CoursealTheme
 
+typealias SetStatusBarColor = (color: Color, isTextDark: Boolean) -> Unit
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             CoursealTheme {
-                var statusBarColor by rememberSaveable { mutableIntStateOf(0) }
-                var statusBarTextDark by rememberSaveable { mutableStateOf(true) }
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainApp { color, isTextDark ->
-                        statusBarColor = color.toArgb()
-                        statusBarTextDark = isTextDark
+                val view = LocalView.current
+                val window = (view.context as Activity).window
+                val setStatusBarColor: SetStatusBarColor = { color, isTextDark ->
+                    if (!view.isInEditMode) {
+                        window.statusBarColor = color.toArgb()
+                        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isTextDark
                     }
                 }
 
-                val view = LocalView.current
-                if (!view.isInEditMode) {
-                    SideEffect {
-                        val window = (view.context as Activity).window
-                        window.statusBarColor = statusBarColor
-                        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = statusBarTextDark
-                    }
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    MainApp(
+                        setStatusBarColor = setStatusBarColor
+                    )
                 }
             }
         }
     }
 }
-
-typealias SetStatusBarColor = (color: Color, isTextDark: Boolean) -> Unit
