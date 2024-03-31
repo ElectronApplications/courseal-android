@@ -4,12 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import online.courseal.courseal_android.data.api.ServerInfo
 import online.courseal.courseal_android.data.api.coursealInfo
+import javax.inject.Inject
 
 const val DEFAULT_SERVER = "https://courseal.online"
 
@@ -20,7 +22,8 @@ data class AuthUiState(
     val serverRegistrationEnabled: Boolean = true
 )
 
-class AuthViewModel : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 

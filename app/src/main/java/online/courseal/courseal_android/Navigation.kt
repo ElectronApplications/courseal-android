@@ -3,12 +3,14 @@ package online.courseal.courseal_android
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import online.courseal.courseal_android.ui.screens.RegisterScreen
+import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 
 enum class Routes(val path: String) {
@@ -18,7 +20,7 @@ enum class Routes(val path: String) {
 }
 
 @Composable
-fun MainApp(setStatusBarColor: SetStatusBarColor) {
+fun MainApp() {
     val navController = rememberNavController()
 
     NavHost(
@@ -37,6 +39,7 @@ fun MainApp(setStatusBarColor: SetStatusBarColor) {
             slideOutHorizontally(targetOffsetX = { it })
         }
     ) {
+        /* Welcome Screen */
         composable(
             route = "${Routes.WELCOME.path}?canGoBack={canGoBack}",
             arguments = listOf(
@@ -46,7 +49,6 @@ fun MainApp(setStatusBarColor: SetStatusBarColor) {
             val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
 
             WelcomeScreen(
-                setStatusBarColor = setStatusBarColor,
                 onGoBack = if (canGoBack == true) {{
                     navController.popBackStack()
                 }} else null,
@@ -56,11 +58,18 @@ fun MainApp(setStatusBarColor: SetStatusBarColor) {
             )
         }
 
+        /* Registration Screen */
         composable(
             route = Routes.REGISTER.path
-        ) {
-            RegisterScreen(
-                setStatusBarColor = setStatusBarColor
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.WELCOME.path)
+            }
+            RegistrationScreen(
+                onGoBack = {
+                    navController.popBackStack()
+                },
+                authViewModel = hiltViewModel(parentEntry)
             )
         }
     }
