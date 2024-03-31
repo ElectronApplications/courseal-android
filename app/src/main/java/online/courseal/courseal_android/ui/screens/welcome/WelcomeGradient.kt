@@ -7,12 +7,15 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Icon
@@ -29,17 +32,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
-import online.courseal.courseal_android.SetStatusBarColor
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 
 @Composable
 fun WelcomeGradient(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    setStatusBarColor: SetStatusBarColor
 ) {
     val context = LocalContext.current
-    setStatusBarColor(LocalCoursealPalette.current.welcomeGradientTop, !isSystemInDarkTheme())
 
     Column(
         modifier = modifier
@@ -52,6 +52,7 @@ fun WelcomeGradient(
                 )
             )
     ) {
+        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         if (onGoBack != null) {
             Row(
                 modifier = Modifier
