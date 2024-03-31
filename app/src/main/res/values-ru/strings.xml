@@ -8,4 +8,6 @@
     <string name="connection_failed">Соединение провалилось</string>
     <string name="server_url">URL сервера</string>
     <string name="loading">Загрузка...</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="connection_failed_detailed">Сервер не отвечает. Проверьте правильность URL</string>
 </resources>

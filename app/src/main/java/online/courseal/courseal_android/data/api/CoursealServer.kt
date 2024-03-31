@@ -11,19 +11,18 @@ import kotlinx.serialization.json.JsonNames
 data class ServerInfo(
     @JsonNames("server_name") val serverName: String,
     @JsonNames("server_description") val serverDescription: String,
-    @JsonNames("server_register_enabled") val serverRegisterEnabled: Boolean
+    @JsonNames("server_registration_enabled") val serverRegistrationEnabled: Boolean
 )
-suspend fun coursealInfo(url: String, onError: (errorCode: Int, errorMessage: String) -> Unit, onSuccess: (serverInfo: ServerInfo) -> Unit) {
+suspend fun coursealInfo(url: String): ServerInfo? {
     print("$url/api/courseal-info")
-    try {
+    return try {
         val response = httpClient.get("$url/api/courseal-info")
         if(response.status.value == 200) {
-            val result: ServerInfo = response.body()
-            onSuccess(result)
+            response.body()
         } else {
-            onError(response.status.value, "")
+            null
         }
-    } catch (ex: Exception) {
-        onError(-1, ex.stackTraceToString())
+    } catch (_: Exception) {
+        null
     }
 }
