@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import online.courseal.courseal_android.ui.screens.RegisterScreen
-import online.courseal.courseal_android.ui.screens.WelcomeScreen
+import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 
 enum class Routes(val path: String) {
     WELCOME("welcome"),

@@ -23,10 +23,8 @@ fun CoursealTextField(
     val labelContent: @Composable (() -> Unit)? = if (label != null) {
         { Text(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.background),
-            text = label,
-            color = MaterialTheme.colorScheme.onBackground,
-
+                .background(MaterialTheme.colorScheme.surface),
+            text = label
         ) }
     } else null
 
