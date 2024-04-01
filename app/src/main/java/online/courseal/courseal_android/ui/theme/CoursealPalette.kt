@@ -9,6 +9,7 @@ data class CoursealPalette(
     val welcomeGradientBottom: Color = Color.Unspecified,
     val welcomeGradientTop: Color = Color.Unspecified,
     val onWelcomeGradient: Color = Color.Unspecified,
+    val link: Color = Color.Unspecified
 )
 
 val LocalCoursealPalette = staticCompositionLocalOf { CoursealPalette() }
