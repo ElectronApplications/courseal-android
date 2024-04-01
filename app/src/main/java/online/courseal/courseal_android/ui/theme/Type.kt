@@ -20,12 +20,6 @@ val fontFamilyNunito = FontFamily(
     Font(googleFont = fontNunito, fontProvider = provider)
 )
 
-val fontRobotoSlab = GoogleFont("Roboto Slab")
-val fontFamilyRobotoSlab = FontFamily(
-    Font(googleFont = fontRobotoSlab, fontProvider = provider)
-)
-
-// Set of Material typography styles to start with
 val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = fontFamilyNunito,
@@ -36,17 +30,60 @@ val Typography = Typography(
     ),
     headlineMedium = TextStyle(
         fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 36.sp,
+        letterSpacing = 0.5.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = fontFamilyNunito,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 28.sp,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+
+    displayLarge = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 48.sp,
+        lineHeight = 48.sp,
+        letterSpacing = 0.5.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 32.sp,
         lineHeight = 32.sp,
+        letterSpacing = 0.5.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
 
     bodyLarge = TextStyle(
-        fontFamily = fontFamilyRobotoSlab,
+        fontFamily = fontFamilyNunito,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 14.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = 0.5.sp
     ),
 
