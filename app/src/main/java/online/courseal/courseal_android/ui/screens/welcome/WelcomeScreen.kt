@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -46,7 +48,7 @@ import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    onStart: () -> Unit,
+    onStart: (serverRegistrationEnabled: Boolean) -> Unit,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -94,7 +96,7 @@ fun WelcomeScreen(
         ) {
             Row(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(all = 10.dp)
             ) {
                 Text(
                     text = context.getString(R.string.connecting_to) + " "
@@ -117,36 +119,35 @@ fun WelcomeScreen(
             }
         }
 
-        Column(
+        AnimatedVisibility(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.85f),
+            visible = advancedVisible
         ) {
-            AnimatedVisibility(
-                visible = advancedVisible
-            ) {
-                CoursealTextField(
-                    value = userUrl,
-                    onValueChange = {
-                        userUrl = it
-                        authViewModel.updateUrl(userUrl)
-                    },
-                    label = context.getString(R.string.server_url))
-            }
+            CoursealTextField(
+                value = userUrl,
+                onValueChange = {
+                    userUrl = it
+                    authViewModel.updateUrl(userUrl)
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                label = context.getString(R.string.server_url))
         }
 
         var makingRequest by rememberSaveable { mutableStateOf(false) }
         CoursealPrimaryButton(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(top = 15.dp, start = 25.dp, end = 25.dp)
-                .fillMaxWidth(),
+                .padding(top = 15.dp)
+                .fillMaxWidth(0.85f),
             text = if (!makingRequest) context.getString(R.string.get_started) else context.getString(R.string.loading),
             enabled = !makingRequest,
             onClick = {
                 makingRequest = true
                 coroutineScope.launch {
                     if (authViewModel.getServerInfo()) {
-                        onStart()
+                        onStart(authUiState.serverRegistrationEnabled)
                     } else {
                         connectionFailedVisible = true
                     }

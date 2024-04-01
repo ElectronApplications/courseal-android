@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import online.courseal.courseal_android.ui.screens.login.LoginScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 
@@ -52,8 +53,11 @@ fun MainApp() {
                 onGoBack = if (canGoBack == true) {{
                     navController.popBackStack()
                 }} else null,
-                onStart = {
-                    navController.navigate(Routes.REGISTER.path)
+                onStart = { serverRegistrationEnabled: Boolean ->
+                    if (serverRegistrationEnabled)
+                        navController.navigate(Routes.REGISTER.path)
+                    else
+                        navController.navigate(Routes.LOGIN.path)
                 }
             )
         }
@@ -68,6 +72,28 @@ fun MainApp() {
             RegistrationScreen(
                 onGoBack = {
                     navController.popBackStack()
+                },
+                onStartLogin = {
+                   navController.navigate(Routes.LOGIN.path)
+                },
+                onRegister = {},
+                authViewModel = hiltViewModel(parentEntry)
+            )
+        }
+
+        /* Login Screen */
+        composable(
+            route = Routes.LOGIN.path
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.WELCOME.path)
+            }
+            LoginScreen(
+                onGoBack = {
+                    navController.popBackStack()
+                },
+                onLogin = {
+
                 },
                 authViewModel = hiltViewModel(parentEntry)
             )

@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
+import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 
 @Composable
@@ -54,26 +55,7 @@ fun WelcomeGradient(
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         if (onGoBack != null) {
-            Row(
-                modifier = Modifier
-                    .padding(top = 10.dp, start = 15.dp)
-                    .clickable { onGoBack() }
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically),
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = context.getString(R.string.go_back),
-                    tint = LocalCoursealPalette.current.onWelcomeGradient
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(start = 5.dp)
-                        .align(Alignment.CenterVertically),
-                    text = context.getString(R.string.go_back),
-                    color = LocalCoursealPalette.current.onWelcomeGradient
-                )
-            }
+            GoBack(onGoBack = onGoBack)
         }
 
         Text(
