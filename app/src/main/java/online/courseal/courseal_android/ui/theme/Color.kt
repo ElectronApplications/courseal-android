@@ -44,11 +44,13 @@ val LightColorScheme = lightColorScheme(
 val DarkCoursealPalette = CoursealPalette(
     welcomeGradientTop = DarkTopGradient,
     welcomeGradientBottom = DarkBottomGradient,
-    onWelcomeGradient = DarkGradientText
+    onWelcomeGradient = DarkGradientText,
+    link = Color(0xFF59A6FF),
 )
 
 val LightCoursealPalette = CoursealPalette(
     welcomeGradientTop = LightTopGradient,
     welcomeGradientBottom = LightBottomGradient,
-    onWelcomeGradient = LightGradientText
+    onWelcomeGradient = LightGradientText,
+    link = Color(0xFF0066FF)
 )

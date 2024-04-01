@@ -1,6 +1,5 @@
-package online.courseal.courseal_android.ui.screens.registration
+package online.courseal.courseal_android.ui.screens.login
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,15 +28,13 @@ import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.GoBack
-import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
 
 @Composable
-fun RegistrationScreen(
+fun LoginScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
-    onStartLogin: () -> Unit,
-    onRegister: () -> Unit,
+    onLogin: () -> Unit,
     authViewModel: AuthViewModel
 ) {
     val context = LocalContext.current
@@ -56,7 +53,7 @@ fun RegistrationScreen(
             modifier = Modifier
                 .padding(top = 10.dp)
                 .align(Alignment.CenterHorizontally),
-            text = context.getString(R.string.create_account),
+            text = context.getString(R.string.sign_in),
             style = MaterialTheme.typography.displayMedium
         )
 
@@ -98,17 +95,6 @@ fun RegistrationScreen(
                 leadingIcon = { Text("@") }
             )
 
-            var username by rememberSaveable { mutableStateOf("") }
-            CoursealTextField(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 10.dp)
-                    .fillMaxWidth(),
-                value = username,
-                onValueChange = { username = it },
-                label = context.getString(R.string.username)
-            )
-
             var password by rememberSaveable { mutableStateOf("") }
             CoursealPasswordField(
                 modifier = Modifier
@@ -120,23 +106,12 @@ fun RegistrationScreen(
                 label = context.getString(R.string.password),
             )
 
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 15.dp)
-                    .clickable {
-                        onStartLogin()
-                    },
-                color = LocalCoursealPalette.current.link,
-                text = context.getString(R.string.already_have_account)
-            )
-
             CoursealPrimaryButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
                     .fillMaxWidth(),
-                text = context.getString(R.string.register),
+                text = context.getString(R.string.login),
                 onClick = {
                     /* TODO */
                 }

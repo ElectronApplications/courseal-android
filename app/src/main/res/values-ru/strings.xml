@@ -10,4 +10,14 @@
     <string name="loading">Загрузка...</string>
     <string name="confirm">Подтвердить</string>
     <string name="connection_failed_detailed">Сервер не отвечает. Проверьте правильность URL</string>
+    <string name="create_account">Создание аккаунта</string>
+    <string name="usertag">Уникальный тег пользователя</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="show_password">Показать пароль</string>
+    <string name="hide_password">Спрятать пароль</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="already_have_account">У меня уже есть аккаунт</string>
+    <string name="sign_in">Вход в аккаунт</string>
+    <string name="login">Войти</string>
 </resources>

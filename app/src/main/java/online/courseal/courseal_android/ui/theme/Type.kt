@@ -37,12 +37,19 @@ val Typography = Typography(
     ),
     headlineSmall = TextStyle(
         fontFamily = fontFamilyNunito,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
 
+    displayLarge = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 48.sp,
+        lineHeight = 48.sp,
+        letterSpacing = 0.5.sp
+    ),
     displayMedium = TextStyle(
         fontFamily = fontFamilyNunito,
         fontWeight = FontWeight.Bold,
@@ -50,12 +57,33 @@ val Typography = Typography(
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp
     ),
+    displaySmall = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
 
     bodyLarge = TextStyle(
         fontFamily = fontFamilyNunito,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 14.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = fontFamilyNunito,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 12.sp,
         letterSpacing = 0.5.sp
     ),
 
