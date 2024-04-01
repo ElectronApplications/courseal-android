@@ -1,14 +1,17 @@
 package online.courseal.courseal_android.ui.components.editorjs.content
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.editorjs.EditorJSLatexData
@@ -19,6 +22,8 @@ fun EditorJSLatexComponent(
     modifier: Modifier = Modifier,
     data: EditorJSLatexData
 ) {
+    val isDark = isSystemInDarkTheme()
+
     AndroidView(
         modifier = modifier,
         factory = {
@@ -34,7 +39,13 @@ fun EditorJSLatexComponent(
                     fun getFormula(): String {
                         return data.math
                     }
-               }, "Android")
+
+                    @JavascriptInterface
+                    fun isDark(): Boolean {
+                        return isDark
+                    }
+                }, "Android")
+                this.setBackgroundColor(Color.Transparent.toArgb())
             }
         },
         update = {

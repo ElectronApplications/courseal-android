@@ -114,6 +114,7 @@ fun LoginScreen(
                 text = context.getString(R.string.login),
                 onClick = {
                     /* TODO */
+                    onLogin()
                 }
             )
         }

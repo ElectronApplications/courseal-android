@@ -1,18 +1,18 @@
 package online.courseal.courseal_android.ui.components.editorjs.content
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import online.courseal.courseal_android.data.editorjs.EditorJSHeaderData
 import online.courseal.courseal_android.data.editorjs.EditorJSHeaderLevel
+import online.courseal.courseal_android.ui.components.TextHTML
 
 @Composable
 fun EditorJSHeaderComponent(
     modifier: Modifier = Modifier,
     data: EditorJSHeaderData
 ) {
-    Text(
+    TextHTML(
         modifier = modifier,
         text = data.text,
         style = when(data.level) {
