@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
@@ -20,8 +21,6 @@ fun GoBack(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Row(
         modifier = modifier
             .padding(top = 10.dp, start = 15.dp)
@@ -31,14 +30,14 @@ fun GoBack(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = context.getString(R.string.go_back),
+            contentDescription = stringResource(R.string.go_back),
             tint = LocalCoursealPalette.current.onWelcomeGradient
         )
         Text(
             modifier = Modifier
                 .padding(start = 5.dp)
                 .align(Alignment.CenterVertically),
-            text = context.getString(R.string.go_back),
+            text = stringResource(R.string.go_back),
             color = LocalCoursealPalette.current.onWelcomeGradient
         )
     }
