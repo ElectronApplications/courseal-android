@@ -20,4 +20,5 @@
     <string name="already_have_account">I already have an account</string>
     <string name="sign_in">Sign in</string>
     <string name="login">Login</string>
+    <string name="warning">Warning</string>
 </resources>

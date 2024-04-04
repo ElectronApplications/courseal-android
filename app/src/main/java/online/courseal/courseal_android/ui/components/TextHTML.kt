@@ -8,6 +8,7 @@ import android.text.style.URLSpan
 import android.text.style.UnderlineSpan
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +27,8 @@ import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 fun TextHTML(
     modifier: Modifier = Modifier,
     text: String,
-    style: TextStyle = LocalTextStyle.current
+    style: TextStyle = LocalTextStyle.current,
+    color: Color = MaterialTheme.colorScheme.onBackground
 ) {
     val spannableString = SpannableStringBuilder(text.replace("<br>", "")).toString()
     val spanned = HtmlCompat.fromHtml(spannableString, HtmlCompat.FROM_HTML_MODE_COMPACT)
@@ -36,7 +38,9 @@ fun TextHTML(
     ClickableText(
         modifier = modifier,
         text = annotated,
-        style = style,
+        style = style.copy(
+            color = color
+        ),
         onClick = {
             annotated
                 .getStringAnnotations("URL", it, it)

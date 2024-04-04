@@ -109,3 +109,11 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
 )
+
+val CodeStyle = TextStyle(
+    fontFamily = FontFamily.Monospace,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    lineHeight = 16.sp,
+    letterSpacing = 0.5.sp
+)

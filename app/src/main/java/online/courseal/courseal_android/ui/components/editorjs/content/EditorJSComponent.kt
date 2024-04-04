@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,18 +30,20 @@ fun EditorJSContentComponent(
     modifier: Modifier = Modifier,
     content: EditorJSContent
 ) {
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-    ) {
-        Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        for (block in content.blocks) {
-            EditorJSBlockComponent(
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-                    .fillMaxWidth(),
-                block = block
-            )
+    SelectionContainer {
+        Column(
+            modifier = modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+            for (block in content.blocks) {
+                EditorJSBlockComponent(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth(),
+                    block = block
+                )
+            }
         }
     }
 }
@@ -51,14 +54,14 @@ fun EditorJSBlockComponent(
     block: EditorJSBlock
 ) {
     when(block) {
-        is EditorJSCode -> {}
+        is EditorJSCode -> EditorJSCodeComponent(modifier = modifier, data = block.data)
         is EditorJSDelimiter -> EditorJSDelimiterComponent(modifier = modifier)
         is EditorJSHeader -> EditorJSHeaderComponent(modifier = modifier, data = block.data)
-        is EditorJSImage -> {}
-        is EditorJSList -> {}
+        is EditorJSImage -> EditorJSImageComponent(modifier = modifier, data = block.data)
+        is EditorJSList -> EditorJSListComponent(modifier = modifier, data = block.data)
         is EditorJSParagraph -> EditorJSParagraphComponent(modifier = modifier, data = block.data)
-        is EditorJSQuote -> {}
-        is EditorJSWarning -> {}
+        is EditorJSQuote -> EditorJSQuoteComponent(modifier = modifier, data = block.data)
+        is EditorJSWarning -> EditorJSWarningComponent(modifier = modifier, data = block.data)
         is EditorJSLatex -> EditorJSLatexComponent(modifier = modifier, data = block.data)
     }
 }

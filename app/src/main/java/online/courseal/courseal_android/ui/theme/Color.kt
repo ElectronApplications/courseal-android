@@ -46,11 +46,15 @@ val DarkCoursealPalette = CoursealPalette(
     welcomeGradientBottom = DarkBottomGradient,
     onWelcomeGradient = DarkGradientText,
     link = Color(0xFF59A6FF),
+    warning = Color(0xFFFAECC6),
+    onWarning = Color(0xFF3B4045)
 )
 
 val LightCoursealPalette = CoursealPalette(
     welcomeGradientTop = LightTopGradient,
     welcomeGradientBottom = LightBottomGradient,
     onWelcomeGradient = LightGradientText,
-    link = Color(0xFF0066FF)
+    link = Color(0xFF0066FF),
+    warning = Color(0xFFFAECC6),
+    onWarning = Color(0xFF3B4045)
 )

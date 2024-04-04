@@ -17,6 +17,8 @@ import online.courseal.courseal_android.data.editorjs.EditorJSDelimiter
 import online.courseal.courseal_android.data.editorjs.EditorJSHeader
 import online.courseal.courseal_android.data.editorjs.EditorJSHeaderData
 import online.courseal.courseal_android.data.editorjs.EditorJSHeaderLevel
+import online.courseal.courseal_android.data.editorjs.EditorJSImage
+import online.courseal.courseal_android.data.editorjs.EditorJSImageData
 import online.courseal.courseal_android.data.editorjs.EditorJSLatex
 import online.courseal.courseal_android.data.editorjs.EditorJSLatexData
 import online.courseal.courseal_android.data.editorjs.EditorJSList
@@ -29,6 +31,7 @@ import online.courseal.courseal_android.data.editorjs.EditorJSQuoteAlignment
 import online.courseal.courseal_android.data.editorjs.EditorJSQuoteData
 import online.courseal.courseal_android.data.editorjs.EditorJSWarning
 import online.courseal.courseal_android.data.editorjs.EditorJSWarningData
+import online.courseal.courseal_android.data.editorjs.EditorJsImageFile
 import online.courseal.courseal_android.ui.components.editorjs.content.EditorJSContentComponent
 import online.courseal.courseal_android.ui.screens.login.LoginScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
@@ -96,7 +99,9 @@ fun MainApp() {
                 onStartLogin = {
                    navController.navigate(Routes.LOGIN.path)
                 },
-                onRegister = {},
+                onRegister = {
+
+                },
                 authViewModel = hiltViewModel(parentEntry)
             )
         }
@@ -113,112 +118,10 @@ fun MainApp() {
                     navController.popBackStack()
                 },
                 onLogin = {
-                    navController.navigate("editorjs")
+
                 },
                 authViewModel = hiltViewModel(parentEntry)
             )
-        }
-
-        composable(
-            route = "editorjs"
-        ) {
-            val sampleContent = EditorJSContent(
-                time = 1711507166253,
-                version = "2.29.1",
-                blocks = listOf(
-                    EditorJSHeader(
-                        id = "oi2FNWysnU",
-                        data = EditorJSHeaderData(
-                            text = "Sample Header h1",
-                            level = EditorJSHeaderLevel.H1
-                        )
-                    ),
-                    EditorJSHeader(
-                        id = "c03rFjLjll",
-                        data = EditorJSHeaderData(
-                            text = "Sample Header h6",
-                            level = EditorJSHeaderLevel.H6
-                        )
-                    ),
-                    EditorJSParagraph(
-                        id = "Y0FC-KXE9f",
-                        data = EditorJSParagraphData(
-                            text = "Sample text<br>"
-                        )
-                    ),
-                    EditorJSParagraph(
-                        id = "nNEesxxc6H",
-                        data = EditorJSParagraphData(
-                            text = "<i>Sample italic text</i><br>"
-                        )
-                    ),
-                    EditorJSParagraph(
-                        id = "nNEesxxc6H",
-                        data = EditorJSParagraphData(
-                            text = "<b>Sample bold text</b><br>"
-                        )
-                    ),
-                    EditorJSParagraph(
-                        id = "nNEesxxc6H",
-                        data = EditorJSParagraphData(
-                            text = "<a href=\"example.com\">Sample link</a><br>"
-                        )
-                    ),
-                    EditorJSList(
-                        id = "O6yNYMO2HR",
-                        data = EditorJSListData(
-                            style = EditorJSListStyle.ORDERED,
-                            items = listOf(
-                                "ordered",
-                                "list"
-                            )
-                        )
-                    ),
-                    EditorJSList(
-                        id = "PodGxsipV_",
-                        data = EditorJSListData(
-                            style = EditorJSListStyle.UNORDERED,
-                            items = listOf(
-                                "unordered",
-                                "list"
-                            )
-                        )
-                    ),
-                    EditorJSDelimiter(
-                        id = "SSIiQM8QW_",
-                        data = Unit
-                    ),
-                    EditorJSQuote(
-                        id = "3iWyZzWbmz",
-                        data = EditorJSQuoteData(
-                            text = "A quote<br>",
-                            caption = "caption",
-                            alignment = EditorJSQuoteAlignment.LEFT
-                        )
-                    ),
-                    EditorJSWarning(
-                        id = "QK8ZIRhemb",
-                        data = EditorJSWarningData(
-                            title = "WARNING",
-                            message = "sample message"
-                        )
-                    ),
-                    EditorJSCode(
-                        id = "h9bxessZnC",
-                        data = EditorJSCodeData(
-                            code = "print(\"Hello World!)"
-                        )
-                    ),
-                    EditorJSLatex(
-                        id = "rgr3eg",
-                        data = EditorJSLatexData(
-                            math = "x^2 + 1 = 0 \\Rightarrow x = i"
-                        )
-                    )
-                )
-            )
-
-            EditorJSContentComponent(content = sampleContent)
         }
     }
 
