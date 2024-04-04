@@ -20,4 +20,5 @@
     <string name="already_have_account">У меня уже есть аккаунт</string>
     <string name="sign_in">Вход в аккаунт</string>
     <string name="login">Войти</string>
+    <string name="warning">Внимание</string>
 </resources>

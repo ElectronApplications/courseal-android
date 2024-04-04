@@ -42,6 +42,7 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
+import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
 
 @Composable
@@ -73,89 +74,95 @@ fun WelcomeScreen(
             onGoBack = onGoBack
         )
 
-        Text(
+        Column(
             modifier = Modifier
+                .adaptiveContainerWidth()
                 .align(Alignment.CenterHorizontally)
-                .padding(all = 25.dp),
-            style = MaterialTheme.typography.displayMedium,
-            text = context.getString(R.string.learn_skills),
-            textAlign = TextAlign.Center
-        )
-
-        var advancedVisible by rememberSaveable { mutableStateOf(false) }
-        val arrowRotation by animateFloatAsState(targetValue = if (advancedVisible) -180.0f else 0.0f, label = "arrow rotation")
-        var userUrl by rememberSaveable { mutableStateOf("") }
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(all = 5.dp)
-                .clickable {
-                    advancedVisible = !advancedVisible
-                },
         ) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(all = 25.dp),
+                style = MaterialTheme.typography.displayMedium,
+                text = context.getString(R.string.learn_skills),
+                textAlign = TextAlign.Center
+            )
+
+            var advancedVisible by rememberSaveable { mutableStateOf(false) }
+            val arrowRotation by animateFloatAsState(targetValue = if (advancedVisible) -180.0f else 0.0f, label = "arrow rotation")
+            var userUrl by rememberSaveable { mutableStateOf("") }
+
             Row(
                 modifier = Modifier
-                    .padding(all = 10.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(all = 5.dp)
+                    .clickable {
+                        advancedVisible = !advancedVisible
+                    },
             ) {
-                Text(
-                    text = context.getString(R.string.connecting_to) + " "
-                )
-
-                val displayUrl = if (authUiState.serverUrl.length > 24) {
-                    authUiState.serverUrl.take(21) + "..."
-                } else authUiState.serverUrl
-
-                Text(
-                    text = displayUrl,
-                    textDecoration = TextDecoration.Underline
-                )
-                Icon(
+                Row(
                     modifier = Modifier
-                        .rotate(arrowRotation),
-                    imageVector = Icons.Outlined.KeyboardArrowDown,
-                    contentDescription = "Expand"
-                )
-            }
-        }
+                        .padding(all = 10.dp)
+                ) {
+                    Text(
+                        text = context.getString(R.string.connecting_to) + " "
+                    )
 
-        AnimatedVisibility(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(0.85f),
-            visible = advancedVisible
-        ) {
-            CoursealTextField(
-                value = userUrl,
-                onValueChange = {
-                    userUrl = it
-                    authViewModel.updateUrl(userUrl)
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                label = context.getString(R.string.server_url))
-        }
+                    val displayUrl = if (authUiState.serverUrl.length > 24) {
+                        authUiState.serverUrl.take(21) + "..."
+                    } else authUiState.serverUrl
 
-        var makingRequest by rememberSaveable { mutableStateOf(false) }
-        CoursealPrimaryButton(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 15.dp)
-                .fillMaxWidth(0.85f),
-            text = if (!makingRequest) context.getString(R.string.get_started) else context.getString(R.string.loading),
-            enabled = !makingRequest,
-            onClick = {
-                makingRequest = true
-                coroutineScope.launch {
-                    if (authViewModel.getServerInfo()) {
-                        onStart(authUiState.serverRegistrationEnabled)
-                    } else {
-                        connectionFailedVisible = true
-                    }
-                    makingRequest = false
+                    Text(
+                        text = displayUrl,
+                        textDecoration = TextDecoration.Underline
+                    )
+                    Icon(
+                        modifier = Modifier
+                            .rotate(arrowRotation),
+                        imageVector = Icons.Outlined.KeyboardArrowDown,
+                        contentDescription = "Expand"
+                    )
                 }
             }
-        )
 
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+            AnimatedVisibility(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(0.85f),
+                visible = advancedVisible
+            ) {
+                CoursealTextField(
+                    value = userUrl,
+                    onValueChange = {
+                        userUrl = it
+                        authViewModel.updateUrl(userUrl)
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
+                    label = context.getString(R.string.server_url))
+            }
+
+            var makingRequest by rememberSaveable { mutableStateOf(false) }
+            CoursealPrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp)
+                    .fillMaxWidth(0.85f),
+                text = if (!makingRequest) context.getString(R.string.get_started) else context.getString(R.string.loading),
+                enabled = !makingRequest,
+                onClick = {
+                    makingRequest = true
+                    coroutineScope.launch {
+                        if (authViewModel.getServerInfo()) {
+                            onStart(authUiState.serverRegistrationEnabled)
+                        } else {
+                            connectionFailedVisible = true
+                        }
+                        makingRequest = false
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+        }
     }
 }

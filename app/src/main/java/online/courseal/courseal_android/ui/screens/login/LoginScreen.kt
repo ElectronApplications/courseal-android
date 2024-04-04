@@ -28,6 +28,7 @@ import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.GoBack
+import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
 
 @Composable
@@ -49,76 +50,82 @@ fun LoginScreen(
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         GoBack(onGoBack = onGoBack)
 
-        Text(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .align(Alignment.CenterHorizontally),
-            text = context.getString(R.string.sign_in),
-            style = MaterialTheme.typography.displayMedium
-        )
-
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            text = authUiState.serverName,
-            style = MaterialTheme.typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            text = authUiState.serverDescription,
-            style = MaterialTheme.typography.bodyMedium
-        )
-
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            text = authUiState.serverUrl,
-            style = MaterialTheme.typography.bodyMedium
-        )
-
         Column(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(0.75f)
+                .adaptiveContainerWidth()
         ) {
-            var usertag by rememberSaveable { mutableStateOf("") }
-            CoursealTextField(
+            Column(
                 modifier = Modifier
+                    .fillMaxWidth(0.75f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 20.dp)
-                    .fillMaxWidth(),
-                value = usertag,
-                onValueChange = { usertag = it },
-                label = context.getString(R.string.usertag),
-                leadingIcon = { Text("@") }
-            )
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .align(Alignment.CenterHorizontally),
+                    text = context.getString(R.string.sign_in),
+                    style = MaterialTheme.typography.displayMedium
+                )
 
-            var password by rememberSaveable { mutableStateOf("") }
-            CoursealPasswordField(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 10.dp)
-                    .fillMaxWidth(),
-                value = password,
-                onValueChange = { password = it },
-                label = context.getString(R.string.password),
-            )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    text = authUiState.serverName,
+                    style = MaterialTheme.typography.bodyLarge
+                )
 
-            CoursealPrimaryButton(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 15.dp)
-                    .fillMaxWidth(),
-                text = context.getString(R.string.login),
-                onClick = {
-                    /* TODO */
-                    onLogin()
-                }
-            )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    text = authUiState.serverDescription,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally),
+                    text = authUiState.serverUrl,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                var usertag by rememberSaveable { mutableStateOf("") }
+                CoursealTextField(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 20.dp)
+                        .fillMaxWidth(),
+                    value = usertag,
+                    onValueChange = { usertag = it },
+                    label = context.getString(R.string.usertag),
+                    leadingIcon = { Text("@") }
+                )
+
+                var password by rememberSaveable { mutableStateOf("") }
+                CoursealPasswordField(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 10.dp)
+                        .fillMaxWidth(),
+                    value = password,
+                    onValueChange = { password = it },
+                    label = context.getString(R.string.password),
+                )
+
+                CoursealPrimaryButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 15.dp)
+                        .fillMaxWidth(),
+                    text = context.getString(R.string.login),
+                    onClick = {
+                        /* TODO */
+                        onLogin()
+                    }
+                )
+
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
+            }
         }
-
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }
 }
