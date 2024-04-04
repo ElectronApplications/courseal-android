@@ -10,6 +10,29 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import online.courseal.courseal_android.data.editorjs.EditorJSCode
+import online.courseal.courseal_android.data.editorjs.EditorJSCodeData
+import online.courseal.courseal_android.data.editorjs.EditorJSContent
+import online.courseal.courseal_android.data.editorjs.EditorJSDelimiter
+import online.courseal.courseal_android.data.editorjs.EditorJSHeader
+import online.courseal.courseal_android.data.editorjs.EditorJSHeaderData
+import online.courseal.courseal_android.data.editorjs.EditorJSHeaderLevel
+import online.courseal.courseal_android.data.editorjs.EditorJSImage
+import online.courseal.courseal_android.data.editorjs.EditorJSImageData
+import online.courseal.courseal_android.data.editorjs.EditorJSLatex
+import online.courseal.courseal_android.data.editorjs.EditorJSLatexData
+import online.courseal.courseal_android.data.editorjs.EditorJSList
+import online.courseal.courseal_android.data.editorjs.EditorJSListData
+import online.courseal.courseal_android.data.editorjs.EditorJSListStyle
+import online.courseal.courseal_android.data.editorjs.EditorJSParagraph
+import online.courseal.courseal_android.data.editorjs.EditorJSParagraphData
+import online.courseal.courseal_android.data.editorjs.EditorJSQuote
+import online.courseal.courseal_android.data.editorjs.EditorJSQuoteAlignment
+import online.courseal.courseal_android.data.editorjs.EditorJSQuoteData
+import online.courseal.courseal_android.data.editorjs.EditorJSWarning
+import online.courseal.courseal_android.data.editorjs.EditorJSWarningData
+import online.courseal.courseal_android.data.editorjs.EditorJsImageFile
+import online.courseal.courseal_android.ui.components.editorjs.content.EditorJSContentComponent
 import online.courseal.courseal_android.ui.screens.login.LoginScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
@@ -76,7 +99,9 @@ fun MainApp() {
                 onStartLogin = {
                    navController.navigate(Routes.LOGIN.path)
                 },
-                onRegister = {},
+                onRegister = {
+
+                },
                 authViewModel = hiltViewModel(parentEntry)
             )
         }
