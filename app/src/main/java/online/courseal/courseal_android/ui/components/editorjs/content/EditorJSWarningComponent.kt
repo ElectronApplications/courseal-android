@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.editorjs.EditorJSWarningData
@@ -27,8 +28,6 @@ fun EditorJSWarningComponent(
     modifier: Modifier = Modifier,
     data: EditorJSWarningData
 ) {
-    val context = LocalContext.current
-
     Row(
         modifier = modifier
             .background(LocalCoursealPalette.current.warning)
@@ -42,7 +41,7 @@ fun EditorJSWarningComponent(
             ,
             contentScale = ContentScale.FillWidth,
             painter = rememberVectorPainter(image = Icons.Outlined.Warning),
-            contentDescription = context.getString(R.string.warning)
+            contentDescription = stringResource(R.string.warning)
         )
         Column {
             TextHTML(

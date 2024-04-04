@@ -31,7 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -52,17 +52,15 @@ fun WelcomeScreen(
     onStart: (serverRegistrationEnabled: Boolean) -> Unit,
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
     val authUiState by authViewModel.uiState.collectAsState()
 
     var connectionFailedVisible by remember { mutableStateOf(false) }
     ErrorDialog(
         isVisible = connectionFailedVisible,
         setVisible = { connectionFailedVisible = it },
-        title = context.getString(R.string.connection_failed),
-        text = context.getString(R.string.connection_failed_detailed)
+        title = stringResource(R.string.connection_failed),
+        text = stringResource(R.string.connection_failed_detailed)
     )
 
     Column(
@@ -84,7 +82,7 @@ fun WelcomeScreen(
                     .align(Alignment.CenterHorizontally)
                     .padding(all = 25.dp),
                 style = MaterialTheme.typography.displayMedium,
-                text = context.getString(R.string.learn_skills),
+                text = stringResource(R.string.learn_skills),
                 textAlign = TextAlign.Center
             )
 
@@ -105,7 +103,7 @@ fun WelcomeScreen(
                         .padding(all = 10.dp)
                 ) {
                     Text(
-                        text = context.getString(R.string.connecting_to) + " "
+                        text = stringResource(R.string.connecting_to) + " "
                     )
 
                     val displayUrl = if (authUiState.serverUrl.length > 24) {
@@ -138,7 +136,7 @@ fun WelcomeScreen(
                         authViewModel.updateUrl(userUrl)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
-                    label = context.getString(R.string.server_url))
+                    label = stringResource(R.string.server_url))
             }
 
             var makingRequest by rememberSaveable { mutableStateOf(false) }
@@ -147,7 +145,7 @@ fun WelcomeScreen(
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
                     .fillMaxWidth(0.85f),
-                text = if (!makingRequest) context.getString(R.string.get_started) else context.getString(R.string.loading),
+                text = if (!makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
                 enabled = !makingRequest,
                 onClick = {
                     makingRequest = true
