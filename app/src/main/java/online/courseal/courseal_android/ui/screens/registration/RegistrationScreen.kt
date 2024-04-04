@@ -22,7 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
@@ -41,9 +41,7 @@ fun RegistrationScreen(
     onRegister: () -> Unit,
     authViewModel: AuthViewModel
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
     val authUiState by authViewModel.uiState.collectAsState()
 
     Column(
@@ -67,7 +65,7 @@ fun RegistrationScreen(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .align(Alignment.CenterHorizontally),
-                    text = context.getString(R.string.create_account),
+                    text = stringResource(R.string.create_account),
                     style = MaterialTheme.typography.displayMedium
                 )
 
@@ -100,7 +98,7 @@ fun RegistrationScreen(
                         .fillMaxWidth(),
                     value = usertag,
                     onValueChange = { usertag = it },
-                    label = context.getString(R.string.usertag),
+                    label = stringResource(R.string.usertag),
                     leadingIcon = { Text("@") }
                 )
 
@@ -112,7 +110,7 @@ fun RegistrationScreen(
                         .fillMaxWidth(),
                     value = username,
                     onValueChange = { username = it },
-                    label = context.getString(R.string.username)
+                    label = stringResource(R.string.username)
                 )
 
                 var password by rememberSaveable { mutableStateOf("") }
@@ -123,7 +121,7 @@ fun RegistrationScreen(
                         .fillMaxWidth(),
                     value = password,
                     onValueChange = { password = it },
-                    label = context.getString(R.string.password),
+                    label = stringResource(R.string.password),
                 )
 
                 Text(
@@ -134,7 +132,7 @@ fun RegistrationScreen(
                             onStartLogin()
                         },
                     color = LocalCoursealPalette.current.link,
-                    text = context.getString(R.string.already_have_account)
+                    text = stringResource(R.string.already_have_account)
                 )
 
                 CoursealPrimaryButton(
@@ -142,7 +140,7 @@ fun RegistrationScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = context.getString(R.string.register),
+                    text = stringResource(R.string.register),
                     onClick = {
                         /* TODO */
                     }

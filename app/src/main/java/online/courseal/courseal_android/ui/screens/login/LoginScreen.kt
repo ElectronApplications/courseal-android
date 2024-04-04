@@ -21,7 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
@@ -38,9 +38,7 @@ fun LoginScreen(
     onLogin: () -> Unit,
     authViewModel: AuthViewModel
 ) {
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
     val authUiState by authViewModel.uiState.collectAsState()
 
     Column(
@@ -64,7 +62,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .align(Alignment.CenterHorizontally),
-                    text = context.getString(R.string.sign_in),
+                    text = stringResource(R.string.sign_in),
                     style = MaterialTheme.typography.displayMedium
                 )
 
@@ -97,7 +95,7 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     value = usertag,
                     onValueChange = { usertag = it },
-                    label = context.getString(R.string.usertag),
+                    label = stringResource(R.string.usertag),
                     leadingIcon = { Text("@") }
                 )
 
@@ -109,7 +107,7 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     value = password,
                     onValueChange = { password = it },
-                    label = context.getString(R.string.password),
+                    label = stringResource(R.string.password),
                 )
 
                 CoursealPrimaryButton(
@@ -117,7 +115,7 @@ fun LoginScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = context.getString(R.string.login),
+                    text = stringResource(R.string.login),
                     onClick = {
                         /* TODO */
                         onLogin()

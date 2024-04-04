@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
@@ -40,8 +41,6 @@ fun WelcomeGradient(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = modifier
             .background(
@@ -62,7 +61,7 @@ fun WelcomeGradient(
             modifier = Modifier
                 .padding(top = 10.dp)
                 .fillMaxWidth(),
-            text = context.getString(R.string.app_name),
+            text = stringResource(R.string.app_name),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
             color = LocalCoursealPalette.current.onWelcomeGradient
@@ -83,7 +82,7 @@ fun WelcomeGradient(
             Image(
                 contentScale = ContentScale.FillWidth,
                 painter = painterResource(id = R.drawable.courseal_not_rounded),
-                contentDescription = context.getString(R.string.logo)
+                contentDescription = stringResource(R.string.logo)
             )
         }
     }
