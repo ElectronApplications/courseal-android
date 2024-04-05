@@ -10,29 +10,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import online.courseal.courseal_android.data.editorjs.EditorJSCode
-import online.courseal.courseal_android.data.editorjs.EditorJSCodeData
-import online.courseal.courseal_android.data.editorjs.EditorJSContent
-import online.courseal.courseal_android.data.editorjs.EditorJSDelimiter
-import online.courseal.courseal_android.data.editorjs.EditorJSHeader
-import online.courseal.courseal_android.data.editorjs.EditorJSHeaderData
-import online.courseal.courseal_android.data.editorjs.EditorJSHeaderLevel
-import online.courseal.courseal_android.data.editorjs.EditorJSImage
-import online.courseal.courseal_android.data.editorjs.EditorJSImageData
-import online.courseal.courseal_android.data.editorjs.EditorJSLatex
-import online.courseal.courseal_android.data.editorjs.EditorJSLatexData
-import online.courseal.courseal_android.data.editorjs.EditorJSList
-import online.courseal.courseal_android.data.editorjs.EditorJSListData
-import online.courseal.courseal_android.data.editorjs.EditorJSListStyle
-import online.courseal.courseal_android.data.editorjs.EditorJSParagraph
-import online.courseal.courseal_android.data.editorjs.EditorJSParagraphData
-import online.courseal.courseal_android.data.editorjs.EditorJSQuote
-import online.courseal.courseal_android.data.editorjs.EditorJSQuoteAlignment
-import online.courseal.courseal_android.data.editorjs.EditorJSQuoteData
-import online.courseal.courseal_android.data.editorjs.EditorJSWarning
-import online.courseal.courseal_android.data.editorjs.EditorJSWarningData
-import online.courseal.courseal_android.data.editorjs.EditorJsImageFile
-import online.courseal.courseal_android.ui.components.editorjs.content.EditorJSContentComponent
 import online.courseal.courseal_android.ui.screens.login.LoginScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
@@ -76,51 +53,51 @@ fun MainApp() {
                 onGoBack = if (canGoBack == true) {{
                     navController.popBackStack()
                 }} else null,
-                onStart = { serverRegistrationEnabled: Boolean ->
+                onStart = { serverRegistrationEnabled: Boolean, serverId: Long ->
                     if (serverRegistrationEnabled)
-                        navController.navigate(Routes.REGISTER.path)
+                        navController.navigate("${Routes.REGISTER.path}?serverId=$serverId")
                     else
-                        navController.navigate(Routes.LOGIN.path)
+                        navController.navigate("${Routes.LOGIN.path}?serverId=$serverId")
                 }
             )
         }
 
         /* Registration Screen */
         composable(
-            route = Routes.REGISTER.path
-        ) { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(Routes.WELCOME.path)
-            }
+            route = "${Routes.REGISTER.path}?serverId={serverId}",
+            arguments = listOf(
+                navArgument("serverId") { type = NavType.LongType }
+            )
+        ) {
             RegistrationScreen(
                 onGoBack = {
                     navController.popBackStack()
                 },
-                onStartLogin = {
-                   navController.navigate(Routes.LOGIN.path)
+                onStartLogin = { serverId: Long ->
+                   navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
                 },
                 onRegister = {
 
-                },
-                authViewModel = hiltViewModel(parentEntry)
+                }
             )
         }
 
         /* Login Screen */
         composable(
-            route = Routes.LOGIN.path
-        ) { backStackEntry ->
-            val parentEntry = remember(backStackEntry) {
-                navController.getBackStackEntry(Routes.WELCOME.path)
-            }
+            route = "${Routes.LOGIN.path}?serverId={serverId}",
+            arguments = listOf(
+                navArgument("serverId") { type = NavType.LongType }
+            )
+        ) {
             LoginScreen(
                 onGoBack = {
                     navController.popBackStack()
                 },
                 onLogin = {
-
-                },
-                authViewModel = hiltViewModel(parentEntry)
+                    navController.navigate(Routes.WELCOME.path) {
+                        popUpTo(0)
+                    }
+                }
             )
         }
     }

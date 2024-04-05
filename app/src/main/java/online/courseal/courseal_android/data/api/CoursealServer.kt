@@ -14,15 +14,15 @@ data class ServerInfo(
     @JsonNames("server_registration_enabled") val serverRegistrationEnabled: Boolean
 )
 suspend fun coursealInfo(url: String): ServerInfo? {
-    print("$url/api/courseal-info")
     return try {
         val response = httpClient.get("$url/api/courseal-info")
+
         if(response.status.value == 200) {
             response.body()
         } else {
             null
         }
-    } catch (_: Exception) {
+    } catch (e: Exception) {
         null
     }
 }

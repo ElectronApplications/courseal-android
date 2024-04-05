@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
@@ -31,18 +32,19 @@ import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
-import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
+import online.courseal.courseal_android.ui.viewmodels.RegistrationViewModel
+import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun RegistrationScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
-    onStartLogin: () -> Unit,
+    onStartLogin: (serverId: Long) -> Unit,
     onRegister: () -> Unit,
-    authViewModel: AuthViewModel
+    registrationViewModel: RegistrationViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val authUiState by authViewModel.uiState.collectAsState()
+    val registrationUiState by registrationViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -72,21 +74,21 @@ fun RegistrationScreen(
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverName,
+                    text = registrationUiState.serverName,
                     style = MaterialTheme.typography.bodyLarge
                 )
 
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverDescription,
+                    text = registrationUiState.serverDescription,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverUrl,
+                    text = registrationUiState.serverUrl,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -129,7 +131,7 @@ fun RegistrationScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .clickable {
-                            onStartLogin()
+                            onStartLogin(registrationViewModel.getServerId())
                         },
                     color = LocalCoursealPalette.current.link,
                     text = stringResource(R.string.already_have_account)
