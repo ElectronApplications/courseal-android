@@ -23,23 +23,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
+import online.courseal.courseal_android.ui.viewmodels.LoginViewModel
+import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
     onLogin: () -> Unit,
-    authViewModel: AuthViewModel
+    loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val authUiState by authViewModel.uiState.collectAsState()
+    val loginUiState by loginViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -69,21 +72,21 @@ fun LoginScreen(
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverName,
+                    text = loginUiState.serverName,
                     style = MaterialTheme.typography.bodyLarge
                 )
 
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverDescription,
+                    text = loginUiState.serverDescription,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
-                    text = authUiState.serverUrl,
+                    text = loginUiState.serverUrl,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -117,8 +120,9 @@ fun LoginScreen(
                         .fillMaxWidth(),
                     text = stringResource(R.string.login),
                     onClick = {
-                        /* TODO */
-                        onLogin()
+                        coroutineScope.launch {
+                            loginViewModel.login(usertag, password, onLogin)
+                        }
                     }
                 )
 

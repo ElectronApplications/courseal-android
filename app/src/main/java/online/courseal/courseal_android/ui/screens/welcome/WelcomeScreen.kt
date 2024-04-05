@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -43,22 +42,21 @@ import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
+import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    onStart: (serverRegistrationEnabled: Boolean) -> Unit,
-    authViewModel: AuthViewModel = hiltViewModel()
+    onStart: (serverRegistrationEnabled: Boolean, serverId: Long) -> Unit,
+    welcomeViewModel: WelcomeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val authUiState by authViewModel.uiState.collectAsState()
+    val welcomeUiState by welcomeViewModel.uiState.collectAsState()
 
-    var connectionFailedVisible by remember { mutableStateOf(false) }
     ErrorDialog(
-        isVisible = connectionFailedVisible,
-        setVisible = { connectionFailedVisible = it },
+        isVisible = welcomeUiState.showError,
+        setVisible = welcomeViewModel::setErrorVisible,
         title = stringResource(R.string.connection_failed),
         text = stringResource(R.string.connection_failed_detailed)
     )
@@ -106,9 +104,9 @@ fun WelcomeScreen(
                         text = stringResource(R.string.connecting_to) + " "
                     )
 
-                    val displayUrl = if (authUiState.serverUrl.length > 24) {
-                        authUiState.serverUrl.take(21) + "..."
-                    } else authUiState.serverUrl
+                    val displayUrl = if (welcomeUiState.serverUrl.length > 24) {
+                        welcomeUiState.serverUrl.take(21) + "..."
+                    } else welcomeUiState.serverUrl
 
                     Text(
                         text = displayUrl,
@@ -133,29 +131,22 @@ fun WelcomeScreen(
                     value = userUrl,
                     onValueChange = {
                         userUrl = it
-                        authViewModel.updateUrl(userUrl)
+                        welcomeViewModel.updateUrl(userUrl)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                     label = stringResource(R.string.server_url))
             }
 
-            var makingRequest by rememberSaveable { mutableStateOf(false) }
             CoursealPrimaryButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
                     .fillMaxWidth(0.85f),
-                text = if (!makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
-                enabled = !makingRequest,
+                text = if (!welcomeUiState.makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
+                enabled = !welcomeUiState.makingRequest,
                 onClick = {
-                    makingRequest = true
                     coroutineScope.launch {
-                        if (authViewModel.getServerInfo()) {
-                            onStart(authUiState.serverRegistrationEnabled)
-                        } else {
-                            connectionFailedVisible = true
-                        }
-                        makingRequest = false
+                        welcomeViewModel.start(onStart)
                     }
                 }
             )
