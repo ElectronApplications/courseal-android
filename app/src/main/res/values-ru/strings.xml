@@ -21,4 +21,7 @@
     <string name="sign_in">Вход в аккаунт</string>
     <string name="login">Войти</string>
     <string name="warning">Внимание</string>
+    <string name="user_exists">Такой пользователь уже существует</string>
+    <string name="unknown_error">Произошла неизвестная ошибка</string>
+    <string name="incorrect_usertag_or_password">Неправильный тег пользователя или пароль</string>
 </resources>

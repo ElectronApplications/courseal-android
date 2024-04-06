@@ -29,8 +29,10 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
+import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
+import online.courseal.courseal_android.ui.viewmodels.LoginError
 import online.courseal.courseal_android.ui.viewmodels.LoginViewModel
 import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
@@ -43,6 +45,16 @@ fun LoginScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val loginUiState by loginViewModel.uiState.collectAsState()
+
+    ErrorDialog(
+        isVisible = loginUiState.errorState != LoginError.NONE,
+        hideDialog = { loginViewModel.hideError() },
+        title = when (loginUiState.errorState) {
+            LoginError.INCORRECT -> stringResource(R.string.incorrect_usertag_or_password)
+            LoginError.UNKNOWN -> stringResource(R.string.unknown_error)
+            LoginError.NONE -> ""
+        }
+    )
 
     Column(
         modifier = modifier
@@ -90,26 +102,24 @@ fun LoginScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                var usertag by rememberSaveable { mutableStateOf("") }
                 CoursealTextField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                         .fillMaxWidth(),
-                    value = usertag,
-                    onValueChange = { usertag = it },
+                    value = loginUiState.usertag,
+                    onValueChange = { loginViewModel.updateUsertag(it) },
                     label = stringResource(R.string.usertag),
                     leadingIcon = { Text("@") }
                 )
 
-                var password by rememberSaveable { mutableStateOf("") }
                 CoursealPasswordField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 10.dp)
                         .fillMaxWidth(),
-                    value = password,
-                    onValueChange = { password = it },
+                    value = loginUiState.password,
+                    onValueChange = { loginViewModel.updatePassword(it) },
                     label = stringResource(R.string.password),
                 )
 
@@ -118,10 +128,11 @@ fun LoginScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = stringResource(R.string.login),
+                    text = if (!loginUiState.makingRequest) stringResource(R.string.login) else stringResource(R.string.loading),
+                    enabled = !loginUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
-                            loginViewModel.login(usertag, password, onLogin)
+                            loginViewModel.login(onLogin)
                         }
                     }
                 )

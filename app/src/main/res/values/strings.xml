@@ -21,4 +21,7 @@
     <string name="sign_in">Sign in</string>
     <string name="login">Login</string>
     <string name="warning">Warning</string>
+    <string name="user_exists">Such user already exists</string>
+    <string name="unknown_error">An unknown error has occured</string>
+    <string name="incorrect_usertag_or_password">Incorrect usertag or password</string>
 </resources>

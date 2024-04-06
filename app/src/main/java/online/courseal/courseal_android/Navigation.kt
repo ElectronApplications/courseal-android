@@ -1,5 +1,7 @@
 package online.courseal.courseal_android
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -11,34 +13,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import online.courseal.courseal_android.ui.screens.login.LoginScreen
+import online.courseal.courseal_android.ui.screens.main.MainScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 
 enum class Routes(val path: String) {
     WELCOME("welcome"),
     REGISTER("register"),
-    LOGIN("login")
+    LOGIN("login"),
+    MAIN("main")
 }
 
 @Composable
-fun MainApp() {
+fun MainApp(startDestination: Routes) {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = Routes.WELCOME.path,
-        enterTransition = {
-            slideInHorizontally(initialOffsetX = { it })
-        },
-        exitTransition = {
-            slideOutHorizontally(targetOffsetX = { -it })
-        },
-        popEnterTransition = {
-            slideInHorizontally(initialOffsetX = { -it })
-        },
-        popExitTransition = {
-            slideOutHorizontally(targetOffsetX = { it })
-        }
+        startDestination = startDestination.path,
+        enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
     ) {
         /* Welcome Screen */
         composable(
@@ -67,7 +63,8 @@ fun MainApp() {
             route = "${Routes.REGISTER.path}?serverId={serverId}",
             arguments = listOf(
                 navArgument("serverId") { type = NavType.LongType }
-            )
+            ),
+            exitTransition = { fadeOut() }
         ) {
             RegistrationScreen(
                 onGoBack = {
@@ -77,7 +74,9 @@ fun MainApp() {
                    navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
                 },
                 onRegister = {
-
+                    navController.navigate(Routes.MAIN.path) {
+                        popUpTo(0)
+                    }
                 }
             )
         }
@@ -87,18 +86,26 @@ fun MainApp() {
             route = "${Routes.LOGIN.path}?serverId={serverId}",
             arguments = listOf(
                 navArgument("serverId") { type = NavType.LongType }
-            )
+            ),
+            exitTransition = { fadeOut() }
         ) {
             LoginScreen(
                 onGoBack = {
                     navController.popBackStack()
                 },
                 onLogin = {
-                    navController.navigate(Routes.WELCOME.path) {
+                    navController.navigate(Routes.MAIN.path) {
                         popUpTo(0)
                     }
                 }
             )
+        }
+
+        composable(
+            route = Routes.MAIN.path,
+            enterTransition = { fadeIn() }
+        ) {
+            MainScreen()
         }
     }
 
