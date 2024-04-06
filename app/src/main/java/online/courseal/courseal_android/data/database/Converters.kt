@@ -3,6 +3,9 @@ package online.courseal.courseal_android.data.database
 import androidx.room.TypeConverter
 import io.ktor.http.Cookie
 import io.ktor.http.CookieEncoding
+import io.ktor.http.Parameters
+import io.ktor.http.URLBuilder
+import io.ktor.http.URLProtocol
 import io.ktor.http.Url
 import io.ktor.util.date.GMTDate
 import kotlinx.serialization.Serializable
@@ -10,18 +13,11 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class Converters {
-
     @TypeConverter
     fun convertCookieToString(cookie: Cookie): String = Json.encodeToString(SerializableCookie(cookie))
 
     @TypeConverter
     fun convertStringToCookie(string: String): Cookie = Json.decodeFromString<SerializableCookie>(string).toCookie()
-
-    @TypeConverter
-    fun convertUrlToString(url: Url): String = Json.encodeToString(url)
-
-    @TypeConverter
-    fun convertStringToUrl(string: String): Url = Json.decodeFromString(string)
 }
 
 @Serializable

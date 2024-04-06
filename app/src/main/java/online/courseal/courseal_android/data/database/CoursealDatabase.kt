@@ -17,7 +17,7 @@ import online.courseal.courseal_android.data.database.entities.UserCookie
         Server::class
     ],
     version = 1,
-    exportSchema = false)
+)
 @TypeConverters(Converters::class)
 abstract class CoursealDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

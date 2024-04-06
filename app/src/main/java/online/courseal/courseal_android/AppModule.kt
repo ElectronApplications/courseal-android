@@ -7,7 +7,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.serialization.kotlinx.json.json
+import online.courseal.courseal_android.data.api.UserCookiesStorage
 import online.courseal.courseal_android.data.database.CoursealDatabase
+import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Singleton
 
 @Module
@@ -32,4 +39,14 @@ object AppModule {
     @Provides
     fun provideServerDao(db: CoursealDatabase) = db.serverDao()
 
+    @Singleton
+    @Provides
+    fun provideHttpClient(userDao: UserDao) = HttpClient(CIO) {
+        install(ContentNegotiation) {
+            json()
+        }
+        install(HttpCookies) {
+            storage = UserCookiesStorage(userDao)
+        }
+    }
 }

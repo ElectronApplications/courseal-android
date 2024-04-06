@@ -25,13 +25,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
+import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
+import online.courseal.courseal_android.ui.viewmodels.LoginError
+import online.courseal.courseal_android.ui.viewmodels.RegistrationError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationViewModel
 import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
@@ -45,6 +49,16 @@ fun RegistrationScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val registrationUiState by registrationViewModel.uiState.collectAsState()
+
+    ErrorDialog(
+        isVisible = registrationUiState.errorState != RegistrationError.NONE,
+        hideDialog = { registrationViewModel.hideError() },
+        title = when (registrationUiState.errorState) {
+            RegistrationError.USER_EXISTS -> stringResource(R.string.user_exists)
+            RegistrationError.UNKNOWN -> stringResource(R.string.unknown_error)
+            RegistrationError.NONE -> ""
+        }
+    )
 
     Column(
         modifier = modifier
@@ -92,37 +106,34 @@ fun RegistrationScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                var usertag by rememberSaveable { mutableStateOf("") }
                 CoursealTextField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                         .fillMaxWidth(),
-                    value = usertag,
-                    onValueChange = { usertag = it },
+                    value = registrationUiState.usertag,
+                    onValueChange = { registrationViewModel.updateUsertag(it) },
                     label = stringResource(R.string.usertag),
                     leadingIcon = { Text("@") }
                 )
 
-                var username by rememberSaveable { mutableStateOf("") }
                 CoursealTextField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 10.dp)
                         .fillMaxWidth(),
-                    value = username,
-                    onValueChange = { username = it },
+                    value = registrationUiState.username,
+                    onValueChange = { registrationViewModel.updateUsername(it) },
                     label = stringResource(R.string.username)
                 )
 
-                var password by rememberSaveable { mutableStateOf("") }
                 CoursealPasswordField(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 10.dp)
                         .fillMaxWidth(),
-                    value = password,
-                    onValueChange = { password = it },
+                    value = registrationUiState.password,
+                    onValueChange = { registrationViewModel.updatePassword(it) },
                     label = stringResource(R.string.password),
                 )
 
@@ -142,9 +153,12 @@ fun RegistrationScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = stringResource(R.string.register),
+                    text = if (!registrationUiState.makingRequest) stringResource(R.string.register) else stringResource(R.string.loading),
+                    enabled = !registrationUiState.makingRequest,
                     onClick = {
-                        /* TODO */
+                        coroutineScope.launch {
+                            registrationViewModel.register(onRegister)
+                        }
                     }
                 )
 

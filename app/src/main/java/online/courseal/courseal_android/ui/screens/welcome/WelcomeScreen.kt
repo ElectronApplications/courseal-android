@@ -56,7 +56,7 @@ fun WelcomeScreen(
 
     ErrorDialog(
         isVisible = welcomeUiState.showError,
-        setVisible = welcomeViewModel::setErrorVisible,
+        hideDialog = welcomeViewModel::hideDialog,
         title = stringResource(R.string.connection_failed),
         text = stringResource(R.string.connection_failed_detailed)
     )
@@ -86,7 +86,6 @@ fun WelcomeScreen(
 
             var advancedVisible by rememberSaveable { mutableStateOf(false) }
             val arrowRotation by animateFloatAsState(targetValue = if (advancedVisible) -180.0f else 0.0f, label = "arrow rotation")
-            var userUrl by rememberSaveable { mutableStateOf("") }
 
             Row(
                 modifier = Modifier
@@ -128,10 +127,9 @@ fun WelcomeScreen(
                 visible = advancedVisible
             ) {
                 CoursealTextField(
-                    value = userUrl,
+                    value = welcomeUiState.providedUrl,
                     onValueChange = {
-                        userUrl = it
-                        welcomeViewModel.updateUrl(userUrl)
+                        welcomeViewModel.updateUrl(it)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                     label = stringResource(R.string.server_url))
