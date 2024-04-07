@@ -24,4 +24,7 @@
     <string name="user_exists">Такой пользователь уже существует</string>
     <string name="unknown_error">Произошла неизвестная ошибка</string>
     <string name="incorrect_usertag_or_password">Неправильный тег пользователя или пароль</string>
+    <string name="session_expired">Ваша сессия истекла</string>
+    <string name="server_not_responding">Сервер не отвечает</string>
+    <string name="unexpected_error">Произошла непредвиденная ошибка</string>
 </resources>

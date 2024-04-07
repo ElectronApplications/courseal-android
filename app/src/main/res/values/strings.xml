@@ -24,4 +24,7 @@
     <string name="user_exists">Such user already exists</string>
     <string name="unknown_error">An unknown error has occured</string>
     <string name="incorrect_usertag_or_password">Incorrect usertag or password</string>
+    <string name="session_expired">Your session has expired</string>
+    <string name="server_not_responding">The server is not responding</string>
+    <string name="unexpected_error">There has been an unexpected error</string>
 </resources>

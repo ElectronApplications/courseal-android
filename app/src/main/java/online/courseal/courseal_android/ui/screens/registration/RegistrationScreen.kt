@@ -16,10 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
+import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
@@ -34,10 +32,8 @@ import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
-import online.courseal.courseal_android.ui.viewmodels.LoginError
-import online.courseal.courseal_android.ui.viewmodels.RegistrationError
+import online.courseal.courseal_android.ui.viewmodels.RegistrationUiError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationViewModel
-import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun RegistrationScreen(
@@ -45,18 +41,19 @@ fun RegistrationScreen(
     onGoBack: () -> Unit,
     onStartLogin: (serverId: Long) -> Unit,
     onRegister: () -> Unit,
+    onUnrecoverable: OnUnrecoverable,
     registrationViewModel: RegistrationViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val registrationUiState by registrationViewModel.uiState.collectAsState()
 
     ErrorDialog(
-        isVisible = registrationUiState.errorState != RegistrationError.NONE,
-        hideDialog = { registrationViewModel.hideError() },
+        isVisible = registrationUiState.errorState != RegistrationUiError.NONE,
+        hideDialog = registrationViewModel::hideError,
         title = when (registrationUiState.errorState) {
-            RegistrationError.USER_EXISTS -> stringResource(R.string.user_exists)
-            RegistrationError.UNKNOWN -> stringResource(R.string.unknown_error)
-            RegistrationError.NONE -> ""
+            RegistrationUiError.USER_EXISTS -> stringResource(R.string.user_exists)
+            RegistrationUiError.UNKNOWN -> stringResource(R.string.unknown_error)
+            RegistrationUiError.NONE -> ""
         }
     )
 
@@ -157,7 +154,7 @@ fun RegistrationScreen(
                     enabled = !registrationUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
-                            registrationViewModel.register(onRegister)
+                            registrationViewModel.register(onRegister, onUnrecoverable)
                         }
                     }
                 )
