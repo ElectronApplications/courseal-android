@@ -84,7 +84,8 @@ class LoginViewModel @Inject constructor(
 
         val newUserId = userDao.insertUser(User(
             usertag = usertag,
-            serverId = server.serverId
+            serverId = server.serverId,
+            loggedIn = false
         ))
         userDao.setCurrentUser(newUserId)
 
@@ -103,6 +104,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is ApiResult.Success -> {
+                userDao.setUserLoggedIn(newUserId, true)
                 onLogin()
             }
         }
