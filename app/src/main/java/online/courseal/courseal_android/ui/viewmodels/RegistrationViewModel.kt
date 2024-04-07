@@ -12,17 +12,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.CoursealAuthService
-import online.courseal.courseal_android.data.api.LoginResult
-import online.courseal.courseal_android.data.api.RegistrationResult
+import online.courseal.courseal_android.data.api.RegistrationApiError
+import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
 import online.courseal.courseal_android.data.database.entities.Server
 import online.courseal.courseal_android.data.database.entities.User
+import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.logic.validateUsertag
 import javax.inject.Inject
 
-enum class RegistrationError {
+enum class RegistrationUiError {
     USER_EXISTS,
     UNKNOWN,
     NONE
@@ -36,7 +38,7 @@ data class RegistrationUiState(
     val username: String = "",
     val password: String = "",
     val makingRequest: Boolean = false,
-    val errorState: RegistrationError = RegistrationError.NONE
+    val errorState: RegistrationUiError = RegistrationUiError.NONE
 )
 
 @HiltViewModel
@@ -89,14 +91,14 @@ class RegistrationViewModel @Inject constructor(
         return server.serverId
     }
 
-    suspend fun register(onRegister: () -> Unit) {
+    suspend fun register(onRegister: () -> Unit, onUnrecoverable: OnUnrecoverable) {
         _uiState.update { it.copy(makingRequest = true) }
 
         if (userDao.findUserByUsertagServer(usertag, server.serverId) != null) {
             _uiState.update {
                 it.copy(
                     makingRequest = false,
-                    errorState = RegistrationError.USER_EXISTS
+                    errorState = RegistrationUiError.USER_EXISTS
                 )
             }
             return;
@@ -108,28 +110,34 @@ class RegistrationViewModel @Inject constructor(
         ))
         userDao.setCurrentUser(newUserId)
 
-        val result = coursealAuthService.register(usertag, username, password)
-
-        // Remove the user if couldn't register
-        if (result != RegistrationResult.SUCCESS) {
-            userDao.deleteUserById(newUserId)
-            _uiState.update { it.copy(makingRequest = false) }
-        }
-
-        when (result) {
-            RegistrationResult.SUCCESS -> {
-                coursealAuthService.login(usertag, password)
-                _uiState.update { it.copy(makingRequest = false) }
-                onRegister()
+        when (val result = coursealAuthService.register(usertag, username, password)) {
+            is ApiResult.UnrecoverableError -> {
+                userDao.deleteUserById(newUserId)
+                onUnrecoverable(result.unrecoverableType)
             }
-            RegistrationResult.USER_EXISTS -> _uiState.update { it.copy(errorState = RegistrationError.USER_EXISTS) }
-            RegistrationResult.UNKNOWN -> _uiState.update { it.copy(errorState = RegistrationError.UNKNOWN) }
+
+            is ApiResult.Error -> {
+                userDao.deleteUserById(newUserId)
+                when (result.errorValue) {
+                    RegistrationApiError.USER_EXISTS -> _uiState.update { it.copy(errorState = RegistrationUiError.USER_EXISTS) }
+                    RegistrationApiError.UNKNOWN -> _uiState.update { it.copy(errorState = RegistrationUiError.UNKNOWN) }
+                }
+            }
+
+            is ApiResult.Success -> {
+                when (val loginResult = coursealAuthService.login(usertag, password)) {
+                    is ApiResult.UnrecoverableError -> onUnrecoverable(loginResult.unrecoverableType)
+                    is ApiResult.Error -> onUnrecoverable(UnrecoverableErrorType.OTHER_UNRECOVERABLE)
+                    is ApiResult.Success -> onRegister()
+                }
+            }
         }
 
+        _uiState.update { it.copy(makingRequest = false) }
     }
 
     fun hideError() {
-        _uiState.update { it.copy(errorState = RegistrationError.NONE) }
+        _uiState.update { it.copy(errorState = RegistrationUiError.NONE) }
     }
 
 }

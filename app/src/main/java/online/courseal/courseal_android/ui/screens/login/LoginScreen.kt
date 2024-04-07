@@ -15,10 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,33 +23,34 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
+import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.LoginError
+import online.courseal.courseal_android.ui.viewmodels.LoginUiError
 import online.courseal.courseal_android.ui.viewmodels.LoginViewModel
-import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
     onLogin: () -> Unit,
+    onUnrecoverable: OnUnrecoverable,
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
     val loginUiState by loginViewModel.uiState.collectAsState()
 
     ErrorDialog(
-        isVisible = loginUiState.errorState != LoginError.NONE,
-        hideDialog = { loginViewModel.hideError() },
+        isVisible = loginUiState.errorState != LoginUiError.NONE,
+        hideDialog = loginViewModel::hideError,
         title = when (loginUiState.errorState) {
-            LoginError.INCORRECT -> stringResource(R.string.incorrect_usertag_or_password)
-            LoginError.UNKNOWN -> stringResource(R.string.unknown_error)
-            LoginError.NONE -> ""
+            LoginUiError.INCORRECT -> stringResource(R.string.incorrect_usertag_or_password)
+            LoginUiError.UNKNOWN -> stringResource(R.string.unknown_error)
+            LoginUiError.NONE -> ""
         }
     )
 
@@ -132,7 +130,7 @@ fun LoginScreen(
                     enabled = !loginUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
-                            loginViewModel.login(onLogin)
+                            loginViewModel.login(onLogin, onUnrecoverable)
                         }
                     }
                 )

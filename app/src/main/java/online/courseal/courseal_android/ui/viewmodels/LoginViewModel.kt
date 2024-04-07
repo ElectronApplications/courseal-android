@@ -12,16 +12,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.CoursealAuthService
-import online.courseal.courseal_android.data.api.LoginResult
+import online.courseal.courseal_android.data.api.LoginApiError
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
 import online.courseal.courseal_android.data.database.entities.Server
 import online.courseal.courseal_android.data.database.entities.User
+import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.logic.validateUsertag
 import javax.inject.Inject
 
-enum class LoginError {
+enum class LoginUiError {
     INCORRECT,
     UNKNOWN,
     NONE
@@ -34,7 +36,7 @@ data class LoginUiState(
     val usertag: String = "",
     val password: String = "",
     val makingRequest: Boolean = false,
-    val errorState: LoginError = LoginError.NONE
+    val errorState: LoginUiError = LoginUiError.NONE
 )
 
 @HiltViewModel
@@ -77,7 +79,7 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(password = password) }
     }
 
-    suspend fun login(onLogin: () -> Unit) {
+    suspend fun login(onLogin: () -> Unit, onUnrecoverable: OnUnrecoverable) {
         _uiState.update { it.copy(makingRequest = true) }
 
         val newUserId = userDao.insertUser(User(
@@ -86,25 +88,30 @@ class LoginViewModel @Inject constructor(
         ))
         userDao.setCurrentUser(newUserId)
 
-        val result = coursealAuthService.login(usertag, password)
+        when (val result = coursealAuthService.login(usertag, password)) {
+            is ApiResult.UnrecoverableError -> {
+                userDao.deleteUserById(newUserId)
+                onUnrecoverable(result.unrecoverableType)
+            }
 
-        // Remove the user if couldn't log in
-        if (result != LoginResult.SUCCESS) {
-            userDao.deleteUserById(newUserId)
+            is ApiResult.Error -> {
+                userDao.deleteUserById(newUserId)
+                when (result.errorValue) {
+                    LoginApiError.INCORRECT -> _uiState.update { it.copy(errorState = LoginUiError.INCORRECT) }
+                    LoginApiError.UNKNOWN -> _uiState.update { it.copy(errorState = LoginUiError.UNKNOWN) }
+                }
+            }
+
+            is ApiResult.Success -> {
+                onLogin()
+            }
         }
 
         _uiState.update { it.copy(makingRequest = false) }
-
-        when (result) {
-            LoginResult.SUCCESS -> onLogin()
-            LoginResult.INCORRECT -> _uiState.update { it.copy(errorState = LoginError.INCORRECT) }
-            LoginResult.UNKNOWN -> _uiState.update { it.copy(errorState = LoginError.UNKNOWN) }
-        }
-
     }
 
     fun hideError() {
-        _uiState.update { it.copy(errorState = LoginError.NONE) }
+        _uiState.update { it.copy(errorState = LoginUiError.NONE) }
     }
 
 }

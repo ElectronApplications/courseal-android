@@ -8,34 +8,34 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 import online.courseal.courseal_android.data.database.dao.ServerDao
+import java.io.IOException
+import java.nio.channels.UnresolvedAddressException
 import javax.inject.Inject
 
 @Serializable
-data class RegistrationRequest(
+data class RegistrationApiRequest(
     val usertag: String,
     val username: String,
     val password: String
 )
 
 @Serializable
-data class LoginRequest(
+data class LoginApiRequest(
     val usertag: String,
     val password: String
 )
 
-enum class RegistrationResult {
-    SUCCESS,
+enum class RegistrationApiError {
     USER_EXISTS,
     UNKNOWN
 }
 
-enum class LoginResult {
-    SUCCESS,
+enum class LoginApiError {
     INCORRECT,
     UNKNOWN
 }
 
-enum class RefreshResult {
+enum class RefreshApiError {
     SUCCESS,
     INVALID,
     UNKNOWN
@@ -50,55 +50,67 @@ class CoursealAuthService @Inject constructor(
     private suspend fun refreshUrl(): String = "${serverDao.getCurrentServerUrl()}/api/auth/refresh"
     private suspend fun logoutUrl(): String = "${serverDao.getCurrentServerUrl()}/api/auth/logout"
 
-    suspend fun register(usertag: String, username: String, password: String): RegistrationResult {
+    suspend fun register(usertag: String, username: String, password: String): ApiResult<Unit, RegistrationApiError> {
         return try {
             val response = httpClient.post(registrationUrl()) {
                 contentType(ContentType.Application.Json)
-                setBody(RegistrationRequest(
-                    usertag = usertag,
-                    username = username,
-                    password = password
-                ))
+                setBody(
+                    RegistrationApiRequest(
+                        usertag = usertag,
+                        username = username,
+                        password = password
+                    )
+                )
             }
 
             if (response.status.value == 200)
-                RegistrationResult.SUCCESS
+                ApiResult.Success(Unit)
             else
-                RegistrationResult.USER_EXISTS
-        } catch(_: Exception) {
-            RegistrationResult.UNKNOWN
+                ApiResult.Error(RegistrationApiError.USER_EXISTS)
+        }
+        catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException ->ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
+                else ->ApiResult.Error(RegistrationApiError.UNKNOWN)
+            }
         }
     }
 
-    suspend fun login(usertag: String, password: String): LoginResult {
+    suspend fun login(usertag: String, password: String): ApiResult<Unit, LoginApiError> {
         return try {
             val response = httpClient.post(loginUrl()) {
                 contentType(ContentType.Application.Json)
-                setBody(LoginRequest(
+                setBody(LoginApiRequest(
                     usertag = usertag,
                     password = password
                 ))
             }
 
             if (response.status.value == 200 || response.status.value == 204)
-                LoginResult.SUCCESS
+                ApiResult.Success(Unit)
             else
-                LoginResult.INCORRECT
-        } catch(_: Exception) {
-            LoginResult.UNKNOWN
+                ApiResult.Error(LoginApiError.INCORRECT)
+        } catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
+                else -> ApiResult.Error(LoginApiError.UNKNOWN)
+            }
         }
     }
 
-    suspend fun refresh(): RefreshResult {
+    suspend fun refresh(): ApiResult<Unit, RefreshApiError> {
         return try {
             val response = httpClient.get(refreshUrl())
 
             if (response.status.value == 200 || response.status.value == 204)
-                RefreshResult.SUCCESS
+                ApiResult.Success(Unit)
             else
-                RefreshResult.INVALID
-        } catch(_: Exception) {
-            RefreshResult.UNKNOWN
+                ApiResult.Error(RefreshApiError.INVALID)
+        } catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
+                else -> ApiResult.Error(RefreshApiError.UNKNOWN)
+            }
         }
     }
 
