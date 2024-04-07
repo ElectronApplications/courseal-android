@@ -106,7 +106,8 @@ class RegistrationViewModel @Inject constructor(
 
         val newUserId = userDao.insertUser(User(
             usertag = usertag,
-            serverId = server.serverId
+            serverId = server.serverId,
+            loggedIn = false
         ))
         userDao.setCurrentUser(newUserId)
 
@@ -128,7 +129,10 @@ class RegistrationViewModel @Inject constructor(
                 when (val loginResult = coursealAuthService.login(usertag, password)) {
                     is ApiResult.UnrecoverableError -> onUnrecoverable(loginResult.unrecoverableType)
                     is ApiResult.Error -> onUnrecoverable(UnrecoverableErrorType.OTHER_UNRECOVERABLE)
-                    is ApiResult.Success -> onRegister()
+                    is ApiResult.Success -> {
+                        userDao.setUserLoggedIn(newUserId, true)
+                        onRegister()
+                    }
                 }
             }
         }

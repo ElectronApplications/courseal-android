@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import io.ktor.http.Url
 import online.courseal.courseal_android.data.database.entities.User
 import online.courseal.courseal_android.data.database.entities.UserCookie
@@ -15,8 +16,14 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User): Long
 
+    @Update
+    suspend fun updateUser(user: User)
+
     @Delete
     suspend fun deleteUser(user: User)
+
+    @Query("UPDATE user SET logged_in = :loggedIn WHERE user_id = :userId")
+    suspend fun setUserLoggedIn(userId: Long, loggedIn: Boolean)
 
     @Query("DELETE FROM user WHERE user_id = :userId")
     suspend fun deleteUserById(userId: Long)

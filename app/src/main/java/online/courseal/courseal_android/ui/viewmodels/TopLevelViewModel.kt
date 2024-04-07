@@ -49,7 +49,7 @@ class TopLevelViewModel @Inject constructor(
         val currentUser = userDao.getCurrentUser()
         val users = userDao.getAllUsers()
 
-        startDestination = if (currentUser != null) {
+        startDestination = if (currentUser != null && currentUser.loggedIn) {
             Routes.MAIN
         } else if (users.isNotEmpty()) {
             Routes.ACCOUNTS
