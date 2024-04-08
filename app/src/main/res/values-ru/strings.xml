@@ -27,4 +27,8 @@
     <string name="session_expired">Ваша сессия истекла</string>
     <string name="server_not_responding">Сервер не отвечает</string>
     <string name="unexpected_error">Произошла непредвиденная ошибка</string>
+    <string name="choose_account">Выберите аккаунт</string>
+    <string name="logged_in">Авторизован</string>
+    <string name="not_logged_in">Не авторизован</string>
+    <string name="delete_account">Удалить аккаунт</string>
 </resources>

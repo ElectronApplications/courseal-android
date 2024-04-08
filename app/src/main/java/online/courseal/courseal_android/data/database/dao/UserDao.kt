@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import io.ktor.http.Url
 import online.courseal.courseal_android.data.database.entities.User
 import online.courseal.courseal_android.data.database.entities.UserCookie
 

@@ -101,7 +101,7 @@ class RegistrationViewModel @Inject constructor(
                     errorState = RegistrationUiError.USER_EXISTS
                 )
             }
-            return;
+            return
         }
 
         val newUserId = userDao.insertUser(User(
