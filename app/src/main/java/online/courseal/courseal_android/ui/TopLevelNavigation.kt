@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.ui.components.ErrorDialog
+import online.courseal.courseal_android.ui.screens.accounts.AccountsScreen
 import online.courseal.courseal_android.ui.screens.login.LoginScreen
 import online.courseal.courseal_android.ui.screens.main.MainScreen
 import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
@@ -79,28 +80,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
     AnimatedVisibility(
         visible = topLevelUiState.isLoading || topLevelUiState.errorState != TopLevelUiError.NONE
     ) {
-        Column(
-            verticalArrangement = Arrangement.Center
-        ) {
-            Image(
-                modifier = Modifier
-                    .width(150.dp)
-                    .align(alignment = Alignment.CenterHorizontally),
-                contentScale = ContentScale.FillWidth,
-                painter = painterResource(id = R.drawable.courseal_not_rounded),
-                contentDescription = stringResource(R.string.logo)
-            )
-
-            Text(
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth(),
-                text = stringResource(R.string.app_name),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.onSecondary
-            )
-        }
+        TopLevelLoadingScreen()
     }
 
     AnimatedVisibility(
@@ -142,7 +122,12 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 arguments = listOf(
                     navArgument("serverId") { type = NavType.LongType }
                 ),
-                exitTransition = { fadeOut() }
+                exitTransition = {
+                    if (this.targetState.destination.route == Routes.MAIN.path)
+                        fadeOut()
+                    else
+                        null
+                }
             ) {
                 RegistrationScreen(
                     onGoBack = {
@@ -166,7 +151,12 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 arguments = listOf(
                     navArgument("serverId") { type = NavType.LongType }
                 ),
-                exitTransition = { fadeOut() }
+                exitTransition = {
+                    if (this.targetState.destination.route == Routes.MAIN.path)
+                        fadeOut()
+                    else
+                        null
+                }
             ) {
                 LoginScreen(
                     onGoBack = {
@@ -181,6 +171,17 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 )
             }
 
+            /* Accounts Screen */
+            composable(
+                route = Routes.ACCOUNTS.path,
+                enterTransition = { fadeIn() }
+            ) {
+                AccountsScreen(
+                    onUnrecoverable = onUnrecoverable
+                )
+            }
+
+            /* Main Screen */
             composable(
                 route = Routes.MAIN.path,
                 enterTransition = { fadeIn() }
@@ -190,5 +191,31 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TopLevelLoadingScreen() {
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = Modifier
+                .width(150.dp)
+                .align(alignment = Alignment.CenterHorizontally),
+            contentScale = ContentScale.FillWidth,
+            painter = painterResource(id = R.drawable.courseal_not_rounded),
+            contentDescription = stringResource(R.string.logo)
+        )
+
+        Text(
+            modifier = Modifier
+                .padding(top = 10.dp)
+                .fillMaxWidth(),
+            text = stringResource(R.string.app_name),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onSecondary
+        )
     }
 }

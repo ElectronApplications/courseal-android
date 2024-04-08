@@ -27,4 +27,8 @@
     <string name="session_expired">Your session has expired</string>
     <string name="server_not_responding">The server is not responding</string>
     <string name="unexpected_error">There has been an unexpected error</string>
+    <string name="choose_account">Choose an account</string>
+    <string name="logged_in">Logged in</string>
+    <string name="not_logged_in">Not logged in</string>
+    <string name="delete_account">Delete account</string>
 </resources>
