@@ -34,10 +34,10 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.screens.accounts.AccountsScreen
-import online.courseal.courseal_android.ui.screens.login.LoginScreen
+import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
+import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.main.MainScreen
-import online.courseal.courseal_android.ui.screens.registration.RegistrationScreen
+import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.TopLevelUiError
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
@@ -123,7 +123,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                     navArgument("serverId") { type = NavType.LongType }
                 ),
                 exitTransition = {
-                    if (this.targetState.destination.route == Routes.MAIN.path)
+                    if (this.targetState.destination.route?.startsWith(Routes.MAIN.path) == true)
                         fadeOut()
                     else
                         null
@@ -152,7 +152,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                     navArgument("serverId") { type = NavType.LongType }
                 ),
                 exitTransition = {
-                    if (this.targetState.destination.route == Routes.MAIN.path)
+                    if (this.targetState.destination.route?.startsWith(Routes.MAIN.path) == true)
                         fadeOut()
                     else
                         null
@@ -174,9 +174,27 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
             /* Accounts Screen */
             composable(
                 route = Routes.ACCOUNTS.path,
-                enterTransition = { fadeIn() }
+                exitTransition = {
+                    if (this.targetState.destination.route?.startsWith(Routes.LOGIN.path) == true)
+                        null
+                    else
+                        fadeOut()
+                }
             ) {
                 AccountsScreen(
+                    onLoggedIn = {
+                        navController.navigate(Routes.MAIN.path) {
+                            popUpTo(0)
+                        }
+                    },
+                    onNotLoggedIn = { serverId: Long ->
+                        navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
+                    },
+                    onAllAccountsDeleted = {
+                        navController.navigate(Routes.WELCOME.path) {
+                            popUpTo(0)
+                        }
+                    },
                     onUnrecoverable = onUnrecoverable
                 )
             }

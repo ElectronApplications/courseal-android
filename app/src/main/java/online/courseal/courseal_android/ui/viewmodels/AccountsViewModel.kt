@@ -31,16 +31,37 @@ class AccountsViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AccountsUiState())
     val uiState: StateFlow<AccountsUiState> = _uiState.asStateFlow()
 
+    private var accounts = mutableListOf<AccountUi>()
+
     init {
         viewModelScope.launch {
             val users = userDao.getAllUsers()
-            val accounts = users.map { AccountUi(
+            accounts.addAll(users.map { AccountUi(
                 userId = it.userId,
                 usertag = it.usertag,
                 loggedIn = it.loggedIn,
                 serverUrl = serverDao.findServerById(it.serverId)!!.serverUrl
-            ) }
+            ) })
             _uiState.update { it.copy(accounts = accounts) }
         }
+    }
+
+    suspend fun chooseAccount(userId: Long, onLoggedIn: () -> Unit, onNotLoggedIn: (serverId: Long) -> Unit) {
+        val account = accounts.first { it.userId == userId }
+        userDao.setCurrentUser(account.userId)
+        if (account.loggedIn) {
+            onLoggedIn()
+        } else {
+            onNotLoggedIn(serverDao.getCurrentServer()!!.serverId)
+        }
+    }
+
+    suspend fun removeAccount(userId: Long, onAllAccountsDeleted: () -> Unit) {
+        userDao.deleteUserById(userId)
+        accounts.removeIf { it.userId == userId }
+        _uiState.update { it.copy(accounts = accounts) }
+
+        if (accounts.isEmpty())
+            onAllAccountsDeleted()
     }
 }
