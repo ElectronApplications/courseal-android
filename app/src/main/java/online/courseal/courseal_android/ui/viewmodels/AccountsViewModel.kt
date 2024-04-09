@@ -42,7 +42,7 @@ class AccountsViewModel @Inject constructor(
                 loggedIn = it.loggedIn,
                 serverUrl = serverDao.findServerById(it.serverId)!!.serverUrl
             ) })
-            _uiState.update { it.copy(accounts = accounts) }
+            _uiState.update { it.copy(accounts = accounts.toList()) }
         }
     }
 
@@ -59,9 +59,14 @@ class AccountsViewModel @Inject constructor(
     suspend fun removeAccount(userId: Long, onAllAccountsDeleted: () -> Unit) {
         userDao.deleteUserById(userId)
         accounts.removeIf { it.userId == userId }
-        _uiState.update { it.copy(accounts = accounts) }
+        _uiState.update { it.copy(accounts = accounts.toList()) }
 
         if (accounts.isEmpty())
             onAllAccountsDeleted()
+    }
+
+    suspend fun addNewAccount(onAddNewAccount: () -> Unit) {
+        userDao.setCurrentUser(null)
+        onAddNewAccount()
     }
 }

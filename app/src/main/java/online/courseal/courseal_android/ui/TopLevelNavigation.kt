@@ -195,6 +195,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                             popUpTo(0)
                         }
                     },
+                    onAddNewAccount = {
+                        navController.navigate(Routes.WELCOME.path)
+                    },
                     onUnrecoverable = onUnrecoverable
                 )
             }
@@ -205,6 +208,11 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 enterTransition = { fadeIn() }
             ) {
                 MainScreen(
+                    onViewAccounts = {
+                        navController.navigate(Routes.ACCOUNTS.path) {
+                            popUpTo(0)
+                        }
+                    },
                     onUnrecoverable = onUnrecoverable
                 )
             }
