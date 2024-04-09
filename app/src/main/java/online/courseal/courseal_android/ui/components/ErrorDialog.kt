@@ -10,15 +10,15 @@ import online.courseal.courseal_android.R
 @Composable
 fun ErrorDialog(
     isVisible: Boolean,
-    setVisible: (value: Boolean) -> Unit,
+    hideDialog: () -> Unit,
     title: String,
     text: String? = null
 ) {
     if (isVisible) {
         AlertDialog(
-            onDismissRequest = { setVisible(false) },
+            onDismissRequest = { hideDialog() },
             confirmButton = {
-                TextButton(onClick = { setVisible(false) }) {
+                TextButton(onClick = { hideDialog() }) {
                     Text(stringResource(R.string.confirm))
                 }
             },

@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
@@ -43,22 +43,21 @@ import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.AuthViewModel
+import online.courseal.courseal_android.ui.viewmodels.WelcomeViewModel
 
 @Composable
 fun WelcomeScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    onStart: (serverRegistrationEnabled: Boolean) -> Unit,
-    authViewModel: AuthViewModel = hiltViewModel()
+    onStart: (serverRegistrationEnabled: Boolean, serverId: Long) -> Unit,
+    welcomeViewModel: WelcomeViewModel = hiltViewModel()
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val authUiState by authViewModel.uiState.collectAsState()
+    val welcomeUiState by welcomeViewModel.uiState.collectAsState()
 
-    var connectionFailedVisible by remember { mutableStateOf(false) }
     ErrorDialog(
-        isVisible = connectionFailedVisible,
-        setVisible = { connectionFailedVisible = it },
+        isVisible = welcomeUiState.showError,
+        hideDialog = welcomeViewModel::hideDialog,
         title = stringResource(R.string.connection_failed),
         text = stringResource(R.string.connection_failed_detailed)
     )
@@ -88,7 +87,6 @@ fun WelcomeScreen(
 
             var advancedVisible by rememberSaveable { mutableStateOf(false) }
             val arrowRotation by animateFloatAsState(targetValue = if (advancedVisible) -180.0f else 0.0f, label = "arrow rotation")
-            var userUrl by rememberSaveable { mutableStateOf("") }
 
             Row(
                 modifier = Modifier
@@ -106,13 +104,12 @@ fun WelcomeScreen(
                         text = stringResource(R.string.connecting_to) + " "
                     )
 
-                    val displayUrl = if (authUiState.serverUrl.length > 24) {
-                        authUiState.serverUrl.take(21) + "..."
-                    } else authUiState.serverUrl
-
                     Text(
-                        text = displayUrl,
-                        textDecoration = TextDecoration.Underline
+                        modifier = Modifier.weight(1f, fill = false),
+                        text = welcomeUiState.serverUrl,
+                        textDecoration = TextDecoration.Underline,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                     )
                     Icon(
                         modifier = Modifier
@@ -130,32 +127,24 @@ fun WelcomeScreen(
                 visible = advancedVisible
             ) {
                 CoursealTextField(
-                    value = userUrl,
+                    value = welcomeUiState.providedUrl,
                     onValueChange = {
-                        userUrl = it
-                        authViewModel.updateUrl(userUrl)
+                        welcomeViewModel.updateUrl(it)
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                     label = stringResource(R.string.server_url))
             }
 
-            var makingRequest by rememberSaveable { mutableStateOf(false) }
             CoursealPrimaryButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
                     .fillMaxWidth(0.85f),
-                text = if (!makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
-                enabled = !makingRequest,
+                text = if (!welcomeUiState.makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
+                enabled = !welcomeUiState.makingRequest,
                 onClick = {
-                    makingRequest = true
                     coroutineScope.launch {
-                        if (authViewModel.getServerInfo()) {
-                            onStart(authUiState.serverRegistrationEnabled)
-                        } else {
-                            connectionFailedVisible = true
-                        }
-                        makingRequest = false
+                        welcomeViewModel.start(onStart)
                     }
                 }
             )
