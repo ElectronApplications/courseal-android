@@ -1,6 +1,9 @@
 package online.courseal.courseal_android.ui
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -25,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -58,6 +62,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
     val topLevelUiState by topLevelViewModel.uiState.collectAsState()
     val navController = rememberNavController()
 
+    /* Unrecoverable errors */
     val onUnrecoverable: OnUnrecoverable = {
         coroutineScope.launch {
             navController.navigate(topLevelViewModel.processUnrecoverable(it).path) {
@@ -77,12 +82,36 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
         }
     )
 
+    /* Defining transitions */
+    val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
+        val transitionFade = targetState.arguments?.getBoolean("transitionFade")
+        if (transitionFade == true)
+            fadeIn()
+        else
+            null
+    }
+
+    val exitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition? = {
+        val transitionFade = targetState.arguments?.getBoolean("transitionFade")
+        if (transitionFade == true)
+            fadeOut()
+        else
+            null
+    }
+
+    val transitionFadeArgument = navArgument("transitionFade") {
+        type = NavType.BoolType
+        defaultValue = false
+    }
+
+    /* Loading screen */
     AnimatedVisibility(
         visible = topLevelUiState.isLoading || topLevelUiState.errorState != TopLevelUiError.NONE
     ) {
         TopLevelLoadingScreen()
     }
 
+    /* Navigation */
     AnimatedVisibility(
         visible = !topLevelUiState.isLoading && topLevelUiState.errorState == TopLevelUiError.NONE
     ) {
@@ -96,10 +125,13 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
         ) {
             /* Welcome Screen */
             composable(
-                route = "${Routes.WELCOME.path}?canGoBack={canGoBack}",
+                route = "${Routes.WELCOME.path}?canGoBack={canGoBack}&transitionFade={transitionFade}",
                 arguments = listOf(
-                    navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false }
-                )
+                    navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
+                    transitionFadeArgument
+                ),
+                enterTransition = enterTransition,
+                exitTransition = exitTransition
             ) { backStackEntry ->
                 val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
 
@@ -118,16 +150,13 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
 
             /* Registration Screen */
             composable(
-                route = "${Routes.REGISTER.path}?serverId={serverId}",
+                route = "${Routes.REGISTER.path}?serverId={serverId}&transitionFade={transitionFade}",
                 arguments = listOf(
-                    navArgument("serverId") { type = NavType.LongType }
+                    navArgument("serverId") { type = NavType.LongType },
+                    transitionFadeArgument
                 ),
-                exitTransition = {
-                    if (this.targetState.destination.route?.startsWith(Routes.MAIN.path) == true)
-                        fadeOut()
-                    else
-                        null
-                }
+                enterTransition = enterTransition,
+                exitTransition = exitTransition
             ) {
                 RegistrationScreen(
                     onGoBack = {
@@ -137,7 +166,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                         navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
                     },
                     onRegister = {
-                        navController.navigate(Routes.MAIN.path) {
+                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
                             popUpTo(0)
                         }
                     },
@@ -147,23 +176,20 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
 
             /* Login Screen */
             composable(
-                route = "${Routes.LOGIN.path}?serverId={serverId}",
+                route = "${Routes.LOGIN.path}?serverId={serverId}&transitionFade={transitionFade}",
                 arguments = listOf(
-                    navArgument("serverId") { type = NavType.LongType }
+                    navArgument("serverId") { type = NavType.LongType },
+                    transitionFadeArgument
                 ),
-                exitTransition = {
-                    if (this.targetState.destination.route?.startsWith(Routes.MAIN.path) == true)
-                        fadeOut()
-                    else
-                        null
-                }
+                enterTransition = enterTransition,
+                exitTransition = exitTransition
             ) {
                 LoginScreen(
                     onGoBack = {
                         navController.popBackStack()
                     },
                     onLogin = {
-                        navController.navigate(Routes.MAIN.path) {
+                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
                             popUpTo(0)
                         }
                     },
@@ -173,17 +199,14 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
 
             /* Accounts Screen */
             composable(
-                route = Routes.ACCOUNTS.path,
-                exitTransition = {
-                    if (this.targetState.destination.route?.startsWith(Routes.LOGIN.path) == true)
-                        null
-                    else
-                        fadeOut()
-                }
+                route = "${Routes.ACCOUNTS.path}?transitionFade={transitionFade}",
+                arguments = listOf(transitionFadeArgument),
+                enterTransition = enterTransition,
+                exitTransition = exitTransition
             ) {
                 AccountsScreen(
                     onLoggedIn = {
-                        navController.navigate(Routes.MAIN.path) {
+                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
                             popUpTo(0)
                         }
                     },
@@ -191,12 +214,12 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                         navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
                     },
                     onAllAccountsDeleted = {
-                        navController.navigate(Routes.WELCOME.path) {
+                        navController.navigate("${Routes.WELCOME.path}?transitionFade=true") {
                             popUpTo(0)
                         }
                     },
                     onAddNewAccount = {
-                        navController.navigate(Routes.WELCOME.path)
+                        navController.navigate("${Routes.WELCOME.path}?canGoBack=true")
                     },
                     onUnrecoverable = onUnrecoverable
                 )
@@ -204,12 +227,14 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
 
             /* Main Screen */
             composable(
-                route = Routes.MAIN.path,
-                enterTransition = { fadeIn() }
+                route = "${Routes.MAIN.path}?transitionFade={transitionFade}",
+                arguments = listOf(transitionFadeArgument),
+                enterTransition = enterTransition,
+                exitTransition = exitTransition
             ) {
                 MainScreen(
                     onViewAccounts = {
-                        navController.navigate(Routes.ACCOUNTS.path) {
+                        navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
                             popUpTo(0)
                         }
                     },
