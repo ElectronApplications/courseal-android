@@ -32,6 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
+import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
 
 @Composable
@@ -40,6 +42,7 @@ fun AccountsScreen(
     onLoggedIn: () -> Unit,
     onNotLoggedIn: (serverId: Long) -> Unit,
     onAllAccountsDeleted: () -> Unit,
+    onAddNewAccount: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     accountsViewModel: AccountsViewModel = hiltViewModel()
 ) {
@@ -66,9 +69,13 @@ fun AccountsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                       coroutineScope.launch {
-                           accountsViewModel.chooseAccount(account.userId, onLoggedIn, onNotLoggedIn)
-                       }
+                        coroutineScope.launch {
+                            accountsViewModel.chooseAccount(
+                                account.userId,
+                                onLoggedIn,
+                                onNotLoggedIn
+                            )
+                        }
                     },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -96,7 +103,10 @@ fun AccountsScreen(
                         .scale(1.25f)
                         .clickable {
                             coroutineScope.launch {
-                                accountsViewModel.removeAccount(account.userId, onAllAccountsDeleted)
+                                accountsViewModel.removeAccount(
+                                    account.userId,
+                                    onAllAccountsDeleted
+                                )
                             }
                         },
                     imageVector = Icons.Filled.Clear,
@@ -104,6 +114,24 @@ fun AccountsScreen(
                 )
             }
             HorizontalDivider()
+        }
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .adaptiveContainerWidth()
+        ) {
+            /* TODO: CoursealSecondaryButton here */
+            CoursealPrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 15.dp)
+                    .fillMaxWidth(0.75f),
+                text = stringResource(R.string.add_account),
+                onClick = {
+                    coroutineScope.launch { accountsViewModel.addNewAccount(onAddNewAccount) }
+                }
+            )
         }
     }
 }
