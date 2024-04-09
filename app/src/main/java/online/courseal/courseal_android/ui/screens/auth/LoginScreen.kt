@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.screens.login
+package online.courseal.courseal_android.ui.screens.auth
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -105,6 +105,7 @@ fun LoginScreen(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                         .fillMaxWidth(),
+                    enabled = loginUiState.usertagEditable,
                     value = loginUiState.usertag,
                     onValueChange = { loginViewModel.updateUsertag(it) },
                     label = stringResource(R.string.usertag),

@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.screens.registration
+package online.courseal.courseal_android.ui.screens.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column

@@ -33,6 +33,7 @@ data class LoginUiState(
     val serverUrl: String = "",
     val serverName: String = "",
     val serverDescription: String = "",
+    val usertagEditable: Boolean = true,
     val usertag: String = "",
     val password: String = "",
     val makingRequest: Boolean = false,
@@ -53,12 +54,21 @@ class LoginViewModel @Inject constructor(
     private var password by mutableStateOf("")
 
     private lateinit var server: Server
+    private var currentUserId: Long? = null
 
     init {
         viewModelScope.launch {
+            val currentUser = userDao.getCurrentUser()
+            if (currentUser != null) {
+                usertag = currentUser.usertag
+                currentUserId = currentUser.userId
+            }
+
             server = serverDao.findServerById(state["serverId"]!!)!!
             _uiState.update {
                 it.copy(
+                    usertag = currentUser?.usertag ?: "",
+                    usertagEditable = currentUser == null,
                     serverUrl = server.serverUrl,
                     serverName = server.serverName,
                     serverDescription = server.serverDescription
@@ -68,7 +78,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun updateUsertag(usertag: String) {
-        if (usertag.isEmpty() || validateUsertag(usertag)) {
+        if (currentUserId == null && (usertag.isEmpty() || validateUsertag(usertag))) {
             this.usertag = usertag
             _uiState.update { it.copy(usertag = usertag) }
         }
@@ -82,21 +92,23 @@ class LoginViewModel @Inject constructor(
     suspend fun login(onLogin: () -> Unit, onUnrecoverable: OnUnrecoverable) {
         _uiState.update { it.copy(makingRequest = true) }
 
-        val newUserId = userDao.insertUser(User(
+        val userId = currentUserId ?: userDao.insertUser(User(
             usertag = usertag,
             serverId = server.serverId,
             loggedIn = false
         ))
-        userDao.setCurrentUser(newUserId)
+        userDao.setCurrentUser(userId)
 
         when (val result = coursealAuthService.login(usertag, password)) {
             is ApiResult.UnrecoverableError -> {
-                userDao.deleteUserById(newUserId)
+                if (currentUserId == null)
+                    userDao.deleteUserById(userId)
                 onUnrecoverable(result.unrecoverableType)
             }
 
             is ApiResult.Error -> {
-                userDao.deleteUserById(newUserId)
+                if (currentUserId == null)
+                    userDao.deleteUserById(userId)
                 when (result.errorValue) {
                     LoginApiError.INCORRECT -> _uiState.update { it.copy(errorState = LoginUiError.INCORRECT) }
                     LoginApiError.UNKNOWN -> _uiState.update { it.copy(errorState = LoginUiError.UNKNOWN) }
@@ -104,7 +116,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is ApiResult.Success -> {
-                userDao.setUserLoggedIn(newUserId, true)
+                userDao.setUserLoggedIn(userId, true)
                 onLogin()
             }
         }

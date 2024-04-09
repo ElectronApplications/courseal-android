@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.screens.accounts
+package online.courseal.courseal_android.ui.screens.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +25,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
@@ -37,6 +37,9 @@ import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
 @Composable
 fun AccountsScreen(
     modifier: Modifier = Modifier,
+    onLoggedIn: () -> Unit,
+    onNotLoggedIn: (serverId: Long) -> Unit,
+    onAllAccountsDeleted: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     accountsViewModel: AccountsViewModel = hiltViewModel()
 ) {
@@ -62,7 +65,11 @@ fun AccountsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { /* TODO */ },
+                    .clickable {
+                       coroutineScope.launch {
+                           accountsViewModel.chooseAccount(account.userId, onLoggedIn, onNotLoggedIn)
+                       }
+                    },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -87,7 +94,11 @@ fun AccountsScreen(
                     modifier = Modifier
                         .padding(top = 10.dp, bottom = 10.dp, end = 20.dp)
                         .scale(1.25f)
-                        .clickable { /* TODO */ },
+                        .clickable {
+                            coroutineScope.launch {
+                                accountsViewModel.removeAccount(account.userId, onAllAccountsDeleted)
+                            }
+                        },
                     imageVector = Icons.Filled.Clear,
                     contentDescription = stringResource(R.string.delete_account),
                 )
