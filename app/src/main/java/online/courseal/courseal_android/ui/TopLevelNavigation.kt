@@ -99,6 +99,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
             null
     }
 
+    val popEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = { slideInHorizontally(initialOffsetX = { -it }) }
+    val popExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+
     val transitionFadeArgument = navArgument("transitionFade") {
         type = NavType.BoolType
         defaultValue = false
@@ -120,8 +123,8 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
             startDestination = topLevelUiState.startDestination.path,
             enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
             exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+            popEnterTransition = popEnterTransition,
+            popExitTransition = popExitTransition
         ) {
             /* Welcome Screen */
             composable(
@@ -131,7 +134,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                     transitionFadeArgument
                 ),
                 enterTransition = enterTransition,
-                exitTransition = exitTransition
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
             ) { backStackEntry ->
                 val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
 
@@ -156,7 +161,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                     transitionFadeArgument
                 ),
                 enterTransition = enterTransition,
-                exitTransition = exitTransition
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
             ) {
                 RegistrationScreen(
                     onGoBack = {
@@ -182,7 +189,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                     transitionFadeArgument
                 ),
                 enterTransition = enterTransition,
-                exitTransition = exitTransition
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
             ) {
                 LoginScreen(
                     onGoBack = {
@@ -202,7 +211,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 route = "${Routes.ACCOUNTS.path}?transitionFade={transitionFade}",
                 arguments = listOf(transitionFadeArgument),
                 enterTransition = enterTransition,
-                exitTransition = exitTransition
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
             ) {
                 AccountsScreen(
                     onLoggedIn = {
@@ -230,7 +241,9 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                 route = "${Routes.MAIN.path}?transitionFade={transitionFade}",
                 arguments = listOf(transitionFadeArgument),
                 enterTransition = enterTransition,
-                exitTransition = exitTransition
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
             ) {
                 MainScreen(
                     onViewAccounts = {
