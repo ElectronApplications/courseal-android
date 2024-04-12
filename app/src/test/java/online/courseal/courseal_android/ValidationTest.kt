@@ -1,6 +1,6 @@
 package online.courseal.courseal_android
 
-import online.courseal.courseal_android.ui.logic.validateUsertag
+import online.courseal.courseal_android.ui.util.validateUsertag
 import org.junit.Assert
 import org.junit.Test
 

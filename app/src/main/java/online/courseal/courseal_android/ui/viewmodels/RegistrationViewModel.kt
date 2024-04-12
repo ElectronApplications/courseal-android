@@ -21,7 +21,7 @@ import online.courseal.courseal_android.data.database.dao.UserDao
 import online.courseal.courseal_android.data.database.entities.Server
 import online.courseal.courseal_android.data.database.entities.User
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.logic.validateUsertag
+import online.courseal.courseal_android.ui.util.validateUsertag
 import javax.inject.Inject
 
 enum class RegistrationUiError {

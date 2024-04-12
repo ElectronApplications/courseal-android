@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
 
@@ -121,8 +122,7 @@ fun AccountsScreen(
                 .align(Alignment.CenterHorizontally)
                 .adaptiveContainerWidth()
         ) {
-            /* TODO: CoursealSecondaryButton here */
-            CoursealPrimaryButton(
+            CoursealSecondaryButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
