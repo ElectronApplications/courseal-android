@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -83,6 +84,7 @@ fun AccountsScreen(
             ) {
                 Column(
                     modifier = Modifier
+                        .weight(1f, fill = false)
                         .padding(top = 10.dp, bottom = 10.dp, start = 20.dp)
                 ) {
                     Text(
@@ -133,5 +135,7 @@ fun AccountsScreen(
                 }
             )
         }
+        
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }
 }

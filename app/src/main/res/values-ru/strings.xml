@@ -32,4 +32,5 @@
     <string name="not_logged_in">Не авторизован</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="add_account">Добавить новый аккаунт</string>
+    <string name="empty_fields">Поля ввода не могут быть пустыми</string>
 </resources>

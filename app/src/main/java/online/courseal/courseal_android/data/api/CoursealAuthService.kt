@@ -1,6 +1,7 @@
 package online.courseal.courseal_android.data.api
 
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -28,6 +29,7 @@ data class LoginApiRequest(
 
 enum class RegistrationApiError {
     USER_EXISTS,
+    INCORRECT_USERTAG,
     UNKNOWN
 }
 
@@ -76,13 +78,16 @@ class CoursealAuthService @Inject constructor(
 
             if (response.status.value == 200)
                 ApiResult.Success(Unit)
-            else
-                ApiResult.Error(RegistrationApiError.USER_EXISTS)
+            else when(response.body<ErrorResponse>().error) {
+                ErrorResponseType.USER_EXISTS -> ApiResult.Error(RegistrationApiError.USER_EXISTS)
+                ErrorResponseType.INCORRECT_USERTAG -> ApiResult.Error(RegistrationApiError.INCORRECT_USERTAG)
+                else -> ApiResult.Error(RegistrationApiError.UNKNOWN)
+            }
         }
         catch(e: Exception) {
             when (e) {
-                is IOException, is UnresolvedAddressException ->ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
-                else ->ApiResult.Error(RegistrationApiError.UNKNOWN)
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
+                else -> ApiResult.Error(RegistrationApiError.UNKNOWN)
             }
         }
     }
@@ -99,8 +104,10 @@ class CoursealAuthService @Inject constructor(
 
             if (response.status.value == 200 || response.status.value == 204)
                 ApiResult.Success(Unit)
-            else
-                ApiResult.Error(LoginApiError.INCORRECT)
+            else when(response.body<ErrorResponse>().error) {
+                ErrorResponseType.INCORRECT_LOGIN -> ApiResult.Error(LoginApiError.INCORRECT)
+                else -> ApiResult.Error(LoginApiError.UNKNOWN)
+            }
         } catch(e: Exception) {
             when (e) {
                 is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
@@ -115,8 +122,11 @@ class CoursealAuthService @Inject constructor(
 
             if (response.status.value == 200 || response.status.value == 204)
                 ApiResult.Success(Unit)
-            else
-                ApiResult.Error(RefreshApiError.INVALID)
+            else when(response.body<ErrorResponse>().error) {
+                ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(RefreshApiError.INVALID)
+                else -> ApiResult.Error(RefreshApiError.UNKNOWN)
+            }
+
         } catch(e: Exception) {
             when (e) {
                 is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)
@@ -131,8 +141,11 @@ class CoursealAuthService @Inject constructor(
 
             if (response.status.value == 200 || response.status.value == 204)
                 ApiResult.Success(Unit)
-            else
-                ApiResult.Error(LogoutApiError.REFRESH_INVALID)
+            else when(response.body<ErrorResponse>().error) {
+                ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(LogoutApiError.REFRESH_INVALID)
+                else -> ApiResult.Error(LogoutApiError.UNKNOWN)
+            }
+
         } catch(e: Exception) {
             when (e) {
                 is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(UnrecoverableErrorType.SERVER_NOT_RESPONDING)

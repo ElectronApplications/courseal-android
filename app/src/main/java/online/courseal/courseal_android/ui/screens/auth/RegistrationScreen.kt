@@ -32,6 +32,7 @@ import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
+import online.courseal.courseal_android.ui.viewmodels.LoginUiError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationUiError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationViewModel
 
@@ -51,6 +52,8 @@ fun RegistrationScreen(
         isVisible = registrationUiState.errorState != RegistrationUiError.NONE,
         hideDialog = registrationViewModel::hideError,
         title = when (registrationUiState.errorState) {
+            RegistrationUiError.EMPTY_FIELDS -> stringResource(R.string.empty_fields)
+            RegistrationUiError.INCORRECT -> stringResource(R.string.incorrect_usertag_or_password)
             RegistrationUiError.USER_EXISTS -> stringResource(R.string.user_exists)
             RegistrationUiError.UNKNOWN -> stringResource(R.string.unknown_error)
             RegistrationUiError.NONE -> ""
