@@ -25,6 +25,8 @@ import online.courseal.courseal_android.ui.util.validateUsertag
 import javax.inject.Inject
 
 enum class RegistrationUiError {
+    EMPTY_FIELDS,
+    INCORRECT,
     USER_EXISTS,
     UNKNOWN,
     NONE
@@ -92,6 +94,11 @@ class RegistrationViewModel @Inject constructor(
     }
 
     suspend fun register(onRegister: () -> Unit, onUnrecoverable: OnUnrecoverable) {
+        if (usertag.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            _uiState.update { it.copy(errorState = RegistrationUiError.EMPTY_FIELDS) }
+            return
+        }
+
         _uiState.update { it.copy(makingRequest = true) }
 
         if (userDao.findUserByUsertagServer(usertag, server.serverId) != null) {
@@ -120,6 +127,7 @@ class RegistrationViewModel @Inject constructor(
             is ApiResult.Error -> {
                 userDao.deleteUserById(newUserId)
                 when (result.errorValue) {
+                    RegistrationApiError.INCORRECT_USERTAG -> _uiState.update { it.copy(errorState = RegistrationUiError.INCORRECT) }
                     RegistrationApiError.USER_EXISTS -> _uiState.update { it.copy(errorState = RegistrationUiError.USER_EXISTS) }
                     RegistrationApiError.UNKNOWN -> _uiState.update { it.copy(errorState = RegistrationUiError.UNKNOWN) }
                 }
