@@ -17,4 +17,5 @@ enum class ErrorResponseType {
     @SerialName("user-exists") USER_EXISTS,
     @SerialName("incorrect-usertag") INCORRECT_USERTAG,
     @SerialName("incorrect-login") INCORRECT_LOGIN,
+    @SerialName("user-not-found") USER_NOT_FOUND,
 }
