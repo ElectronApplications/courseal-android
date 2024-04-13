@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
-import online.courseal.courseal_android.data.api.CoursealAuthService
-import online.courseal.courseal_android.data.api.RegistrationApiError
+import online.courseal.courseal_android.data.api.auth.CoursealAuthService
+import online.courseal.courseal_android.data.api.usermanagement.CoursealUserManagementService
+import online.courseal.courseal_android.data.api.usermanagement.RegistrationApiError
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
@@ -48,7 +49,8 @@ class RegistrationViewModel @Inject constructor(
     private val state: SavedStateHandle,
     private val userDao: UserDao,
     private val serverDao: ServerDao,
-    private val coursealAuthService: CoursealAuthService
+    private val coursealAuthService: CoursealAuthService,
+    private val coursealUserManagementService: CoursealUserManagementService
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()
@@ -118,7 +120,7 @@ class RegistrationViewModel @Inject constructor(
         ))
         userDao.setCurrentUser(newUserId)
 
-        when (val result = coursealAuthService.register(usertag, username, password)) {
+        when (val result = coursealUserManagementService.register(usertag, username, password)) {
             is ApiResult.UnrecoverableError -> {
                 userDao.deleteUserById(newUserId)
                 onUnrecoverable(result.unrecoverableType)
