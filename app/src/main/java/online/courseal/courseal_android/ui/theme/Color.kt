@@ -9,7 +9,7 @@ val LightColorScheme = lightColorScheme(
     secondary = Color(0xFFD3EAFF),
     tertiary = Color(0xFFEEF0F7),
     background = Color(0xFFFFFBFE),
-    surface = Color(0xFFF2F2F2),
+    surface = Color(0xFFDFDFDF),
 
     onPrimary = Color.White,
     onSecondary = Color(0xFF0969DA),

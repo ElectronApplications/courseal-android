@@ -33,4 +33,7 @@
     <string name="delete_account">Delete account</string>
     <string name="add_account">Add new account</string>
     <string name="empty_fields">Input fields cannot be empty</string>
+    <string name="course">Course</string>
+    <string name="profile">Profile</string>
+    <string name="editor">Editor</string>
 </resources>
