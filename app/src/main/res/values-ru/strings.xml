@@ -33,4 +33,7 @@
     <string name="delete_account">Удалить аккаунт</string>
     <string name="add_account">Добавить новый аккаунт</string>
     <string name="empty_fields">Поля ввода не могут быть пустыми</string>
+    <string name="course">Курс</string>
+    <string name="profile">Профиль</string>
+    <string name="editor">Редактор</string>
 </resources>
