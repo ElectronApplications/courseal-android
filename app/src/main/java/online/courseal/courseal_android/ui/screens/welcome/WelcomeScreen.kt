@@ -40,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
@@ -135,13 +136,13 @@ fun WelcomeScreen(
                     label = stringResource(R.string.server_url))
             }
 
-            CoursealPrimaryButton(
+            CoursealPrimaryLoadingButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)
                     .fillMaxWidth(0.85f),
-                text = if (!welcomeUiState.makingRequest) stringResource(R.string.get_started) else stringResource(R.string.loading),
-                enabled = !welcomeUiState.makingRequest,
+                text = stringResource(R.string.get_started),
+                loading = welcomeUiState.makingRequest,
                 onClick = {
                     coroutineScope.launch {
                         welcomeViewModel.start(onStart)

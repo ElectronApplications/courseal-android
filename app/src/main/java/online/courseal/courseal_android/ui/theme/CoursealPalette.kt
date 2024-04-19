@@ -12,6 +12,10 @@ data class CoursealPalette(
     val link: Color = Color.Unspecified,
     val warning: Color = Color.Unspecified,
     val onWarning: Color = Color.Unspecified,
+    val success: Color = Color.Unspecified,
+    val onSuccess: Color = Color.Unspecified,
+    val error: Color = Color.Unspecified,
+    val onError: Color = Color.Unspecified,
     val activityPalette: List<Color> = emptyList() // Must be 4 items
 )
 

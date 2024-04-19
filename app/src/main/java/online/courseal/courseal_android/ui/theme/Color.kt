@@ -9,7 +9,7 @@ val LightColorScheme = lightColorScheme(
     secondary = Color(0xFFD3EAFF),
     tertiary = Color(0xFFEEF0F7),
     background = Color(0xFFFFFBFE),
-    surface = Color(0xFFDFDFDF),
+    surface = Color(0xFFF2F2F2),
 
     onPrimary = Color.White,
     onSecondary = Color(0xFF0969DA),
@@ -25,8 +25,12 @@ val LightCoursealPalette = CoursealPalette(
     link = Color(0xFF0066FF),
     warning = Color(0xFFFAECC6),
     onWarning = Color(0xFF3B4045),
+    success = Color(0xFF58CC02),
+    onSuccess = Color.White,
+    error = Color(0xFFFF4B4B),
+    onError = Color.White,
     activityPalette = listOf(
-        Color.LightGray,
+        Color(0xFFF2F2F2),
         Color(0xFF99E5A5),
         Color(0xFF30A14E),
         Color(0xFF216E39)
@@ -55,10 +59,14 @@ val DarkCoursealPalette = CoursealPalette(
     link = Color(0xFF59A6FF),
     warning = Color(0xFFFAECC6),
     onWarning = Color(0xFF3B4045),
+    success = Color(0xFF58CC02),
+    onSuccess = Color.White,
+    error = Color(0xFFFF4B4B),
+    onError = Color.White,
     activityPalette = listOf(
-        Color.LightGray,
-        Color(0xFF99E5A5),
-        Color(0xFF30A14E),
-        Color(0xFF216E39)
+        Color(0xFF3A3A3A),
+        Color(0xFF006D32),
+        Color(0xFF31AB4B),
+        Color(0xFF39D353)
     )
 )
