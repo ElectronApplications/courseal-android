@@ -27,6 +27,7 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
@@ -148,13 +149,13 @@ fun RegistrationScreen(
                     text = stringResource(R.string.already_have_account)
                 )
 
-                CoursealPrimaryButton(
+                CoursealPrimaryLoadingButton(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = if (!registrationUiState.makingRequest) stringResource(R.string.register) else stringResource(R.string.loading),
-                    enabled = !registrationUiState.makingRequest,
+                    text = stringResource(R.string.register),
+                    loading = registrationUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
                             registrationViewModel.register(onRegister, onUnrecoverable)
