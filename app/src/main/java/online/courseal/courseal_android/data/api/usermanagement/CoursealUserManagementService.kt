@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -26,6 +27,8 @@ class CoursealUserManagementService @Inject constructor(
 ) {
     private suspend fun userManagementUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user-management"
     private suspend fun registrationUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user-management/register"
+    private suspend fun usernameUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user-management/username"
+    private suspend fun passwordUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user-management/password"
 
     suspend fun userInfo(): ApiResult<UserManagementApiResponse, UserManagementApiError> = authService.authWrap {
         return@authWrap try {
@@ -42,7 +45,6 @@ class CoursealUserManagementService @Inject constructor(
                 is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
                     UnrecoverableErrorType.SERVER_NOT_RESPONDING
                 )
-
                 else -> ApiResult.Error(AuthWrapperError.InnerError(UserManagementApiError.UNKNOWN))
             }
         }
@@ -75,6 +77,60 @@ class CoursealUserManagementService @Inject constructor(
                     UnrecoverableErrorType.SERVER_NOT_RESPONDING
                 )
                 else -> ApiResult.Error(RegistrationApiError.UNKNOWN)
+            }
+        }
+    }
+
+    suspend fun changeUsername(newUsername: String): ApiResult<Unit, ChangeNameApiError> = authService.authWrap {
+        return@authWrap try {
+            val response = httpClient.put(usernameUrl()) {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    ChangeNameApiRequest(username = newUsername)
+                )
+            }
+
+            if (response.status.value in 200..299)
+                ApiResult.Success(Unit)
+            else when (response.body<ErrorResponse>().error) {
+                ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
+                else -> ApiResult.Error(AuthWrapperError.InnerError(ChangeNameApiError.BAD_REQUEST))
+            }
+        } catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
+                    UnrecoverableErrorType.SERVER_NOT_RESPONDING
+                )
+                else -> ApiResult.Error(AuthWrapperError.InnerError(ChangeNameApiError.UNKNOWN))
+            }
+        }
+    }
+
+    suspend fun changePassword(oldPassword: String, newPassword: String): ApiResult<Unit, ChangePasswordApiError> = authService.authWrap {
+        return@authWrap try {
+            val response = httpClient.put(passwordUrl()) {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    ChangePasswordApiRequest(
+                        oldPassword = oldPassword,
+                        newPassword = newPassword
+                    )
+                )
+            }
+
+            if (response.status.value in 200..299)
+                ApiResult.Success(Unit)
+            else when (response.body<ErrorResponse>().error) {
+                ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
+                ErrorResponseType.INCORRECT_PASSWORD -> ApiResult.Error(AuthWrapperError.InnerError(ChangePasswordApiError.PASSWORD_INVALID))
+                else -> ApiResult.Error(AuthWrapperError.InnerError(ChangePasswordApiError.BAD_REQUEST))
+            }
+        } catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
+                    UnrecoverableErrorType.SERVER_NOT_RESPONDING
+                )
+                else -> ApiResult.Error(AuthWrapperError.InnerError(ChangePasswordApiError.UNKNOWN))
             }
         }
     }
