@@ -11,7 +11,8 @@ data class CoursealPalette(
     val onWelcomeGradient: Color = Color.Unspecified,
     val link: Color = Color.Unspecified,
     val warning: Color = Color.Unspecified,
-    val onWarning: Color = Color.Unspecified
+    val onWarning: Color = Color.Unspecified,
+    val activityPalette: List<Color> = emptyList() // Must be 4 items
 )
 
 val LocalCoursealPalette = staticCompositionLocalOf { CoursealPalette() }

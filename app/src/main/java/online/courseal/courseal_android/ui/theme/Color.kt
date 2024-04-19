@@ -24,7 +24,13 @@ val LightCoursealPalette = CoursealPalette(
     onWelcomeGradient = Color(0xFF35415F),
     link = Color(0xFF0066FF),
     warning = Color(0xFFFAECC6),
-    onWarning = Color(0xFF3B4045)
+    onWarning = Color(0xFF3B4045),
+    activityPalette = listOf(
+        Color.LightGray,
+        Color(0xFF99E5A5),
+        Color(0xFF30A14E),
+        Color(0xFF216E39)
+    )
 )
 
 
@@ -48,5 +54,11 @@ val DarkCoursealPalette = CoursealPalette(
     onWelcomeGradient = Color.White,
     link = Color(0xFF59A6FF),
     warning = Color(0xFFFAECC6),
-    onWarning = Color(0xFF3B4045)
+    onWarning = Color(0xFF3B4045),
+    activityPalette = listOf(
+        Color.LightGray,
+        Color(0xFF99E5A5),
+        Color(0xFF30A14E),
+        Color(0xFF216E39)
+    )
 )
