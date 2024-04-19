@@ -7,7 +7,7 @@
     <string name="connecting_to">Вход на</string>
     <string name="connection_failed">Соединение провалилось</string>
     <string name="server_url">URL сервера</string>
-    <string name="loading">Загрузка...</string>
+    <string name="loading">Загрузка…</string>
     <string name="confirm">Подтвердить</string>
     <string name="connection_failed_detailed">Сервер не отвечает. Проверьте правильность URL</string>
     <string name="create_account">Создание аккаунта</string>
@@ -36,4 +36,6 @@
     <string name="course">Курс</string>
     <string name="profile">Профиль</string>
     <string name="editor">Редактор</string>
+    <string name="view_accounts">Посмотреть аккаунты</string>
+    <string name="user_not_found">Пользователь не найден</string>
 </resources>

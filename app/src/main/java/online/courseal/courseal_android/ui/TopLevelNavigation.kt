@@ -42,6 +42,7 @@ import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
 import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.main.MainScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
+import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.TopLevelUiError
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
@@ -51,7 +52,8 @@ enum class Routes(val path: String) {
     REGISTER("register"),
     LOGIN("login"),
     ACCOUNTS("accounts"),
-    MAIN("main")
+    MAIN("main"),
+    PROFILE("profile")
 }
 
 typealias OnUnrecoverable = (unrecoverableType: UnrecoverableErrorType) -> Unit
@@ -251,6 +253,29 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
                             popUpTo(0)
                         }
                     },
+                    onUnrecoverable = onUnrecoverable
+                )
+            }
+
+            /* Profile Screen */
+            composable(
+                route = "${Routes.PROFILE.path}?canGoBack={canGoBack}&usertag={usertag}&transitionFade={transitionFade}",
+                arguments = listOf(
+                    navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
+                    navArgument("usertag") { type = NavType.StringType },
+                    transitionFadeArgument
+                ),
+                enterTransition = enterTransition,
+                exitTransition = exitTransition,
+                popEnterTransition = popEnterTransition,
+                popExitTransition = popExitTransition
+            ) { backStackEntry ->
+                val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
+
+                ProfileScreen(
+                    onGoBack = if (canGoBack == true) {{
+                        navController.popBackStack()
+                    }} else null,
                     onUnrecoverable = onUnrecoverable
                 )
             }

@@ -17,7 +17,29 @@ class CoursealUserService @Inject constructor(
     private val httpClient: HttpClient,
     private val serverDao: ServerDao
 ) {
-    private suspend fun userUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user/"
+    private suspend fun userUrl(): String = "${serverDao.getCurrentServerUrl()}/api/user"
+
+    suspend fun usersList(search: String): ApiResult<List<UserListData>, Unit> {
+        return try {
+            val response = httpClient.get(userUrl()) {
+                url {
+                    parameters.append("search", search)
+                }
+            }
+
+            if (response.status.value in 200..299)
+                ApiResult.Success(response.body())
+            else
+                ApiResult.Error(Unit)
+        } catch(e: Exception) {
+            when (e) {
+                is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
+                    UnrecoverableErrorType.SERVER_NOT_RESPONDING
+                )
+                else -> ApiResult.Error(Unit)
+            }
+        }
+    }
 
     suspend fun userInfo(usertag: String): ApiResult<UserApiResponse, UserApiError> {
         return try {
@@ -27,7 +49,7 @@ class CoursealUserService @Inject constructor(
                 }
             }
 
-            if (response.status.value == 200)
+            if (response.status.value in 200..299)
                 ApiResult.Success(response.body())
             else when(response.body<ErrorResponse>().error) {
                 ErrorResponseType.USER_NOT_FOUND -> ApiResult.Error(UserApiError.USER_NOT_FOUND)
@@ -51,7 +73,7 @@ class CoursealUserService @Inject constructor(
                 }
             }
 
-            if (response.status.value == 200)
+            if (response.status.value in 200..299)
                 ApiResult.Success(response.body())
             else when(response.body<ErrorResponse>().error) {
                 ErrorResponseType.USER_NOT_FOUND -> ApiResult.Error(UserActivityApiError.USER_NOT_FOUND)

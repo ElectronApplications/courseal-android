@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
@@ -15,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,7 +28,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 
 enum class NavItems(val icon: ImageVector, val titleId: Int) {
     COURSE(Icons.Filled.Home, R.string.course),
@@ -77,7 +74,7 @@ fun MainScreen(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                CourseScreen(
+                CourseMainScreen(
                     onUnrecoverable = onUnrecoverable
                 )
             }
@@ -87,7 +84,7 @@ fun MainScreen(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                ProfileScreen(
+                ProfileMainScreen(
                     onViewAccounts = onViewAccounts,
                     onUnrecoverable = onUnrecoverable
                 )
@@ -98,7 +95,7 @@ fun MainScreen(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                EditorScreen(
+                EditorMainScreen(
                     onUnrecoverable = onUnrecoverable
                 )
             }
