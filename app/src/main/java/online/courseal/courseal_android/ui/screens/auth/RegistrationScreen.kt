@@ -161,8 +161,6 @@ fun RegistrationScreen(
                         }
                     }
                 )
-
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }

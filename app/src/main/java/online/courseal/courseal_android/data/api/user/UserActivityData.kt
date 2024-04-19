@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.data.api.user
 
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,7 +11,7 @@ data class UserActivityApiResponse(
 
 @Serializable
 data class UserActivityDay(
-    val day: String,
+    val day: LocalDate,
     val xp: Int
 )
 

@@ -135,8 +135,6 @@ fun LoginScreen(
                         }
                     }
                 )
-
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }

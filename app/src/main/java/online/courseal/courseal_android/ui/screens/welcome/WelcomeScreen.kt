@@ -148,8 +148,6 @@ fun WelcomeScreen(
                     }
                 }
             )
-
-            Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
         }
     }
 }

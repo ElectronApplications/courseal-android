@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -33,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
@@ -73,9 +71,9 @@ fun AccountsScreen(
                     .clickable {
                         coroutineScope.launch {
                             accountsViewModel.chooseAccount(
-                                account.userId,
-                                onLoggedIn,
-                                onNotLoggedIn
+                                userId = account.userId,
+                                onLoggedIn = onLoggedIn,
+                                onNotLoggedIn = onNotLoggedIn
                             )
                         }
                     },
@@ -135,7 +133,5 @@ fun AccountsScreen(
                 }
             )
         }
-        
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }
 }

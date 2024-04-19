@@ -38,4 +38,9 @@
     <string name="editor">Editor</string>
     <string name="view_accounts">View accounts</string>
     <string name="user_not_found">User not found</string>
+    <string name="monday_short">Mon</string>
+    <string name="thursday_short">Thu</string>
+    <string name="sunday_short">Sun</string>
+    <string name="joined">Joined</string>
+    <string name="xp_earned">Total XP earned:</string>
 </resources>
