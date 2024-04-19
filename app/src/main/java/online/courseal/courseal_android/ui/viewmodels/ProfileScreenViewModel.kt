@@ -50,12 +50,14 @@ class ProfileScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val usertagParam: String? = state["usertag"]
+            val currentUser = userDao.getCurrentUser()
 
-            val (usertag, isCurrent) = if (usertagParam == null) {
-                val currentUser = userDao.getCurrentUser()
-                Pair(currentUser?.usertag ?: "", currentUser != null)
-            } else Pair(usertagParam, false)
+            val (isCurrent, usertag) = if (state.get<Boolean>("isCurrent")!!) {
+                Pair(true, currentUser!!.usertag)
+            } else {
+                val usertag: String = state["usertag"]!!
+                Pair(currentUser?.usertag == usertag, usertag)
+            }
 
             var errorState = ProfileUiError.NONE
             var errorUnrecoverableState: UnrecoverableErrorType? = null
