@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.ui
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
@@ -7,14 +8,27 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -22,15 +36,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
@@ -38,22 +55,19 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
-import online.courseal.courseal_android.ui.screens.auth.LoginScreen
-import online.courseal.courseal_android.ui.screens.main.MainScreen
-import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
-import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
-import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.TopLevelUiError
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
 
-enum class Routes(val path: String) {
-    WELCOME("welcome"),
-    REGISTER("register"),
-    LOGIN("login"),
-    ACCOUNTS("accounts"),
-    MAIN("main"),
-    PROFILE("profile")
+enum class NavItems(val icon: ImageVector, val titleId: Int) {
+    COURSE(Icons.Filled.Home, R.string.course),
+    PROFILE(Icons.Filled.Face, R.string.profile),
+    EDITOR(Icons.Filled.Build, R.string.editor)
+}
+
+enum class NavBarOptions(val value: Int) {
+    NONE(0),
+    HIDE(1),
+    SHOW(2)
 }
 
 typealias OnUnrecoverable = (unrecoverableType: UnrecoverableErrorType) -> Unit
@@ -84,7 +98,79 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
         }
     )
 
-    /* Defining transitions */
+    /* Loading screen */
+    AnimatedVisibility(
+        visible = topLevelUiState.isLoading || topLevelUiState.errorState != TopLevelUiError.NONE
+    ) {
+        TopLevelLoadingScreen()
+    }
+
+    /* Navigation */
+    AnimatedVisibility(
+        visible = !topLevelUiState.isLoading && topLevelUiState.errorState == TopLevelUiError.NONE
+    ) {
+        Scaffold(
+            bottomBar = {
+                AnimatedVisibility(
+                    visible = topLevelUiState.navBarShown,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it })
+                ) {
+                    HorizontalDivider()
+                    NavigationBar(
+                        containerColor = Color.Transparent
+                    ) {
+                        NavItems.entries.forEach { entry ->
+                            NavigationBarItem(
+                                selected = topLevelUiState.selectedNavEntry == entry,
+                                onClick = { topLevelViewModel.selectNavBarEntry(entry, navController) },
+                                icon = { Icon(imageVector = entry.icon, contentDescription = stringResource(entry.titleId)) },
+                                label = { Text(stringResource(entry.titleId)) },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = MaterialTheme.colorScheme.surface
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        ) { paddingValues ->
+            AppNavigation(
+                modifier = Modifier
+                    .padding(bottom = paddingValues.calculateBottomPadding())
+                    .fillMaxSize(),
+                navController = navController,
+                topLevelViewModel = topLevelViewModel,
+                onUnrecoverable = onUnrecoverable
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.coursealComposable(
+    route: String,
+    arguments: List<NamedNavArgument> = emptyList(),
+    transitionFadeDefault: Boolean = false,
+    navBarDefault: NavBarOptions = NavBarOptions.NONE,
+    setNavBarShown: (Boolean) -> Unit,
+    content: @Composable (AnimatedContentScope.(NavBackStackEntry) -> Unit)
+) {
+    val newRoute = if (route.contains('?'))
+        "${route}&transitionFade={transitionFade}&navBar={navBar}"
+    else
+        "${route}?transitionFade={transitionFade}&navBar={navBar}"
+
+    val newArguments = arguments.toMutableList().apply { addAll(listOf(
+        navArgument("transitionFade") {
+            type = NavType.BoolType
+            defaultValue = transitionFadeDefault
+        },
+        navArgument("navBar") {
+            type = NavType.IntType
+            defaultValue = navBarDefault.value
+        }
+    )) }
+
     val enterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition? = {
         val transitionFade = targetState.arguments?.getBoolean("transitionFade")
         if (transitionFade == true)
@@ -101,185 +187,20 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
             null
     }
 
-    val popEnterTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = { slideInHorizontally(initialOffsetX = { -it }) }
-    val popExitTransition: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
-
-    val transitionFadeArgument = navArgument("transitionFade") {
-        type = NavType.BoolType
-        defaultValue = false
-    }
-
-    /* Loading screen */
-    AnimatedVisibility(
-        visible = topLevelUiState.isLoading || topLevelUiState.errorState != TopLevelUiError.NONE
-    ) {
-        TopLevelLoadingScreen()
-    }
-
-    /* Navigation */
-    AnimatedVisibility(
-        visible = !topLevelUiState.isLoading && topLevelUiState.errorState == TopLevelUiError.NONE
-    ) {
-        NavHost(
-            navController = navController,
-            startDestination = topLevelUiState.startDestination.path,
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
-            popEnterTransition = popEnterTransition,
-            popExitTransition = popExitTransition
-        ) {
-            /* Welcome Screen */
-            composable(
-                route = "${Routes.WELCOME.path}?canGoBack={canGoBack}&transitionFade={transitionFade}",
-                arguments = listOf(
-                    navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
-                    transitionFadeArgument
-                ),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) { backStackEntry ->
-                val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
-
-                WelcomeScreen(
-                    onGoBack = if (canGoBack == true) {{
-                        navController.popBackStack()
-                    }} else null,
-                    onStart = { serverRegistrationEnabled: Boolean, serverId: Long ->
-                        if (serverRegistrationEnabled)
-                            navController.navigate("${Routes.REGISTER.path}?serverId=$serverId")
-                        else
-                            navController.navigate("${Routes.LOGIN.path}?serverId=$serverId")
-                    }
-                )
-            }
-
-            /* Registration Screen */
-            composable(
-                route = "${Routes.REGISTER.path}?serverId={serverId}&transitionFade={transitionFade}",
-                arguments = listOf(
-                    navArgument("serverId") { type = NavType.LongType },
-                    transitionFadeArgument
-                ),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) {
-                RegistrationScreen(
-                    onGoBack = {
-                        navController.popBackStack()
-                    },
-                    onStartLogin = { serverId: Long ->
-                        navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
-                    },
-                    onRegister = {
-                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
-                            popUpTo(0)
-                        }
-                    },
-                    onUnrecoverable = onUnrecoverable
-                )
-            }
-
-            /* Login Screen */
-            composable(
-                route = "${Routes.LOGIN.path}?serverId={serverId}&transitionFade={transitionFade}",
-                arguments = listOf(
-                    navArgument("serverId") { type = NavType.LongType },
-                    transitionFadeArgument
-                ),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) {
-                LoginScreen(
-                    onGoBack = {
-                        navController.popBackStack()
-                    },
-                    onLogin = {
-                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
-                            popUpTo(0)
-                        }
-                    },
-                    onUnrecoverable = onUnrecoverable
-                )
-            }
-
-            /* Accounts Screen */
-            composable(
-                route = "${Routes.ACCOUNTS.path}?transitionFade={transitionFade}",
-                arguments = listOf(transitionFadeArgument),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) {
-                AccountsScreen(
-                    onLoggedIn = {
-                        navController.navigate("${Routes.MAIN.path}?transitionFade=true") {
-                            popUpTo(0)
-                        }
-                    },
-                    onNotLoggedIn = { serverId: Long ->
-                        navController.navigate("${Routes.LOGIN.path}?serverId=${serverId}")
-                    },
-                    onAllAccountsDeleted = {
-                        navController.navigate("${Routes.WELCOME.path}?transitionFade=true") {
-                            popUpTo(0)
-                        }
-                    },
-                    onAddNewAccount = {
-                        navController.navigate("${Routes.WELCOME.path}?canGoBack=true")
-                    },
-                    onUnrecoverable = onUnrecoverable
-                )
-            }
-
-            /* Main Screen */
-            composable(
-                route = "${Routes.MAIN.path}?transitionFade={transitionFade}",
-                arguments = listOf(transitionFadeArgument),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) {
-                MainScreen(
-                    onViewAccounts = {
-                        navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
-                            popUpTo(0)
-                        }
-                    },
-                    onUnrecoverable = onUnrecoverable
-                )
-            }
-
-            /* Profile Screen */
-            composable(
-                route = "${Routes.PROFILE.path}?canGoBack={canGoBack}&usertag={usertag}&transitionFade={transitionFade}",
-                arguments = listOf(
-                    navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
-                    navArgument("usertag") { type = NavType.StringType },
-                    transitionFadeArgument
-                ),
-                enterTransition = enterTransition,
-                exitTransition = exitTransition,
-                popEnterTransition = popEnterTransition,
-                popExitTransition = popExitTransition
-            ) { backStackEntry ->
-                val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
-
-                ProfileScreen(
-                    onGoBack = if (canGoBack == true) {{
-                        navController.popBackStack()
-                    }} else null,
-                    onUnrecoverable = onUnrecoverable
-                )
-            }
+    composable(
+        route = newRoute,
+        arguments = newArguments,
+        enterTransition = enterTransition,
+        exitTransition = exitTransition,
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
+    ) { backStackEntry ->
+        val navBar = backStackEntry.arguments?.getInt("navBar")
+        if (navBar != null && navBar != NavBarOptions.NONE.value) {
+            setNavBarShown(navBar == NavBarOptions.SHOW.value)
         }
+
+        content(this, backStackEntry)
     }
 }
 

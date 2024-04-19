@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.database.dao.UserDao
+import online.courseal.courseal_android.ui.NavBarOptions
+import online.courseal.courseal_android.ui.NavItems
 import online.courseal.courseal_android.ui.Routes
 import javax.inject.Inject
 
@@ -26,6 +29,8 @@ enum class TopLevelUiError {
 data class TopLevelUiState(
     val isLoading: Boolean = true,
     val startDestination: Routes = Routes.WELCOME,
+    val navBarShown: Boolean = false,
+    val selectedNavEntry: NavItems? = null,
     val errorState: TopLevelUiError = TopLevelUiError.NONE
 )
 
@@ -50,7 +55,7 @@ class TopLevelViewModel @Inject constructor(
         val users = userDao.getAllUsers()
 
         startDestination = if (currentUser != null && currentUser.loggedIn) {
-            Routes.MAIN
+            Routes.COURSE
         } else if (users.isNotEmpty()) {
             Routes.ACCOUNTS
         } else {
@@ -90,6 +95,44 @@ class TopLevelViewModel @Inject constructor(
 
     fun hideError() {
         _uiState.update { it.copy(errorState = TopLevelUiError.NONE) }
+    }
+
+    fun selectNavBarEntry(entry: NavItems, navController: NavHostController) {
+        _uiState.update { it.copy(selectedNavEntry = entry) }
+        when (entry) {
+            NavItems.COURSE -> navController.navigate(Routes.COURSE.path) {
+                popUpTo(0) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            NavItems.PROFILE -> navController.navigate("${Routes.PROFILE.path}?isCurrent=true&navBar=${NavBarOptions.SHOW.value}&transitionFade=true") {
+                popUpTo(0) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            NavItems.EDITOR -> navController.navigate(Routes.EDITOR.path) {
+                popUpTo(0) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    }
+
+    fun setNavBarShown(shown: Boolean) {
+        if (shown != uiState.value.navBarShown) {
+            _uiState.update {
+                it.copy(
+                    navBarShown = shown,
+                    selectedNavEntry = if (shown) NavItems.COURSE else null
+                )
+            }
+        }
     }
 
 }
