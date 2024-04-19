@@ -7,7 +7,7 @@
     <string name="connecting_to">Connecting to</string>
     <string name="connection_failed">Connection failed</string>
     <string name="server_url">Server instance\'s URL</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="confirm">Confirm</string>
     <string name="connection_failed_detailed">The server is not responding. Check if the URL is corrrect</string>
     <string name="create_account">Create an account</string>
@@ -22,7 +22,7 @@
     <string name="login">Login</string>
     <string name="warning">Warning</string>
     <string name="user_exists">Such user already exists</string>
-    <string name="unknown_error">An unknown error has occured</string>
+    <string name="unknown_error">An unknown error has occurred</string>
     <string name="incorrect_usertag_or_password">Incorrect usertag or password</string>
     <string name="session_expired">Your session has expired</string>
     <string name="server_not_responding">The server is not responding</string>
@@ -36,4 +36,6 @@
     <string name="course">Course</string>
     <string name="profile">Profile</string>
     <string name="editor">Editor</string>
+    <string name="view_accounts">View accounts</string>
+    <string name="user_not_found">User not found</string>
 </resources>

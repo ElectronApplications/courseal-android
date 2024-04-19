@@ -8,7 +8,9 @@ data class UserApiResponse(
     val usertag: String,
     val username: String,
     @SerialName("date_created") val dateCreated: String,
+    @SerialName("can_create_courses") val canCreateCourses: Boolean,
     val xp: Int,
+    @SerialName("profile_image_url") val profileImageUrl: String,
     val courses: List<UserCourseInformation>,
     @SerialName("courses_maintainer") val coursesMaintainer: List<UserCourseMaintainer>
 )

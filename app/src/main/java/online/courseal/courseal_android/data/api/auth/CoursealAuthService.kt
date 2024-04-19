@@ -31,15 +31,13 @@ class CoursealAuthService @Inject constructor(
         return try {
             val response = httpClient.post(loginUrl()) {
                 contentType(ContentType.Application.Json)
-                setBody(
-                    LoginApiRequest(
+                setBody(LoginApiRequest(
                     usertag = usertag,
                     password = password
-                )
-                )
+                ))
             }
 
-            if (response.status.value == 200 || response.status.value == 204)
+            if (response.status.value in 200..299)
                 ApiResult.Success(Unit)
             else when(response.body<ErrorResponse>().error) {
                 ErrorResponseType.INCORRECT_LOGIN -> ApiResult.Error(LoginApiError.INCORRECT)
@@ -55,11 +53,11 @@ class CoursealAuthService @Inject constructor(
         }
     }
 
-    suspend fun refresh(): ApiResult<Unit, RefreshApiError> {
+    private suspend fun refresh(): ApiResult<Unit, RefreshApiError> {
         return try {
             val response = httpClient.get(refreshUrl())
 
-            if (response.status.value == 200 || response.status.value == 204)
+            if (response.status.value in 200..299)
                 ApiResult.Success(Unit)
             else when(response.body<ErrorResponse>().error) {
                 ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(RefreshApiError.INVALID)
@@ -80,7 +78,7 @@ class CoursealAuthService @Inject constructor(
         return try {
             val response = httpClient.get(logoutUrl())
 
-            if (response.status.value == 200 || response.status.value == 204)
+            if (response.status.value in 200..299)
                 ApiResult.Success(Unit)
             else when(response.body<ErrorResponse>().error) {
                 ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(LogoutApiError.REFRESH_INVALID)
@@ -97,7 +95,7 @@ class CoursealAuthService @Inject constructor(
         }
     }
 
-    suspend fun<T, E> authWrap(inner: () -> ApiResult<T, AuthWrapperError<E>>): ApiResult<T, E> {
+    suspend fun<T, E> authWrap(inner: suspend () -> ApiResult<T, AuthWrapperError<E>>): ApiResult<T, E> {
         val currentUser = userDao.getCurrentUser()
             ?: return ApiResult.UnrecoverableError(UnrecoverableErrorType.OTHER_UNRECOVERABLE)
 

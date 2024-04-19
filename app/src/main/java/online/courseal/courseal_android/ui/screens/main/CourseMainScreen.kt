@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import online.courseal.courseal_android.ui.OnUnrecoverable
 
 @Composable
-fun EditorScreen(
+fun CourseMainScreen(
     modifier: Modifier = Modifier,
     onUnrecoverable: OnUnrecoverable
 ) {

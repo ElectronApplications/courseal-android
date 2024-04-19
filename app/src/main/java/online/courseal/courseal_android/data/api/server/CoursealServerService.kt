@@ -12,7 +12,7 @@ class CoursealServerService @Inject constructor(
         return try {
             val response = httpClient.get("$url/api/courseal-info")
 
-            if(response.status.value == 200) {
+            if(response.status.value in 200..299) {
                 response.body()
             } else {
                 null
