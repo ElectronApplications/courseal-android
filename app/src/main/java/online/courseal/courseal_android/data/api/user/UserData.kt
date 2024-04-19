@@ -30,6 +30,7 @@ data class UserCourseMaintainer(
 
 @Serializable
 enum class MaintainerPermissions {
+    @SerialName("none") NONE,
     @SerialName("full") FULL,
     @SerialName("edit_course") EDIT_COURSE,
     @SerialName("edit_lessons") EDIT_LESSONS
