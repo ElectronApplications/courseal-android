@@ -176,6 +176,7 @@ fun AppNavigation(
                     navController.navigate(Routes.PROFILE_COURSES.path)
                 },
                 onGoBack = if (canGoBack == true) {{ navController.popBackStack() }} else null,
+                onSearchUsers = { /*TODO*/ },
                 onUnrecoverable = onUnrecoverable
             )
         }

@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
@@ -58,6 +59,7 @@ fun ProfileScreen(
     onGoBack: (() -> Unit)? = null,
     onViewAccounts: (() -> Unit)? = null,
     onViewCourses: () -> Unit,
+    onSearchUsers: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     profileScreenViewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
@@ -139,7 +141,8 @@ fun ProfileScreen(
                             placeholder = rememberVectorPainter(Icons.Filled.AccountCircle),
                             error = rememberVectorPainter(Icons.Filled.AccountCircle),
                             contentScale = ContentScale.FillWidth,
-                            contentDescription = userPublicInfo.usertag
+                            contentDescription = userPublicInfo.usertag,
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                         )
 
                         Text(
@@ -238,11 +241,23 @@ fun ProfileScreen(
                                             .width(20.dp),
                                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                         contentDescription = stringResource(R.string.view_courses),
-                                        contentScale = ContentScale.FillWidth
+                                        contentScale = ContentScale.FillWidth,
+                                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
                                     )
                                 }
                             }
                         }
+                    }
+
+                    if (profileScreenUiState.isCurrent) {
+                        CoursealSecondaryButton(
+                            modifier = Modifier
+                                .padding(top = 20.dp)
+                                .align(Alignment.CenterHorizontally)
+                                .fillMaxWidth(0.85f),
+                            text = stringResource(R.string.find_users),
+                            onClick = onSearchUsers
+                        )
                     }
                 }
             }

@@ -46,4 +46,5 @@
     <string name="courses">courses</string>
     <string name="view_courses">View courses</string>
     <string name="user_courses">%1$s\'s courses</string>
+    <string name="find_users">Find other users</string>
 </resources>
