@@ -13,18 +13,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
-import online.courseal.courseal_android.data.api.CoursealAuthService
-import online.courseal.courseal_android.data.api.RegistrationApiError
+import online.courseal.courseal_android.data.api.auth.CoursealAuthService
+import online.courseal.courseal_android.data.api.usermanagement.CoursealUserManagementService
+import online.courseal.courseal_android.data.api.usermanagement.RegistrationApiError
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
 import online.courseal.courseal_android.data.database.entities.Server
 import online.courseal.courseal_android.data.database.entities.User
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.logic.validateUsertag
+import online.courseal.courseal_android.ui.util.validateUsertag
 import javax.inject.Inject
 
 enum class RegistrationUiError {
+    EMPTY_FIELDS,
+    INCORRECT,
     USER_EXISTS,
     UNKNOWN,
     NONE
@@ -46,7 +49,8 @@ class RegistrationViewModel @Inject constructor(
     private val state: SavedStateHandle,
     private val userDao: UserDao,
     private val serverDao: ServerDao,
-    private val coursealAuthService: CoursealAuthService
+    private val coursealAuthService: CoursealAuthService,
+    private val coursealUserManagementService: CoursealUserManagementService
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(RegistrationUiState())
     val uiState: StateFlow<RegistrationUiState> = _uiState.asStateFlow()
@@ -92,6 +96,11 @@ class RegistrationViewModel @Inject constructor(
     }
 
     suspend fun register(onRegister: () -> Unit, onUnrecoverable: OnUnrecoverable) {
+        if (usertag.isEmpty() || username.isEmpty() || password.isEmpty()) {
+            _uiState.update { it.copy(errorState = RegistrationUiError.EMPTY_FIELDS) }
+            return
+        }
+
         _uiState.update { it.copy(makingRequest = true) }
 
         if (userDao.findUserByUsertagServer(usertag, server.serverId) != null) {
@@ -111,7 +120,7 @@ class RegistrationViewModel @Inject constructor(
         ))
         userDao.setCurrentUser(newUserId)
 
-        when (val result = coursealAuthService.register(usertag, username, password)) {
+        when (val result = coursealUserManagementService.register(usertag, username, password)) {
             is ApiResult.UnrecoverableError -> {
                 userDao.deleteUserById(newUserId)
                 onUnrecoverable(result.unrecoverableType)
@@ -120,6 +129,7 @@ class RegistrationViewModel @Inject constructor(
             is ApiResult.Error -> {
                 userDao.deleteUserById(newUserId)
                 when (result.errorValue) {
+                    RegistrationApiError.INCORRECT_USERTAG -> _uiState.update { it.copy(errorState = RegistrationUiError.INCORRECT) }
                     RegistrationApiError.USER_EXISTS -> _uiState.update { it.copy(errorState = RegistrationUiError.USER_EXISTS) }
                     RegistrationApiError.UNKNOWN -> _uiState.update { it.copy(errorState = RegistrationUiError.UNKNOWN) }
                 }

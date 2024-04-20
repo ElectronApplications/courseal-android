@@ -27,11 +27,13 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
+import online.courseal.courseal_android.ui.viewmodels.LoginUiError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationUiError
 import online.courseal.courseal_android.ui.viewmodels.RegistrationViewModel
 
@@ -51,6 +53,8 @@ fun RegistrationScreen(
         isVisible = registrationUiState.errorState != RegistrationUiError.NONE,
         hideDialog = registrationViewModel::hideError,
         title = when (registrationUiState.errorState) {
+            RegistrationUiError.EMPTY_FIELDS -> stringResource(R.string.empty_fields)
+            RegistrationUiError.INCORRECT -> stringResource(R.string.incorrect_usertag_or_password)
             RegistrationUiError.USER_EXISTS -> stringResource(R.string.user_exists)
             RegistrationUiError.UNKNOWN -> stringResource(R.string.unknown_error)
             RegistrationUiError.NONE -> ""
@@ -145,21 +149,19 @@ fun RegistrationScreen(
                     text = stringResource(R.string.already_have_account)
                 )
 
-                CoursealPrimaryButton(
+                CoursealPrimaryLoadingButton(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = if (!registrationUiState.makingRequest) stringResource(R.string.register) else stringResource(R.string.loading),
-                    enabled = !registrationUiState.makingRequest,
+                    text = stringResource(R.string.register),
+                    loading = registrationUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
                             registrationViewModel.register(onRegister, onUnrecoverable)
                         }
                     }
                 )
-
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }

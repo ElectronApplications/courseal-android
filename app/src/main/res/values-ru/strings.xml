@@ -7,7 +7,7 @@
     <string name="connecting_to">Вход на</string>
     <string name="connection_failed">Соединение провалилось</string>
     <string name="server_url">URL сервера</string>
-    <string name="loading">Загрузка...</string>
+    <string name="loading">Загрузка…</string>
     <string name="confirm">Подтвердить</string>
     <string name="connection_failed_detailed">Сервер не отвечает. Проверьте правильность URL</string>
     <string name="create_account">Создание аккаунта</string>
@@ -32,4 +32,18 @@
     <string name="not_logged_in">Не авторизован</string>
     <string name="delete_account">Удалить аккаунт</string>
     <string name="add_account">Добавить новый аккаунт</string>
+    <string name="empty_fields">Поля ввода не могут быть пустыми</string>
+    <string name="course">Курс</string>
+    <string name="profile">Профиль</string>
+    <string name="editor">Редактор</string>
+    <string name="view_accounts">Посмотреть аккаунты</string>
+    <string name="user_not_found">Пользователь не найден</string>
+    <string name="monday_short">Пн</string>
+    <string name="thursday_short">Чт</string>
+    <string name="sunday_short">Вс</string>
+    <string name="joined">Участник с</string>
+    <string name="xp_earned">Всего XP</string>
+    <string name="courses">курсов</string>
+    <string name="view_courses">Посмотреть курсы</string>
+    <string name="user_courses">Курсы %1$s</string>
 </resources>
