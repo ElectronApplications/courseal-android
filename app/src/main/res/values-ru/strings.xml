@@ -46,4 +46,5 @@
     <string name="courses">курсов</string>
     <string name="view_courses">Посмотреть курсы</string>
     <string name="user_courses">Курсы %1$s</string>
+    <string name="find_users">Найти других пользователей</string>
 </resources>
