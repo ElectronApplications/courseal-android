@@ -42,5 +42,7 @@
     <string name="thursday_short">Чт</string>
     <string name="sunday_short">Вс</string>
     <string name="joined">Участник с</string>
-    <string name="xp_earned">Всего заработано XP:</string>
+    <string name="xp_earned">Всего XP</string>
+    <string name="courses">курсов</string>
+    <string name="view_courses">Посмотреть курсы</string>
 </resources>

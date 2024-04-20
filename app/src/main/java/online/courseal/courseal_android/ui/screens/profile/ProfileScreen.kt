@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.ui.screens.profile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,13 +12,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -28,28 +32,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import online.courseal.courseal_android.R
-import online.courseal.courseal_android.data.api.user.UserActivityApiResponse
-import online.courseal.courseal_android.data.api.user.UserActivityDay
-import online.courseal.courseal_android.data.api.user.UserApiResponse
 import online.courseal.courseal_android.ui.OnUnrecoverable
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
-import online.courseal.courseal_android.ui.components.TextHTML
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.ProfileScreenViewModel
 import online.courseal.courseal_android.ui.viewmodels.ProfileUiError
@@ -59,6 +57,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
     onViewAccounts: (() -> Unit)? = null,
+    onViewCourses: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     profileScreenViewModel: ProfileScreenViewModel = hiltViewModel()
 ) {
@@ -172,24 +171,78 @@ fun ProfileScreen(
                     }
 
                     if (userActivity != null) {
-                        ProfileActivity(
+                        CoursealOutlinedCard(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .padding(vertical = 20.dp)
                                 .fillMaxWidth(0.85f)
-                                .height(120.dp),
-                            userActivity = userActivity
-                        )
+                        ) {
+                            ProfileActivity(
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .height(120.dp),
+                                userActivity = userActivity
+                            )
+                        }
                     }
 
                     if (userPublicInfo != null) {
-                        TextHTML(
+                        CoursealOutlinedCard(
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .fillMaxWidth(0.85f),
-                            text = "${stringResource(R.string.xp_earned)} <strong>${userPublicInfo.xp}</strong>",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
+                                .fillMaxWidth(0.85f)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(12.dp)
+                                    .fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Row(
+                                    modifier = Modifier.weight(1f, fill = false),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Image(
+                                        modifier = Modifier.width(32.dp),
+                                        imageVector = Icons.Filled.Star,
+                                        contentDescription = "XP",
+                                        contentScale = ContentScale.FillWidth,
+                                        colorFilter = ColorFilter.tint(Color(0xFFF7C200))
+                                    )
+
+                                    Column(
+                                        modifier = Modifier.padding(start = 6.dp),
+                                        verticalArrangement = Arrangement.Center
+                                    ) {
+                                        Text(
+                                            text = "${userPublicInfo.xp}",
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.xp_earned),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+
+                                Row(
+                                    modifier = Modifier.clickable(onClick = onViewCourses),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text("${userPublicInfo.courses.size} ${stringResource(R.string.courses)}")
+                                    Image(
+                                        modifier = Modifier
+                                            .padding(start = 4.dp)
+                                            .width(20.dp),
+                                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                        contentDescription = stringResource(R.string.view_courses),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
