@@ -32,7 +32,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
 
@@ -55,74 +56,81 @@ fun AccountsScreen(
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
 
-        Text(
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 20.dp)
-                .align(Alignment.CenterHorizontally),
-            text = stringResource(R.string.choose_account),
-            style = MaterialTheme.typography.displayMedium
-        )
-
-        HorizontalDivider()
-        accountsUiState.accounts.forEach { account ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        coroutineScope.launch {
-                            accountsViewModel.chooseAccount(
-                                account.userId,
-                                onLoggedIn,
-                                onNotLoggedIn
-                            )
-                        }
-                    },
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp, start = 20.dp)
-                ) {
-                    Text(
-                        text = "@${account.usertag}",
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-                    )
-                    Text(
-                        text = account.serverUrl,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = if (account.loggedIn) stringResource(R.string.logged_in) else stringResource(R.string.not_logged_in),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                Icon(
-                    modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp, end = 20.dp)
-                        .scale(1.25f)
-                        .clickable {
-                            coroutineScope.launch {
-                                accountsViewModel.removeAccount(
-                                    account.userId,
-                                    onAllAccountsDeleted
-                                )
-                            }
-                        },
-                    imageVector = Icons.Filled.Clear,
-                    contentDescription = stringResource(R.string.delete_account),
-                )
-            }
-            HorizontalDivider()
-        }
-
         Column(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .adaptiveContainerWidth()
         ) {
-            /* TODO: CoursealSecondaryButton here */
-            CoursealPrimaryButton(
+            Text(
+                modifier = Modifier
+                    .padding(top = 20.dp, bottom = 20.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.choose_account),
+                style = MaterialTheme.typography.displayMedium
+            )
+
+            CoursealOutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth(0.85f)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                accountsUiState.accounts.forEach { account ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                coroutineScope.launch {
+                                    accountsViewModel.chooseAccount(
+                                        userId = account.userId,
+                                        onLoggedIn = onLoggedIn,
+                                        onNotLoggedIn = onNotLoggedIn
+                                    )
+                                }
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .weight(1f, fill = false)
+                                .padding(top = 10.dp, bottom = 10.dp, start = 20.dp)
+                        ) {
+                            Text(
+                                text = "@${account.usertag}",
+                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                            )
+                            Text(
+                                text = account.serverUrl,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = if (account.loggedIn) stringResource(R.string.logged_in) else stringResource(
+                                    R.string.not_logged_in
+                                ),
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                        Icon(
+                            modifier = Modifier
+                                .padding(top = 10.dp, bottom = 10.dp, end = 20.dp)
+                                .scale(1.25f)
+                                .clickable {
+                                    coroutineScope.launch {
+                                        accountsViewModel.removeAccount(
+                                            account.userId,
+                                            onAllAccountsDeleted
+                                        )
+                                    }
+                                },
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = stringResource(R.string.delete_account),
+                        )
+                    }
+                    HorizontalDivider()
+                }
+            }
+
+            CoursealSecondaryButton(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .padding(top = 15.dp)

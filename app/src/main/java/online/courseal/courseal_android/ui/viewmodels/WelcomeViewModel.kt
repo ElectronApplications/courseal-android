@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import online.courseal.courseal_android.data.api.CoursealServerService
+import online.courseal.courseal_android.data.api.server.CoursealServerService
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.entities.Server
 import javax.inject.Inject

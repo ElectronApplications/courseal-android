@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
-import online.courseal.courseal_android.data.api.CoursealAuthService
-import online.courseal.courseal_android.data.api.LoginApiError
+import online.courseal.courseal_android.data.api.auth.CoursealAuthService
+import online.courseal.courseal_android.data.api.auth.LoginApiError
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
 import online.courseal.courseal_android.data.database.entities.Server
 import online.courseal.courseal_android.data.database.entities.User
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.logic.validateUsertag
+import online.courseal.courseal_android.ui.util.validateUsertag
 import javax.inject.Inject
 
 enum class LoginUiError {

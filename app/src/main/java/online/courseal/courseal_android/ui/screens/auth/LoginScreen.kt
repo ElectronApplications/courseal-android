@@ -26,6 +26,7 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
@@ -122,21 +123,19 @@ fun LoginScreen(
                     label = stringResource(R.string.password),
                 )
 
-                CoursealPrimaryButton(
+                CoursealPrimaryLoadingButton(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 15.dp)
                         .fillMaxWidth(),
-                    text = if (!loginUiState.makingRequest) stringResource(R.string.login) else stringResource(R.string.loading),
-                    enabled = !loginUiState.makingRequest,
+                    text = stringResource(R.string.login),
+                    loading = loginUiState.makingRequest,
                     onClick = {
                         coroutineScope.launch {
                             loginViewModel.login(onLogin, onUnrecoverable)
                         }
                     }
                 )
-
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
             }
         }
     }

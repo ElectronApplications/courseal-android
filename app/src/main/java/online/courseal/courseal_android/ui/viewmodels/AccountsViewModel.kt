@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import online.courseal.courseal_android.data.api.auth.CoursealAuthService
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Inject
@@ -26,7 +27,8 @@ data class AccountsUiState(
 @HiltViewModel
 class AccountsViewModel @Inject constructor(
     private val userDao: UserDao,
-    private val serverDao: ServerDao
+    private val serverDao: ServerDao,
+    private val authService: CoursealAuthService
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(AccountsUiState())
     val uiState: StateFlow<AccountsUiState> = _uiState.asStateFlow()
@@ -57,6 +59,12 @@ class AccountsViewModel @Inject constructor(
     }
 
     suspend fun removeAccount(userId: Long, onAllAccountsDeleted: () -> Unit) {
+        val user = userDao.findUserById(userId)
+        if (user?.loggedIn == true) {
+            userDao.setCurrentUser(userId)
+            authService.logout() // Doesn't really matter if an error occurs here - we're deleting the account anyway
+        }
+
         userDao.deleteUserById(userId)
         accounts.removeIf { it.userId == userId }
         _uiState.update { it.copy(accounts = accounts.toList()) }
