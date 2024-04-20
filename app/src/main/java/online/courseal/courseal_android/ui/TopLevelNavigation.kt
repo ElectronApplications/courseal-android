@@ -147,7 +147,7 @@ fun TopLevelNavigation(topLevelViewModel: TopLevelViewModel = hiltViewModel()) {
     }
 }
 
-fun NavGraphBuilder.coursealComposable(
+fun NavGraphBuilder.coursealRoute(
     route: String,
     arguments: List<NamedNavArgument> = emptyList(),
     transitionFadeDefault: Boolean = false,

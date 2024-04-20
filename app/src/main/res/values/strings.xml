@@ -42,5 +42,7 @@
     <string name="thursday_short">Thu</string>
     <string name="sunday_short">Sun</string>
     <string name="joined">Joined</string>
-    <string name="xp_earned">Total XP earned:</string>
+    <string name="xp_earned">Total XP</string>
+    <string name="courses">courses</string>
+    <string name="view_courses">View courses</string>
 </resources>

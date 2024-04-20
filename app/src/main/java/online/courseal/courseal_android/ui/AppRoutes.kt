@@ -5,7 +5,9 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -15,8 +17,10 @@ import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
+import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
+import online.courseal.courseal_android.ui.viewmodels.ProfileScreenViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
 
 enum class Routes(val path: String) {
@@ -26,7 +30,8 @@ enum class Routes(val path: String) {
     ACCOUNTS("accounts"),
     COURSE("course"),
     PROFILE("profile"),
-    EDITOR("editor")
+    EDITOR("editor"),
+    PROFILE_COURSES("profile-courses")
 }
 
 @Composable
@@ -48,7 +53,7 @@ fun AppNavigation(
         popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) }
     ) {
         /* Welcome Screen */
-        coursealComposable(
+        coursealRoute(
             route = "${Routes.WELCOME.path}?canGoBack={canGoBack}",
             arguments = listOf(
                 navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
@@ -70,7 +75,7 @@ fun AppNavigation(
         }
 
         /* Registration Screen */
-        coursealComposable(
+        coursealRoute(
             route = "${Routes.REGISTER.path}?serverId={serverId}",
             arguments = listOf(
                 navArgument("serverId") { type = NavType.LongType },
@@ -93,7 +98,7 @@ fun AppNavigation(
         }
 
         /* Login Screen */
-        coursealComposable(
+        coursealRoute(
             route = "${Routes.LOGIN.path}?serverId={serverId}",
             arguments = listOf(
                 navArgument("serverId") { type = NavType.LongType },
@@ -113,7 +118,7 @@ fun AppNavigation(
         }
 
         /* Accounts Screen */
-        coursealComposable(
+        coursealRoute(
             route = Routes.ACCOUNTS.path,
             navBarDefault = NavBarOptions.HIDE,
             setNavBarShown = topLevelViewModel::setNavBarShown
@@ -140,7 +145,7 @@ fun AppNavigation(
         }
 
         /* Course Screen */
-        coursealComposable(
+        coursealRoute(
             route = Routes.COURSE.path,
             transitionFadeDefault = true,
             navBarDefault = NavBarOptions.SHOW,
@@ -150,7 +155,7 @@ fun AppNavigation(
         }
 
         /* Profile Screen */
-        coursealComposable(
+        coursealRoute(
             route = "${Routes.PROFILE.path}?canGoBack={canGoBack}&usertag={usertag}&isCurrent={isCurrent}",
             arguments = listOf(
                 navArgument("canGoBack") { type = NavType.BoolType; defaultValue = false },
@@ -167,19 +172,40 @@ fun AppNavigation(
                         popUpTo(0)
                     }
                 }} else null,
+                onViewCourses = {
+                    navController.navigate(Routes.PROFILE_COURSES.path)
+                },
                 onGoBack = if (canGoBack == true) {{ navController.popBackStack() }} else null,
                 onUnrecoverable = onUnrecoverable
             )
         }
 
         /* Creator Screen */
-        coursealComposable(
+        coursealRoute(
             route = Routes.EDITOR.path,
             transitionFadeDefault = true,
             navBarDefault = NavBarOptions.SHOW,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
             EditorScreen()
+        }
+
+        /* Profile's courses Screen */
+        coursealRoute(
+            route = Routes.PROFILE_COURSES.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.PROFILE.path)
+            }
+            val parentViewModel = hiltViewModel<ProfileScreenViewModel>(parentEntry)
+
+            ProfileCoursesScreen(
+                onGoBack = { navController.popBackStack() },
+                onOpenCourse = { /*TODO*/ },
+                onUnrecoverable = onUnrecoverable,
+                profileScreenViewModel = parentViewModel
+            )
         }
     }
 }

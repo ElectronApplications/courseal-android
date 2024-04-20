@@ -19,12 +19,14 @@ data class UserApiResponse(
 @Serializable
 data class UserCourseInformation(
     @SerialName("course_id") val courseId: Int,
+    @SerialName("course_name") val courseName: String,
     val xp: Int
 )
 
 @Serializable
 data class UserCourseMaintainer(
     @SerialName("course_id") val courseId: Int,
+    @SerialName("course_name") val courseName: String,
     @SerialName("maintainer_permissions") val maintainerPermissions: MaintainerPermissions
 )
 
