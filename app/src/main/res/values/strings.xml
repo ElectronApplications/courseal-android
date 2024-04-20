@@ -45,4 +45,5 @@
     <string name="xp_earned">Total XP</string>
     <string name="courses">courses</string>
     <string name="view_courses">View courses</string>
+    <string name="user_courses">%1$s\'s courses</string>
 </resources>
