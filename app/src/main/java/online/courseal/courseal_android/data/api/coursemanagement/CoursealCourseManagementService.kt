@@ -69,4 +69,6 @@ class CoursealCourseManagementService @Inject constructor(
             else -> ApiResult.Error(AuthWrapperError.InnerError(CourseApiError.UNKNOWN))
         }
     }
+
+
 }

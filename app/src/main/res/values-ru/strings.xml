@@ -47,4 +47,6 @@
     <string name="view_courses">Посмотреть курсы</string>
     <string name="user_courses">Курсы %1$s</string>
     <string name="find_users">Найти других пользователей</string>
+    <string name="username_or_usertag">Имя или тег пользователя</string>
+    <string name="search">Искать</string>
 </resources>

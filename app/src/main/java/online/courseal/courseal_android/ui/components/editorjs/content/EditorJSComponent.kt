@@ -13,17 +13,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import online.courseal.courseal_android.data.editorjs.EditorJSBlock
-import online.courseal.courseal_android.data.editorjs.EditorJSCode
-import online.courseal.courseal_android.data.editorjs.EditorJSContent
-import online.courseal.courseal_android.data.editorjs.EditorJSDelimiter
-import online.courseal.courseal_android.data.editorjs.EditorJSHeader
-import online.courseal.courseal_android.data.editorjs.EditorJSImage
-import online.courseal.courseal_android.data.editorjs.EditorJSLatex
-import online.courseal.courseal_android.data.editorjs.EditorJSList
-import online.courseal.courseal_android.data.editorjs.EditorJSParagraph
-import online.courseal.courseal_android.data.editorjs.EditorJSQuote
-import online.courseal.courseal_android.data.editorjs.EditorJSWarning
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSBlock
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSCode
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSContent
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSDelimiter
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSHeader
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSImage
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSLatex
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSList
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSParagraph
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSQuote
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSWarning
 
 @Composable
 fun EditorJSContentComponent(

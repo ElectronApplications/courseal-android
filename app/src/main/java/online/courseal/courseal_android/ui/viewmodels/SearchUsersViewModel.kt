@@ -37,7 +37,7 @@ class SearchUsersViewModel  @Inject constructor(
     }
 
     suspend fun search(onUnrecoverable: OnUnrecoverable) {
-        when (val result = userService.usersList(searchTerm)) {
+        when (val result = userService.usersList(searchTerm.replace("@", ""))) {
             is ApiResult.UnrecoverableError -> onUnrecoverable(result.unrecoverableType)
             is ApiResult.Error -> {}
             is ApiResult.Success -> _uiState.update { it.copy(users = result.successValue) }

@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
-import online.courseal.courseal_android.data.editorjs.EditorJSImageData
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSImageData
 import online.courseal.courseal_android.ui.components.TextHTML
 
 @Composable
