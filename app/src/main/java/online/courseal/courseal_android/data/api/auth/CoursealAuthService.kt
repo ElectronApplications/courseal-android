@@ -49,7 +49,7 @@ class CoursealAuthService @Inject constructor(
         return@httpExceptionWrap if (response.status.value in 200..299)
             ApiResult.Success(Unit)
         else when(response.body<ErrorResponse>().error) {
-            ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(RefreshApiError.INVALID)
+            ErrorResponseType.REFRESH_INVALID, ErrorResponseType.REFRESH_NOT_FOUND -> ApiResult.Error(RefreshApiError.INVALID)
             else -> ApiResult.Error(RefreshApiError.UNKNOWN)
         }
     }
@@ -60,7 +60,7 @@ class CoursealAuthService @Inject constructor(
         return@httpExceptionWrap if (response.status.value in 200..299)
             ApiResult.Success(Unit)
         else when(response.body<ErrorResponse>().error) {
-            ErrorResponseType.REFRESH_INVALID -> ApiResult.Error(LogoutApiError.REFRESH_INVALID)
+            ErrorResponseType.REFRESH_INVALID, ErrorResponseType.REFRESH_NOT_FOUND -> ApiResult.Error(LogoutApiError.REFRESH_INVALID)
             else -> ApiResult.Error(LogoutApiError.UNKNOWN)
         }
     }

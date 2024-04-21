@@ -47,4 +47,6 @@
     <string name="view_courses">View courses</string>
     <string name="user_courses">%1$s\'s courses</string>
     <string name="find_users">Find other users</string>
+    <string name="username_or_usertag">Username or usertag</string>
+    <string name="search">Search</string>
 </resources>

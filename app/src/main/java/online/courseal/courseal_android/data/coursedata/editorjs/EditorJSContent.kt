@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.editorjs
+package online.courseal.courseal_android.data.coursedata.editorjs
 
 import kotlinx.serialization.Serializable
 
