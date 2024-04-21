@@ -27,7 +27,7 @@ import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.ProfileScreenViewModel
+import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
 
 @Composable
 fun ProfileCoursesScreen(
@@ -35,9 +35,9 @@ fun ProfileCoursesScreen(
     onGoBack: () -> Unit,
     onOpenCourse: (courseId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
-    profileScreenViewModel: ProfileScreenViewModel
+    profileViewModel: ProfileViewModel
 ) {
-    val profileScreenUiState by profileScreenViewModel.uiState.collectAsState()
+    val profileScreenUiState by profileViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
