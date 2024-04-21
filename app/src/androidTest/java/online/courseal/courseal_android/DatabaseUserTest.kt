@@ -67,6 +67,7 @@ class DatabaseUserTest {
 
         val userCookie = UserCookie(
             requestUrl = "https://example.com",
+            cookieName = cookie.name,
             cookie = cookie,
             userId = userId
         )

@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,60 +63,65 @@ class ProfileViewModel @Inject constructor(
             var errorState = ProfileUiError.NONE
             var errorUnrecoverableState: UnrecoverableErrorType? = null
 
-            val userPublicInfo = when (val userPublicInfoResponse = userService.userInfo(usertag)) {
-                is ApiResult.UnrecoverableError -> {
-                    errorUnrecoverableState = userPublicInfoResponse.unrecoverableType
-                    null
-                }
-                is ApiResult.Error -> {
-                    errorState = when (userPublicInfoResponse.errorValue) {
-                        UserApiError.USER_NOT_FOUND -> ProfileUiError.USER_NOT_FOUND
-                        UserApiError.UNKNOWN -> ProfileUiError.UNKNOWN
+            val userPublicInfo = async {
+                when (val userPublicInfoResponse = userService.userInfo(usertag)) {
+                    is ApiResult.UnrecoverableError -> {
+                        errorUnrecoverableState = userPublicInfoResponse.unrecoverableType
+                        null
                     }
-                    null
-                }
-                is ApiResult.Success -> userPublicInfoResponse.successValue
-            }
-
-
-            val userActivity = when (val userActivityResponse = userService.userActivity(usertag)) {
-                is ApiResult.Error -> {
-                    errorState = when (userActivityResponse.errorValue) {
-                        UserActivityApiError.USER_NOT_FOUND -> ProfileUiError.USER_NOT_FOUND
-                        UserActivityApiError.UNKNOWN -> ProfileUiError.UNKNOWN
-                    }
-                    null
-                }
-                is ApiResult.UnrecoverableError -> {
-                    errorUnrecoverableState = userActivityResponse.unrecoverableType
-                    null
-                }
-                is ApiResult.Success -> userActivityResponse.successValue
-            }
-
-            val userPrivateInfo = if (isCurrent) {
-                when (val userPrivateInfoResponse = userManagementService.userInfo()) {
                     is ApiResult.Error -> {
-                        errorState = when (userPrivateInfoResponse.errorValue) {
-                            UserManagementApiError.UNKNOWN -> ProfileUiError.UNKNOWN
+                        errorState = when (userPublicInfoResponse.errorValue) {
+                            UserApiError.USER_NOT_FOUND -> ProfileUiError.USER_NOT_FOUND
+                            UserApiError.UNKNOWN -> ProfileUiError.UNKNOWN
+                        }
+                        null
+                    }
+                    is ApiResult.Success -> userPublicInfoResponse.successValue
+                }
+            }
+
+            val userActivity = async {
+                when (val userActivityResponse = userService.userActivity(usertag)) {
+                    is ApiResult.Error -> {
+                        errorState = when (userActivityResponse.errorValue) {
+                            UserActivityApiError.USER_NOT_FOUND -> ProfileUiError.USER_NOT_FOUND
+                            UserActivityApiError.UNKNOWN -> ProfileUiError.UNKNOWN
                         }
                         null
                     }
                     is ApiResult.UnrecoverableError -> {
-                        errorUnrecoverableState = userPrivateInfoResponse.unrecoverableType
+                        errorUnrecoverableState = userActivityResponse.unrecoverableType
                         null
                     }
-                    is ApiResult.Success -> userPrivateInfoResponse.successValue
+                    is ApiResult.Success -> userActivityResponse.successValue
                 }
-            } else null
+            }
+
+            val userPrivateInfo = async {
+                if (isCurrent) {
+                    when (val userPrivateInfoResponse = userManagementService.userInfo()) {
+                        is ApiResult.Error -> {
+                            errorState = when (userPrivateInfoResponse.errorValue) {
+                                UserManagementApiError.UNKNOWN -> ProfileUiError.UNKNOWN
+                            }
+                            null
+                        }
+                        is ApiResult.UnrecoverableError -> {
+                            errorUnrecoverableState = userPrivateInfoResponse.unrecoverableType
+                            null
+                        }
+                        is ApiResult.Success -> userPrivateInfoResponse.successValue
+                    }
+                } else null
+            }
 
             _uiState.update {
                 it.copy(
                     loading = false,
                     isCurrent = isCurrent,
-                    userPublicInfo = userPublicInfo,
-                    userPrivateInfo = userPrivateInfo,
-                    userActivity = userActivity,
+                    userPublicInfo = userPublicInfo.await(),
+                    userPrivateInfo = userPrivateInfo.await(),
+                    userActivity = userActivity.await(),
                     errorState = errorState,
                     errorUnrecoverableState = errorUnrecoverableState
                 )
