@@ -39,7 +39,7 @@ data class ProfileScreenUiState(
 )
 
 @HiltViewModel
-class ProfileScreenViewModel @Inject constructor(
+class ProfileViewModel @Inject constructor(
     private val state: SavedStateHandle,
     private val userDao: UserDao,
     private val userService: CoursealUserService,

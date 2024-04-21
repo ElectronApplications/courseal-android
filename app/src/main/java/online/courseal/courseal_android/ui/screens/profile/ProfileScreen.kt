@@ -50,7 +50,7 @@ import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.ProfileScreenViewModel
+import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.ProfileUiError
 
 @Composable
@@ -61,9 +61,9 @@ fun ProfileScreen(
     onViewCourses: () -> Unit,
     onSearchUsers: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
-    profileScreenViewModel: ProfileScreenViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val profileScreenUiState by profileScreenViewModel.uiState.collectAsState()
+    val profileScreenUiState by profileViewModel.uiState.collectAsState()
 
     if (profileScreenUiState.errorUnrecoverableState != null) {
         onUnrecoverable(profileScreenUiState.errorUnrecoverableState!!)
@@ -71,7 +71,7 @@ fun ProfileScreen(
 
     ErrorDialog(
         isVisible = profileScreenUiState.errorState != ProfileUiError.NONE,
-        hideDialog = profileScreenViewModel::hideError,
+        hideDialog = profileViewModel::hideError,
         title = when (profileScreenUiState.errorState) {
             ProfileUiError.USER_NOT_FOUND -> stringResource(R.string.user_not_found)
             ProfileUiError.UNKNOWN -> stringResource(R.string.unknown_error)
