@@ -11,6 +11,11 @@ import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
 import online.courseal.courseal_android.data.api.ErrorResponseType
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
+import online.courseal.courseal_android.data.api.auth.data.AuthWrapperError
+import online.courseal.courseal_android.data.api.auth.data.LoginApiError
+import online.courseal.courseal_android.data.api.auth.data.LoginApiRequest
+import online.courseal.courseal_android.data.api.auth.data.LogoutApiError
+import online.courseal.courseal_android.data.api.auth.data.RefreshApiError
 import online.courseal.courseal_android.data.api.httpExceptionWrap
 import online.courseal.courseal_android.data.api.mapErr
 import online.courseal.courseal_android.data.database.dao.ServerDao

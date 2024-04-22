@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.api.usermanagement
+package online.courseal.courseal_android.data.api.usermanagement.data
 
 import kotlinx.serialization.Serializable
 

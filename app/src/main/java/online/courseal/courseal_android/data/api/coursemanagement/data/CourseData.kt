@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.api.coursemanagement
+package online.courseal.courseal_android.data.api.coursemanagement.data
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName

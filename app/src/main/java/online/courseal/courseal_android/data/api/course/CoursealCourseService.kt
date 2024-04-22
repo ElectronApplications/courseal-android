@@ -7,6 +7,9 @@ import io.ktor.http.appendPathSegments
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
 import online.courseal.courseal_android.data.api.ErrorResponseType
+import online.courseal.courseal_android.data.api.course.data.CourseApiError
+import online.courseal.courseal_android.data.api.course.data.CourseApiResponse
+import online.courseal.courseal_android.data.api.course.data.CourseListData
 import online.courseal.courseal_android.data.api.httpExceptionWrap
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import javax.inject.Inject

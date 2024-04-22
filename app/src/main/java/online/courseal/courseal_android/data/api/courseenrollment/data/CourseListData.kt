@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.api.courseenrollment
+package online.courseal.courseal_android.data.api.courseenrollment.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

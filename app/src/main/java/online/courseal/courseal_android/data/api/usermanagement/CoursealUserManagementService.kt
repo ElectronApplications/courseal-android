@@ -11,9 +11,17 @@ import io.ktor.http.contentType
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
 import online.courseal.courseal_android.data.api.ErrorResponseType
-import online.courseal.courseal_android.data.api.auth.AuthWrapperError
+import online.courseal.courseal_android.data.api.auth.data.AuthWrapperError
 import online.courseal.courseal_android.data.api.auth.CoursealAuthService
 import online.courseal.courseal_android.data.api.httpExceptionWrap
+import online.courseal.courseal_android.data.api.usermanagement.data.ChangeNameApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.ChangeNameApiRequest
+import online.courseal.courseal_android.data.api.usermanagement.data.ChangePasswordApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.ChangePasswordApiRequest
+import online.courseal.courseal_android.data.api.usermanagement.data.RegistrationApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.RegistrationApiRequest
+import online.courseal.courseal_android.data.api.usermanagement.data.UserManagementApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.UserManagementApiResponse
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import javax.inject.Inject
 

@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.auth.CoursealAuthService
 import online.courseal.courseal_android.data.api.usermanagement.CoursealUserManagementService
-import online.courseal.courseal_android.data.api.usermanagement.RegistrationApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.RegistrationApiError
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import online.courseal.courseal_android.data.database.dao.UserDao
