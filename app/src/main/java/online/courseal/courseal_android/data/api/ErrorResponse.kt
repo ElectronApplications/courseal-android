@@ -25,4 +25,6 @@ enum class ErrorResponseType {
     @SerialName("course-not-found") COURSE_NOT_FOUND,
     @SerialName("cant-create-courses") CANT_CREATE_COURSES,
     @SerialName("no-permissions") NO_PERMISSIONS,
+    @SerialName("lesson-not-found") LESSON_NOT_FOUND,
+    @SerialName("lesson-token-invalid") LESSON_TOKEN_INVALID,
 }

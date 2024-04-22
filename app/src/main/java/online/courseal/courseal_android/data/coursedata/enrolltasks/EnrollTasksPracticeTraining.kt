@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.coursedata.lessonenroll
+package online.courseal.courseal_android.data.coursedata.enrolltasks
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -6,9 +6,9 @@ import online.courseal.courseal_android.data.coursedata.tasks.CoursealTask
 
 @Serializable
 @SerialName("practice_training")
-data class CoursealLessonEnrollPracticeTraining(
+data class EnrollTasksPracticeTraining(
     val tasks: List<CoursealLessonEnrollPracticeTask>
-) : CoursealLessonEnroll()
+) : EnrollTasks()
 
 @Serializable
 data class CoursealLessonEnrollPracticeTask(
