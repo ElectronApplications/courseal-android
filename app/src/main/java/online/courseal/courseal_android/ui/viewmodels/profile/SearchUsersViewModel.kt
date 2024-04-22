@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.viewmodels
+package online.courseal.courseal_android.ui.viewmodels.profile
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,7 +23,6 @@ data class SearchUsersUiState(
 
 @HiltViewModel
 class SearchUsersViewModel  @Inject constructor(
-    private val state: SavedStateHandle,
     private val userService: CoursealUserService
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUsersUiState())

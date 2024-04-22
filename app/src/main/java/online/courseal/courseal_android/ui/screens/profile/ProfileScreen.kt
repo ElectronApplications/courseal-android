@@ -49,10 +49,10 @@ import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.components.GoBack
+import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
-import online.courseal.courseal_android.ui.viewmodels.ProfileUiError
+import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
+import online.courseal.courseal_android.ui.viewmodels.profile.ProfileUiError
 
 @Composable
 fun ProfileScreen(
@@ -105,7 +105,7 @@ fun ProfileScreen(
             }
         } else if (onGoBack != null) {
             Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-            GoBack(onGoBack = onGoBack)
+            TopBack(onClick = onGoBack)
         }
 
         if (profileUiState.loading) {

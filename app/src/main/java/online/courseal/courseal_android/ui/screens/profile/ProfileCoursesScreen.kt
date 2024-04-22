@@ -2,7 +2,6 @@ package online.courseal.courseal_android.ui.screens.profile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +24,9 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
-import online.courseal.courseal_android.ui.components.GoBack
+import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
+import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 
 @Composable
 fun ProfileCoursesScreen(
@@ -45,7 +43,7 @@ fun ProfileCoursesScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        GoBack(onGoBack = onGoBack)
+        TopBack(onClick = onGoBack)
 
         Column(
             modifier = Modifier
