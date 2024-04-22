@@ -1,5 +1,8 @@
 package online.courseal.courseal_android.data.api
 
+import java.io.IOException
+import java.nio.channels.UnresolvedAddressException
+
 enum class UnrecoverableErrorType {
     REFRESH_INVALID,
     SERVER_NOT_RESPONDING,
@@ -25,5 +28,18 @@ fun<T, E, U> ApiResult<T, E>.mapErr(f: (E) -> U): ApiResult<T, U> {
         is ApiResult.UnrecoverableError -> ApiResult.UnrecoverableError(this.unrecoverableType)
         is ApiResult.Error -> ApiResult.Error(f(this.errorValue))
         is ApiResult.Success -> ApiResult.Success(this.successValue)
+    }
+}
+
+suspend fun<T, E> httpExceptionWrap(unknownError: E, request: suspend () -> ApiResult<T, E>): ApiResult<T, E> {
+    return try {
+        request()
+    } catch(e: Exception) {
+        when (e) {
+            is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
+                UnrecoverableErrorType.SERVER_NOT_RESPONDING
+            )
+            else -> ApiResult.Error(unknownError)
+        }
     }
 }

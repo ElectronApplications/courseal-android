@@ -3,6 +3,7 @@ package online.courseal.courseal_android.data.api.server
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import online.courseal.courseal_android.data.api.server.data.ServerInfo
 import javax.inject.Inject
 
 class CoursealServerService @Inject constructor(

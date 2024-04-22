@@ -19,8 +19,13 @@ import online.courseal.courseal_android.ui.screens.course.CourseScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
+import online.courseal.courseal_android.ui.screens.profile.SearchUsersScreen
+import online.courseal.courseal_android.ui.screens.settings.SettingsPasswordScreen
+import online.courseal.courseal_android.ui.screens.settings.SettingsPictureScreen
+import online.courseal.courseal_android.ui.screens.settings.SettingsScreen
+import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
-import online.courseal.courseal_android.ui.viewmodels.ProfileScreenViewModel
+import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
 
 enum class Routes(val path: String) {
@@ -28,10 +33,21 @@ enum class Routes(val path: String) {
     REGISTER("register"),
     LOGIN("login"),
     ACCOUNTS("accounts"),
+
     COURSE("course"),
     PROFILE("profile"),
     EDITOR("editor"),
-    PROFILE_COURSES("profile-courses")
+
+    PROFILE_SETTINGS("profile/settings"),
+    PROFILE_SETTINGS_PICTURE("profile/settings/picture"),
+    PROFILE_SETTINGS_USERNAME("profile/settings/username"),
+    PROFILE_SETTINGS_PASSWORD("profile/settings/password"),
+    PROFILE_COURSES("profile/courses"),
+
+    SEARCH_USERS("search-users"),
+    SEARCH_COURSES("search-courses"),
+
+    COURSE_INFO("course-info"),
 }
 
 @Composable
@@ -167,15 +183,16 @@ fun AppNavigation(
             val canGoBack = backStackEntry.arguments?.getBoolean("canGoBack")
 
             ProfileScreen(
-                onViewAccounts = if(canGoBack != true) {{
-                    navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
-                        popUpTo(0)
-                    }
+                onViewSettings = if(canGoBack != true) {{
+                    navController.navigate(Routes.PROFILE_SETTINGS.path)
                 }} else null,
                 onViewCourses = {
                     navController.navigate(Routes.PROFILE_COURSES.path)
                 },
                 onGoBack = if (canGoBack == true) {{ navController.popBackStack() }} else null,
+                onSearchUsers = {
+                    navController.navigate(Routes.SEARCH_USERS.path)
+                },
                 onUnrecoverable = onUnrecoverable
             )
         }
@@ -190,6 +207,70 @@ fun AppNavigation(
             EditorScreen()
         }
 
+        /* Profile's settings Screen */
+        coursealRoute(
+            route = Routes.PROFILE_SETTINGS.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            SettingsScreen(
+                onGoBack = { navController.popBackStack() },
+                onChangeProfilePicture = {
+                    navController.navigate(Routes.PROFILE_SETTINGS_PICTURE.path)
+                },
+                onChangeUsername = {
+                    navController.navigate(Routes.PROFILE_SETTINGS_USERNAME.path)
+                },
+                onChangePassword = {
+                    navController.navigate(Routes.PROFILE_SETTINGS_PASSWORD.path)
+                },
+                onViewAccounts = {
+                    navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
+                        popUpTo(0)
+                    }
+                },
+                onUnrecoverable = onUnrecoverable
+            )
+        }
+
+        /* Profile's settings profile picture Screen */
+        coursealRoute(
+            route = Routes.PROFILE_SETTINGS_PICTURE.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            SettingsPictureScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable
+            )
+        }
+
+        /* Profile's settings profile username Screen */
+        coursealRoute(
+            route = Routes.PROFILE_SETTINGS_USERNAME.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.PROFILE.path)
+            }
+            val parentViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
+
+            SettingsUsernameScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                profileViewModel = parentViewModel
+            )
+        }
+
+        /* Profile's settings profile password Screen */
+        coursealRoute(
+            route = Routes.PROFILE_SETTINGS_PASSWORD.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            SettingsPasswordScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable
+            )
+        }
+
         /* Profile's courses Screen */
         coursealRoute(
             route = Routes.PROFILE_COURSES.path,
@@ -198,14 +279,49 @@ fun AppNavigation(
             val parentEntry = remember(backStackEntry) {
                 navController.getBackStackEntry(Routes.PROFILE.path)
             }
-            val parentViewModel = hiltViewModel<ProfileScreenViewModel>(parentEntry)
+            val parentViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
 
             ProfileCoursesScreen(
                 onGoBack = { navController.popBackStack() },
-                onOpenCourse = { /*TODO*/ },
+                onOpenCourse = { courseId ->
+                    navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
+                },
                 onUnrecoverable = onUnrecoverable,
-                profileScreenViewModel = parentViewModel
+                profileViewModel = parentViewModel
             )
+        }
+
+        /* Search users Screen */
+        coursealRoute(
+            route = Routes.SEARCH_USERS.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            SearchUsersScreen(
+                onGoBack = { navController.popBackStack() },
+                onOpenProfile = { usertag ->
+                    navController.navigate("${Routes.PROFILE.path}?usertag=${usertag}&canGoBack=true")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
+        }
+
+        /* Search courses Screen */
+        coursealRoute(
+            route = Routes.SEARCH_COURSES.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            // TODO
+        }
+
+        /* Course info Screen  */
+        coursealRoute(
+            route = "${Routes.COURSE_INFO.path}/{courseId}",
+            arguments = listOf(
+                navArgument("courseId") { type = NavType.IntType }
+            ),
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            // TODO
         }
     }
 }

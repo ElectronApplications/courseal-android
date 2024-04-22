@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,14 +24,13 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealPasswordField
-import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.components.GoBack
+import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.LoginUiError
-import online.courseal.courseal_android.ui.viewmodels.LoginViewModel
+import online.courseal.courseal_android.ui.viewmodels.auth.LoginUiError
+import online.courseal.courseal_android.ui.viewmodels.auth.LoginViewModel
 
 @Composable
 fun LoginScreen(
@@ -60,7 +58,7 @@ fun LoginScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        GoBack(onGoBack = onGoBack)
+        TopBack(onClick = onGoBack)
 
         Column(
             modifier = Modifier

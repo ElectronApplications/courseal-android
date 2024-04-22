@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import online.courseal.courseal_android.data.editorjs.EditorJSCodeData
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSCodeData
 import online.courseal.courseal_android.ui.theme.CodeStyle
 
 @Composable
