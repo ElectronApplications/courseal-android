@@ -49,4 +49,8 @@
     <string name="find_users">Найти других пользователей</string>
     <string name="username_or_usertag">Имя или тег пользователя</string>
     <string name="search">Искать</string>
+    <string name="settings">Настройки</string>
+    <string name="change_profile_picture">Сменить фото</string>
+    <string name="change_username">Сменить имя пользователя</string>
+    <string name="change_password">Сменить пароль</string>
 </resources>

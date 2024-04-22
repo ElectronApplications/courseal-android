@@ -49,4 +49,8 @@
     <string name="find_users">Find other users</string>
     <string name="username_or_usertag">Username or usertag</string>
     <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="change_profile_picture">Change profile picture</string>
+    <string name="change_username">Change username</string>
+    <string name="change_password">Change password</string>
 </resources>

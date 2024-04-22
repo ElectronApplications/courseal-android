@@ -45,6 +45,7 @@ import coil.compose.AsyncImage
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.ErrorDialog
@@ -57,22 +58,22 @@ import online.courseal.courseal_android.ui.viewmodels.ProfileUiError
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     onGoBack: (() -> Unit)? = null,
-    onViewAccounts: (() -> Unit)? = null,
+    onViewSettings: (() -> Unit)? = null,
     onViewCourses: () -> Unit,
     onSearchUsers: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val profileScreenUiState by profileViewModel.uiState.collectAsState()
+    val profileUiState by profileViewModel.uiState.collectAsState()
 
-    if (profileScreenUiState.errorUnrecoverableState != null) {
-        onUnrecoverable(profileScreenUiState.errorUnrecoverableState!!)
+    if (profileUiState.errorUnrecoverableState != null) {
+        onUnrecoverable(profileUiState.errorUnrecoverableState!!)
     }
 
     ErrorDialog(
-        isVisible = profileScreenUiState.errorState != ProfileUiError.NONE,
+        isVisible = profileUiState.errorState != ProfileUiError.NONE,
         hideDialog = profileViewModel::hideError,
-        title = when (profileScreenUiState.errorState) {
+        title = when (profileUiState.errorState) {
             ProfileUiError.USER_NOT_FOUND -> stringResource(R.string.user_not_found)
             ProfileUiError.UNKNOWN -> stringResource(R.string.unknown_error)
             ProfileUiError.NONE -> ""
@@ -83,22 +84,22 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        if (onViewAccounts != null) {
+        if (onViewSettings != null) {
             CoursealTopBar {
                 Row(
                     modifier = Modifier
                         .clickable {
-                            onViewAccounts()
+                            onViewSettings()
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = stringResource(R.string.view_accounts),
+                        text = stringResource(R.string.settings),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowRight,
-                        contentDescription = stringResource(R.string.view_accounts)
+                        contentDescription = stringResource(R.string.settings)
                     )
                 }
             }
@@ -107,7 +108,7 @@ fun ProfileScreen(
             GoBack(onGoBack = onGoBack)
         }
 
-        if (profileScreenUiState.loading) {
+        if (profileUiState.loading) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -122,9 +123,9 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                val userPublicInfo = profileScreenUiState.userPublicInfo
-                val userPrivateInfo = profileScreenUiState.userPrivateInfo
-                val userActivity = profileScreenUiState.userActivity
+                val userPublicInfo = profileUiState.userPublicInfo
+                val userPrivateInfo = profileUiState.userPrivateInfo
+                val userActivity = profileUiState.userActivity
 
                 Column(
                     modifier = Modifier
@@ -180,12 +181,13 @@ fun ProfileScreen(
                                 .padding(vertical = 20.dp)
                                 .fillMaxWidth(0.85f)
                         ) {
-                            ProfileActivity(
-                                modifier = Modifier
-                                    .padding(12.dp)
-                                    .height(120.dp),
-                                userActivity = userActivity
-                            )
+                            CoursealOutlinedCardItem {
+                                ProfileActivity(
+                                    modifier = Modifier
+                                        .height(120.dp),
+                                    userActivity = userActivity
+                                )
+                            }
                         }
                     }
 
@@ -195,11 +197,7 @@ fun ProfileScreen(
                                 .align(Alignment.CenterHorizontally)
                                 .fillMaxWidth(0.85f)
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .padding(12.dp)
-                                    .fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
+                            CoursealOutlinedCardItem(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Row(
@@ -249,7 +247,7 @@ fun ProfileScreen(
                         }
                     }
 
-                    if (profileScreenUiState.isCurrent) {
+                    if (profileUiState.isCurrent) {
                         CoursealSecondaryButton(
                             modifier = Modifier
                                 .padding(top = 20.dp)

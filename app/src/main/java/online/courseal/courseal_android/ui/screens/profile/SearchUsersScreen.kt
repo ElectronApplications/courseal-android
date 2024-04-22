@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
@@ -87,15 +88,9 @@ fun SearchUsersScreen(
                     .fillMaxWidth(0.85f)
             ) {
                 searchUsersUiState.users.forEach { user ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onOpenProfile(user.usertag)
-                            }
-                            .padding(vertical = 8.dp, horizontal = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    CoursealOutlinedCardItem(
+                        modifier = Modifier.clickable { onOpenProfile(user.usertag) },
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Column(
                             modifier = Modifier.weight(1f, fill = false)
@@ -112,8 +107,6 @@ fun SearchUsersScreen(
                             text = "${user.xp} XP"
                         )
                     }
-
-                    HorizontalDivider()
                 }
             }
         }
