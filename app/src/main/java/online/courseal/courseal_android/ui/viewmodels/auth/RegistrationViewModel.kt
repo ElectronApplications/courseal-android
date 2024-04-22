@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.viewmodels
+package online.courseal.courseal_android.ui.viewmodels.auth
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

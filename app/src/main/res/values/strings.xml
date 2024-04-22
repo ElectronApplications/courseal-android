@@ -53,4 +53,8 @@
     <string name="change_profile_picture">Change profile picture</string>
     <string name="change_username">Change username</string>
     <string name="change_password">Change password</string>
+    <string name="cancel">Cancel</string>
+    <string name="incorrect_password">The password is incorrect</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
 </resources>

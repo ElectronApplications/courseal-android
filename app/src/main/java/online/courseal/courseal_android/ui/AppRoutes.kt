@@ -25,7 +25,7 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsPictureScree
 import online.courseal.courseal_android.ui.screens.settings.SettingsScreen
 import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScreen
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
-import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
+import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
 
 enum class Routes(val path: String) {
@@ -247,10 +247,16 @@ fun AppNavigation(
         coursealRoute(
             route = Routes.PROFILE_SETTINGS_USERNAME.path,
             setNavBarShown = topLevelViewModel::setNavBarShown
-        ) {
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.PROFILE.path)
+            }
+            val parentViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
+
             SettingsUsernameScreen(
                 onGoBack = { navController.popBackStack() },
-                onUnrecoverable = onUnrecoverable
+                onUnrecoverable = onUnrecoverable,
+                profileViewModel = parentViewModel
             )
         }
 

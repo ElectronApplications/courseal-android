@@ -28,7 +28,7 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
-import online.courseal.courseal_android.ui.components.GoBack
+import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 
 @Composable
@@ -46,7 +46,7 @@ fun SettingsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-        GoBack(onGoBack = onGoBack)
+        TopBack(onClick = onGoBack)
 
         Column(
             modifier = Modifier
