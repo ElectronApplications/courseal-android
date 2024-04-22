@@ -4,8 +4,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
@@ -14,7 +16,11 @@ import online.courseal.courseal_android.data.api.auth.data.AuthWrapperError
 import online.courseal.courseal_android.data.api.auth.CoursealAuthService
 import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollApiError
 import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollApiRequest
+import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollInfoApiError
+import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollInfoApiResponse
 import online.courseal.courseal_android.data.api.courseenrollment.data.CourseListData
+import online.courseal.courseal_android.data.api.courseenrollment.data.RatingApiError
+import online.courseal.courseal_android.data.api.courseenrollment.data.RatingData
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import javax.inject.Inject
 
@@ -52,6 +58,56 @@ class CoursealCourseEnrollmentService @Inject constructor(
             ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
             ErrorResponseType.COURSE_NOT_FOUND -> ApiResult.Error(AuthWrapperError.InnerError(CourseEnrollApiError.COURSE_NOT_FOUND))
             else -> ApiResult.Error(AuthWrapperError.InnerError(CourseEnrollApiError.UNKNOWN))
+        }
+    }
+
+    suspend fun courseInfo(courseId: Int): ApiResult<CourseEnrollInfoApiResponse, CourseEnrollInfoApiError> = authService.authWrap(CourseEnrollInfoApiError.UNKNOWN) {
+        val response = httpClient.get(courseEnrollmentUrl()) {
+            url {
+                appendPathSegments("$courseId")
+            }
+        }
+
+        return@authWrap if (response.status.value in 200..299)
+            ApiResult.Success(response.body())
+        else when (response.body<ErrorResponse>().error) {
+            ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
+            ErrorResponseType.COURSE_NOT_FOUND -> ApiResult.Error(AuthWrapperError.InnerError(CourseEnrollInfoApiError.COURSE_NOT_FOUND))
+            else -> ApiResult.Error(AuthWrapperError.InnerError(CourseEnrollInfoApiError.UNKNOWN))
+        }
+    }
+
+    suspend fun getRating(courseId: Int): ApiResult<RatingData, RatingApiError> = authService.authWrap(RatingApiError.UNKNOWN) {
+        val response = httpClient.get(courseEnrollmentUrl()) {
+            url {
+                appendPathSegments("$courseId", "rating")
+            }
+        }
+
+        return@authWrap if (response.status.value in 200..299)
+            ApiResult.Success(response.body())
+        else when (response.body<ErrorResponse>().error) {
+            ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
+            ErrorResponseType.COURSE_NOT_FOUND -> ApiResult.Error(AuthWrapperError.InnerError(RatingApiError.COURSE_NOT_FOUND))
+            else -> ApiResult.Error(AuthWrapperError.InnerError(RatingApiError.UNKNOWN))
+        }
+    }
+
+    suspend fun setRating(courseId: Int, rating: Int): ApiResult<Unit, RatingApiError> = authService.authWrap(RatingApiError.UNKNOWN) {
+        val response = httpClient.put(courseEnrollmentUrl()) {
+            url {
+                appendPathSegments("$courseId", "rating")
+            }
+            contentType(ContentType.Application.Json)
+            setBody(RatingData(rating = rating))
+        }
+
+        return@authWrap if (response.status.value in 200..299)
+            ApiResult.Success(Unit)
+        else when (response.body<ErrorResponse>().error) {
+            ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
+            ErrorResponseType.COURSE_NOT_FOUND -> ApiResult.Error(AuthWrapperError.InnerError(RatingApiError.COURSE_NOT_FOUND))
+            else -> ApiResult.Error(AuthWrapperError.InnerError(RatingApiError.UNKNOWN))
         }
     }
 }

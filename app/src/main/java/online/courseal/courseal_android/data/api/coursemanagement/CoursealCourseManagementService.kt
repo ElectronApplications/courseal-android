@@ -57,8 +57,7 @@ class CoursealCourseManagementService @Inject constructor(
 ) {
     private suspend fun courseManagementUrl(): String = "${serverDao.getCurrentServerUrl()}/api/course-management"
 
-    suspend fun createCourse(courseName: String, courseDescription: String): ApiResult<CreateCourseApiResponse, CreateCourseApiError> = authService.authWrap(
-        CreateCourseApiError.UNKNOWN) {
+    suspend fun createCourse(courseName: String, courseDescription: String): ApiResult<CreateCourseApiResponse, CreateCourseApiError> = authService.authWrap(CreateCourseApiError.UNKNOWN) {
         val response = httpClient.post(courseManagementUrl()) {
             contentType(ContentType.Application.Json)
             setBody(
@@ -106,8 +105,7 @@ class CoursealCourseManagementService @Inject constructor(
         }
     }
 
-    suspend fun updateCourseInfo(courseId: Int, courseName: String, courseDescription: String): ApiResult<Unit, UpdateCourseApiError> = authService.authWrap(
-        UpdateCourseApiError.UNKNOWN) {
+    suspend fun updateCourseInfo(courseId: Int, courseName: String, courseDescription: String): ApiResult<Unit, UpdateCourseApiError> = authService.authWrap(UpdateCourseApiError.UNKNOWN) {
         val response = httpClient.put(courseManagementUrl()) {
             url {
                 appendPathSegments("$courseId")
