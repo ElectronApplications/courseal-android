@@ -18,6 +18,7 @@ class UserCookiesStorage @Inject constructor(
         if (currentUser != null) {
             userDao.insertCookie(UserCookie(
                 requestUrl = requestUrl.host,
+                cookieName = cookie.name,
                 cookie = cookie,
                 userId = currentUser.userId
             ))

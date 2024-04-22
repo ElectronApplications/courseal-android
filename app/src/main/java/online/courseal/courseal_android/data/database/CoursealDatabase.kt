@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.data.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -16,7 +17,7 @@ import online.courseal.courseal_android.data.database.entities.UserCookie
         UserCookie::class,
         Server::class
     ],
-    version = 1,
+    version = 2,
 )
 @TypeConverters(Converters::class)
 abstract class CoursealDatabase : RoomDatabase() {

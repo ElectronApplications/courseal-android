@@ -19,7 +19,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.toLocalDateTime
 import online.courseal.courseal_android.R
-import online.courseal.courseal_android.data.api.user.UserActivityApiResponse
+import online.courseal.courseal_android.data.api.user.data.UserActivityApiResponse
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 
 @Composable

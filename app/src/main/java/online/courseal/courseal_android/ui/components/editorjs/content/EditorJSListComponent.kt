@@ -6,8 +6,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import online.courseal.courseal_android.data.editorjs.EditorJSListData
-import online.courseal.courseal_android.data.editorjs.EditorJSListStyle
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSListData
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSListStyle
 import online.courseal.courseal_android.ui.components.TextHTML
 
 @Composable

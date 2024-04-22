@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
-import online.courseal.courseal_android.data.editorjs.EditorJSWarningData
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSWarningData
 import online.courseal.courseal_android.ui.components.TextHTML
 import online.courseal.courseal_android.ui.theme.LocalCoursealPalette
 

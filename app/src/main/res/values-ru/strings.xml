@@ -46,4 +46,15 @@
     <string name="courses">курсов</string>
     <string name="view_courses">Посмотреть курсы</string>
     <string name="user_courses">Курсы %1$s</string>
+    <string name="find_users">Найти других пользователей</string>
+    <string name="username_or_usertag">Имя или тег пользователя</string>
+    <string name="search">Искать</string>
+    <string name="settings">Настройки</string>
+    <string name="change_profile_picture">Сменить фото</string>
+    <string name="change_username">Сменить имя пользователя</string>
+    <string name="change_password">Сменить пароль</string>
+    <string name="cancel">Отменить</string>
+    <string name="incorrect_password">Неправильный пароль</string>
+    <string name="old_password">Старый пароль</string>
+    <string name="new_password">Новый пароль</string>
 </resources>

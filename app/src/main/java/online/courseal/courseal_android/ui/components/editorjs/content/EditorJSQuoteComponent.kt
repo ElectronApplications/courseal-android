@@ -13,8 +13,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
-import online.courseal.courseal_android.data.editorjs.EditorJSQuoteAlignment
-import online.courseal.courseal_android.data.editorjs.EditorJSQuoteData
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSQuoteAlignment
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSQuoteData
 import online.courseal.courseal_android.ui.components.TextHTML
 
 @Composable
