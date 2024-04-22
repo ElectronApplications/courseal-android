@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.GoBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.ProfileViewModel
@@ -37,7 +38,7 @@ fun ProfileCoursesScreen(
     onUnrecoverable: OnUnrecoverable,
     profileViewModel: ProfileViewModel
 ) {
-    val profileScreenUiState by profileViewModel.uiState.collectAsState()
+    val profileUiState by profileViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -52,7 +53,7 @@ fun ProfileCoursesScreen(
                 .align(Alignment.CenterHorizontally)
                 .adaptiveContainerWidth()
         ) {
-            val userPublicInfo = profileScreenUiState.userPublicInfo!!
+            val userPublicInfo = profileUiState.userPublicInfo!!
 
             Text(
                 modifier = Modifier
@@ -69,14 +70,11 @@ fun ProfileCoursesScreen(
                     .align(Alignment.CenterHorizontally)
             ) {
                 userPublicInfo.courses.forEach { course ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onOpenCourse(course.courseId) }
+                    CoursealOutlinedCardItem(
+                        modifier = Modifier.clickable { onOpenCourse(course.courseId) }
                     ) {
                         Text(course.courseName)
                     }
-                    HorizontalDivider()
                 }
             }
         }

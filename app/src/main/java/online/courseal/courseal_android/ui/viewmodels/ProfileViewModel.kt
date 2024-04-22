@@ -29,7 +29,7 @@ enum class ProfileUiError {
     NONE
 }
 
-data class ProfileScreenUiState(
+data class ProfileUiState(
     val loading: Boolean = true,
     val isCurrent: Boolean = false,
     val userPublicInfo: UserApiResponse? = null,
@@ -46,8 +46,8 @@ class ProfileViewModel @Inject constructor(
     private val userService: CoursealUserService,
     private val userManagementService: CoursealUserManagementService
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(ProfileScreenUiState())
-    val uiState: StateFlow<ProfileScreenUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {

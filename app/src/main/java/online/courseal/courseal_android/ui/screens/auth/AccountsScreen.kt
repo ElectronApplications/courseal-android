@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.CoursealSecondaryButton
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.AccountsViewModel
@@ -75,25 +76,21 @@ fun AccountsScreen(
                     .align(Alignment.CenterHorizontally)
             ) {
                 accountsUiState.accounts.forEach { account ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                coroutineScope.launch {
-                                    accountsViewModel.chooseAccount(
-                                        userId = account.userId,
-                                        onLoggedIn = onLoggedIn,
-                                        onNotLoggedIn = onNotLoggedIn
-                                    )
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    CoursealOutlinedCardItem(
+                        modifier = Modifier.clickable {
+                            coroutineScope.launch {
+                                accountsViewModel.chooseAccount(
+                                    userId = account.userId,
+                                    onLoggedIn = onLoggedIn,
+                                    onNotLoggedIn = onNotLoggedIn
+                                )
+                            }
+                        },
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column(
                             modifier = Modifier
                                 .weight(1f, fill = false)
-                                .padding(top = 10.dp, bottom = 10.dp, start = 20.dp)
                         ) {
                             Text(
                                 text = "@${account.usertag}",
@@ -112,7 +109,6 @@ fun AccountsScreen(
                         }
                         Icon(
                             modifier = Modifier
-                                .padding(top = 10.dp, bottom = 10.dp, end = 20.dp)
                                 .scale(1.25f)
                                 .clickable {
                                     coroutineScope.launch {
@@ -126,7 +122,6 @@ fun AccountsScreen(
                             contentDescription = stringResource(R.string.delete_account),
                         )
                     }
-                    HorizontalDivider()
                 }
             }
 
