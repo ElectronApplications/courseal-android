@@ -10,8 +10,11 @@ import io.ktor.http.contentType
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
 import online.courseal.courseal_android.data.api.ErrorResponseType
-import online.courseal.courseal_android.data.api.auth.AuthWrapperError
+import online.courseal.courseal_android.data.api.auth.data.AuthWrapperError
 import online.courseal.courseal_android.data.api.auth.CoursealAuthService
+import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollApiError
+import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollApiRequest
+import online.courseal.courseal_android.data.api.courseenrollment.data.CourseListData
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import javax.inject.Inject
 

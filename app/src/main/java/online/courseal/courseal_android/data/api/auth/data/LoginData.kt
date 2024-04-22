@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.data.api.auth
+package online.courseal.courseal_android.data.api.auth.data
 
 import kotlinx.serialization.Serializable
 

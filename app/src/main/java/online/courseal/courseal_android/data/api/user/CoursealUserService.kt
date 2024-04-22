@@ -8,6 +8,11 @@ import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.ErrorResponse
 import online.courseal.courseal_android.data.api.ErrorResponseType
 import online.courseal.courseal_android.data.api.httpExceptionWrap
+import online.courseal.courseal_android.data.api.user.data.UserActivityApiError
+import online.courseal.courseal_android.data.api.user.data.UserActivityApiResponse
+import online.courseal.courseal_android.data.api.user.data.UserApiError
+import online.courseal.courseal_android.data.api.user.data.UserApiResponse
+import online.courseal.courseal_android.data.api.user.data.UserListData
 import online.courseal.courseal_android.data.database.dao.ServerDao
 import javax.inject.Inject
 

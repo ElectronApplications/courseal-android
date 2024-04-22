@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.user.CoursealUserService
-import online.courseal.courseal_android.data.api.user.UserListData
+import online.courseal.courseal_android.data.api.user.data.UserListData
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import javax.inject.Inject
 

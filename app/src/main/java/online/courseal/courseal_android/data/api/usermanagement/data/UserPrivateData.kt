@@ -1,10 +1,10 @@
-package online.courseal.courseal_android.data.api.usermanagement
+package online.courseal.courseal_android.data.api.usermanagement.data
 
 import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import online.courseal.courseal_android.data.api.user.UserCourseInformation
-import online.courseal.courseal_android.data.api.user.UserCourseMaintainer
+import online.courseal.courseal_android.data.api.user.data.UserCourseInformation
+import online.courseal.courseal_android.data.api.user.data.UserCourseMaintainer
 enum class UserManagementApiError {
     UNKNOWN
 }

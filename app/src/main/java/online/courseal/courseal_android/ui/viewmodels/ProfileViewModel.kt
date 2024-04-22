@@ -13,13 +13,13 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.api.user.CoursealUserService
-import online.courseal.courseal_android.data.api.user.UserActivityApiError
-import online.courseal.courseal_android.data.api.user.UserActivityApiResponse
-import online.courseal.courseal_android.data.api.user.UserApiError
-import online.courseal.courseal_android.data.api.user.UserApiResponse
+import online.courseal.courseal_android.data.api.user.data.UserActivityApiError
+import online.courseal.courseal_android.data.api.user.data.UserActivityApiResponse
+import online.courseal.courseal_android.data.api.user.data.UserApiError
+import online.courseal.courseal_android.data.api.user.data.UserApiResponse
 import online.courseal.courseal_android.data.api.usermanagement.CoursealUserManagementService
-import online.courseal.courseal_android.data.api.usermanagement.UserManagementApiError
-import online.courseal.courseal_android.data.api.usermanagement.UserManagementApiResponse
+import online.courseal.courseal_android.data.api.usermanagement.data.UserManagementApiError
+import online.courseal.courseal_android.data.api.usermanagement.data.UserManagementApiResponse
 import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Inject
 
