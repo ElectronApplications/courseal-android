@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.components.editorjs.content
+package online.courseal.courseal_android.ui.components.editorjs.content.blocks
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll

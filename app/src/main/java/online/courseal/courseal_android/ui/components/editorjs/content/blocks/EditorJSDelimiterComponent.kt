@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.components.editorjs.content
+package online.courseal.courseal_android.ui.components.editorjs.content.blocks
 
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material3.MaterialTheme
