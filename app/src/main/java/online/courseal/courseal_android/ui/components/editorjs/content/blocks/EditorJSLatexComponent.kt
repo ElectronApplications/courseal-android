@@ -1,19 +1,15 @@
-package online.courseal.courseal_android.ui.components.editorjs.content
+package online.courseal.courseal_android.ui.components.editorjs.content.blocks
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
-import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSLatexData
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -34,7 +30,8 @@ fun EditorJSLatexComponent(
                 settings.loadWithOverviewMode = true
                 settings.useWideViewPort = true
                 settings.setSupportZoom(false)
-                this.addJavascriptInterface(object {
+
+                addJavascriptInterface(object {
                     @JavascriptInterface
                     fun getFormula(): String {
                         return data.math
@@ -45,7 +42,8 @@ fun EditorJSLatexComponent(
                         return isDark
                     }
                 }, "Android")
-                this.setBackgroundColor(Color.Transparent.toArgb())
+
+                setBackgroundColor(Color.Transparent.toArgb())
             }
         },
         update = {
