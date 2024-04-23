@@ -20,14 +20,39 @@
 
     <style>
         [data-theme=light] {
-            --fg-color: 0xFF1C1B1F;
+            --fg-color: #0x1C1B1F;
+            --bg-color: white;
+            --bg-color-code: #F8F7FA;
+            --border: unset;
         }
 
         [data-theme=dark] {
             --fg-color: white;
+            --bg-color: #242424;
+            --bg-color-code: #37373D;
         }
 
         body {
+            color: var(--fg-color);
+        }
+
+        .ce-toolbar__plus,
+        .ce-toolbar__settings-btn {
+            background-color: var(--bg-color);
+            color: var(--fg-color);
+        }
+
+        .ce-inline-toolbar {
+            color: #1C1B1F;
+        }
+
+        .ce-code__textarea {
+            color: var(--fg-color);
+            background-color: var(--bg-color-code);
+        }
+
+        .math-preview, .math-input, .math-input-wrapper {
+            width: auto;
             color: var(--fg-color);
         }
     </style>
