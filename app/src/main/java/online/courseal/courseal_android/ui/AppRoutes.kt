@@ -16,6 +16,7 @@ import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
 import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
+import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
@@ -321,7 +322,13 @@ fun AppNavigation(
             ),
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            // TODO
+            CourseInfoScreen(
+                onGoBack = { navController.popBackStack() },
+                onOpenProfile = { usertag ->
+                    navController.navigate("${Routes.PROFILE.path}?usertag=$usertag&canGoBack=true")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
     }
 }

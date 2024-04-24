@@ -41,7 +41,7 @@
     <string name="monday_short">Пн</string>
     <string name="thursday_short">Чт</string>
     <string name="sunday_short">Вс</string>
-    <string name="joined">Участник с</string>
+    <string name="joined">Присоединился</string>
     <string name="xp_earned">Всего XP</string>
     <string name="courses">курсов</string>
     <string name="view_courses">Посмотреть курсы</string>
@@ -57,4 +57,8 @@
     <string name="incorrect_password">Неправильный пароль</string>
     <string name="old_password">Старый пароль</string>
     <string name="new_password">Новый пароль</string>
+    <string name="course_not_found">Курс не был найден</string>
+    <string name="enroll">Записаться</string>
+    <string name="already_enrolled">Вы уже записаны</string>
+    <string name="course_maintainers">Сопроводители курса</string>
 </resources>

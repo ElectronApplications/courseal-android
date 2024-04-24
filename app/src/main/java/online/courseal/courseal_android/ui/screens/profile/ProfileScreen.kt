@@ -247,7 +247,7 @@ fun ProfileScreen(
                         }
                     }
 
-                    if (profileUiState.isCurrent) {
+                    if (profileUiState.isCurrent && onGoBack == null) {
                         CoursealSecondaryButton(
                             modifier = Modifier
                                 .padding(top = 20.dp)
