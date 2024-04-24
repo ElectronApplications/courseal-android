@@ -97,7 +97,12 @@
                 },
                 image: {
                     class: ImageTool,
-                    inlineToolbar: true
+                    inlineToolbar: true,
+                    config: {
+                        endpoints: {
+                            byFile: Android.getSaveEndpoint()
+                        }
+                    }
                 },
                 code: {
                     class: CodeTool,
@@ -115,7 +120,7 @@
             editor.save().then((outputData) => {
                 Android.setData(JSON.stringify(outputData));
             }).catch((error) => alert(error));
-        }, 1000);
+        }, 500);
     </script>
 </body>
 </html>
