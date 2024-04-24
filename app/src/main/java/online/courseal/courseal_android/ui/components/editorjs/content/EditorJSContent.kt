@@ -24,6 +24,15 @@ import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSList
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSParagraph
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSQuote
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSWarning
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSCodeComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSDelimiterComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSHeaderComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSImageComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSLatexComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSListComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSParagraphComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSQuoteComponent
+import online.courseal.courseal_android.ui.components.editorjs.content.blocks.EditorJSWarningComponent
 
 @Composable
 fun EditorJSContentComponent(
