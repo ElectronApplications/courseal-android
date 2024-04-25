@@ -33,6 +33,7 @@ enum class ProfileUiError {
 
 data class ProfileUiState(
     val loading: Boolean = true,
+    val needUpdate: Boolean = true,
     val isCurrent: Boolean = false,
     val userPublicInfo: UserApiResponse? = null,
     val userPrivateInfo: UserManagementApiResponse? = null,
@@ -50,12 +51,6 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            update()
-        }
-    }
 
     suspend fun update() {
         val currentUser = userDao.getCurrentUser()
@@ -125,6 +120,7 @@ class ProfileViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 loading = false,
+                needUpdate = false,
                 isCurrent = isCurrent,
                 userPublicInfo = userPublicInfo.await(),
                 userPrivateInfo = userPrivateInfo.await(),
@@ -133,6 +129,10 @@ class ProfileViewModel @Inject constructor(
                 errorUnrecoverableState = errorUnrecoverableState
             )
         }
+    }
+
+    fun setNeedUpdate() {
+        _uiState.update { it.copy(needUpdate = true) }
     }
 
     fun hideError() {
