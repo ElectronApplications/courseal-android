@@ -61,4 +61,7 @@
     <string name="enroll">Записаться</string>
     <string name="already_enrolled">Вы уже записаны</string>
     <string name="course_maintainers">Сопроводители курса</string>
+    <string name="expand">Раскрыть</string>
+    <string name="your_courses">Ваши курсы</string>
+    <string name="no_permissions">Нет прав</string>
 </resources>

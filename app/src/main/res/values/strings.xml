@@ -61,4 +61,7 @@
     <string name="enroll">Enroll</string>
     <string name="already_enrolled">Already enrolled</string>
     <string name="course_maintainers">Course\'s maintainers</string>
+    <string name="expand">Expand</string>
+    <string name="your_courses">Your courses</string>
+    <string name="no_permissions">No permissions</string>
 </resources>

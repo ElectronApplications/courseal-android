@@ -73,8 +73,8 @@ class SettingsUsernameViewModel @Inject constructor(
                 ChangeNameApiError.UNKNOWN -> _uiState.update { it.copy(errorState = SettingsUsernameUiError.UNKNOWN) }
             }
             is ApiResult.Success -> {
+                profileViewModel.setNeedUpdate()
                 onGoBack()
-                profileViewModel.update()
             }
         }
         _uiState.update { it.copy(makingRequest = false) }

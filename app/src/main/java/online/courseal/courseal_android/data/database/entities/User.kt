@@ -24,5 +24,7 @@ data class User(
     @PrimaryKey(autoGenerate = true) @ColumnInfo("user_id") val userId: Long = 0,
     @ColumnInfo("usertag") val usertag: String,
     @ColumnInfo("logged_in") val loggedIn: Boolean,
-    @ColumnInfo("server_id") val serverId: Long
+    @ColumnInfo("server_id") val serverId: Long,
+    @ColumnInfo("current_course_id") val currentCourseId: Int? = null,
+    @ColumnInfo("current_editor_course_id") val currentEditorCourseId: Int? = null
 )
