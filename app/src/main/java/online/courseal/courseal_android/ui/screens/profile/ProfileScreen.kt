@@ -89,7 +89,6 @@ fun ProfileScreen(
         }
     }
 
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

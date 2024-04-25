@@ -17,7 +17,10 @@ import online.courseal.courseal_android.data.database.entities.UserCookie
         UserCookie::class,
         Server::class
     ],
-    version = 2,
+    version = 3,
+    autoMigrations = [
+        AutoMigration(from = 2, to = 3)
+    ]
 )
 @TypeConverters(Converters::class)
 abstract class CoursealDatabase : RoomDatabase() {

@@ -205,7 +205,9 @@ fun AppNavigation(
             navBarDefault = NavBarOptions.SHOW,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            EditorScreen()
+            EditorScreen(
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Profile's settings Screen */
