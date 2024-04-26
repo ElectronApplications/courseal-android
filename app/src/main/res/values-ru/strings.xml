@@ -64,4 +64,5 @@
     <string name="expand">Раскрыть</string>
     <string name="your_courses">Ваши курсы</string>
     <string name="no_permissions">Нет прав</string>
+    <string name="create_course">Создать новый курс</string>
 </resources>

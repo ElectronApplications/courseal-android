@@ -203,6 +203,18 @@ class EditorViewModel @Inject constructor(
         }
     }
 
+    suspend fun switchCourse(courseId: Int) {
+        val currentUser = userDao.getCurrentUser()!!
+        userDao.updateUser(currentUser.copy(currentCourseId = courseId))
+
+        _uiState.update {
+            it.copy(
+                loading = true,
+                needUpdate = true
+            )
+        }
+    }
+
     fun hideError() {
         _uiState.update { it.copy(errorState = EditorUiError.NONE) }
     }

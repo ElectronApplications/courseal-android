@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
@@ -64,7 +65,8 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = stringResource(R.string.change_profile_picture)
+                        text = stringResource(R.string.change_profile_picture),
+                        fontWeight = FontWeight.SemiBold
                     )
                     Image(
                         modifier = Modifier
@@ -82,7 +84,8 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = stringResource(R.string.change_username)
+                        text = stringResource(R.string.change_username),
+                        fontWeight = FontWeight.SemiBold
                     )
                     Image(
                         modifier = Modifier
@@ -100,7 +103,8 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = stringResource(R.string.change_password)
+                        text = stringResource(R.string.change_password),
+                        fontWeight = FontWeight.SemiBold
                     )
                     Image(
                         modifier = Modifier
@@ -118,7 +122,8 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = stringResource(R.string.view_accounts)
+                        text = stringResource(R.string.view_accounts),
+                        fontWeight = FontWeight.SemiBold
                     )
                     Image(
                         modifier = Modifier
