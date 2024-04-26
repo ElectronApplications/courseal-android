@@ -206,6 +206,7 @@ fun AppNavigation(
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
             EditorScreen(
+                onCreateCourse = { /* TODO */ },
                 onUnrecoverable = onUnrecoverable
             )
         }

@@ -1,13 +1,19 @@
 package online.courseal.courseal_android.ui.screens.editor
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,27 +22,40 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.AnimatedArrowDown
 import online.courseal.courseal_android.ui.components.CoursealTopBar
 import online.courseal.courseal_android.ui.components.CoursealDropdownMenu
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
+import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
+import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.ErrorDialog
+import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorUiError
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
 @Composable
 fun EditorScreen(
     modifier: Modifier = Modifier,
+    onCreateCourse: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel = hiltViewModel()
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val editorUiState by editorViewModel.uiState.collectAsState()
 
     if (editorUiState.errorUnrecoverableState != null) {
@@ -54,7 +73,7 @@ fun EditorScreen(
         }
     )
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = editorUiState.loading) {
         if (editorUiState.needUpdate) {
             editorViewModel.update()
         }
@@ -87,14 +106,60 @@ fun EditorScreen(
                 ) {
                     CircularProgressIndicator()
                 }
+            } else {
+                Column {
+                    Text(editorUiState.courseInfo?.courseName ?: "def")
+                }
             }
 
             this@Column.CoursealDropdownMenu(
-                modifier = Modifier.verticalScroll(rememberScrollState()),
+                modifier = Modifier
+                    .adaptiveContainerWidth()
+                    .verticalScroll(rememberScrollState()),
                 visible = dropdownExpanded,
                 setVisible = { dropdownExpanded = it }
             ) {
+                CoursealOutlinedCard(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(0.85f)
+                ) {
+                    editorUiState.courses?.forEach { course ->
+                        CoursealOutlinedCardItem(
+                            modifier = Modifier.clickable {
+                                dropdownExpanded = false
+                                coroutineScope.launch {
+                                    editorViewModel.switchCourse(course.courseId)
+                                }
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = course.courseName,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Image(
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                                    .width(20.dp),
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = course.courseName,
+                                contentScale = ContentScale.FillWidth,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                        }
+                    }
+                }
 
+                CoursealPrimaryButton(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(0.85f),
+                    text = stringResource(R.string.create_course),
+                    enabled = editorUiState.canCreateCourses,
+                    onClick = onCreateCourse
+                )
             }
         }
     }
