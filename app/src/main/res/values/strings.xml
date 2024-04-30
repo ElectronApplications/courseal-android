@@ -65,4 +65,7 @@
     <string name="your_courses">Your courses</string>
     <string name="no_permissions">No permissions</string>
     <string name="create_course">Create a new course</string>
+    <string name="structure">Structure</string>
+    <string name="lessons">Lessons</string>
+    <string name="tasks">Tasks</string>
 </resources>

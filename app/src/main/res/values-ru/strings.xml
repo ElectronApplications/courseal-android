@@ -65,4 +65,7 @@
     <string name="your_courses">Ваши курсы</string>
     <string name="no_permissions">Нет прав</string>
     <string name="create_course">Создать новый курс</string>
+    <string name="structure">Структура</string>
+    <string name="lessons">Занятия</string>
+    <string name="tasks">Задачи</string>
 </resources>

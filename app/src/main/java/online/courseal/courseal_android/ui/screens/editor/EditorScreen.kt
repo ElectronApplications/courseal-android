@@ -1,6 +1,8 @@
 package online.courseal.courseal_android.ui.screens.editor
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,14 +10,24 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,6 +60,13 @@ import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorUiError
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
+enum class PagerItems(val titleId: Int) {
+    STRUCTURE(R.string.structure),
+    LESSONS(R.string.lessons),
+    TASKS(R.string.tasks)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun EditorScreen(
     modifier: Modifier = Modifier,
@@ -84,7 +103,9 @@ fun EditorScreen(
     Column(
         modifier = modifier
     ) {
-        CoursealTopBar {
+        CoursealTopBar(
+            dividerEnabled = false
+        ) {
             Row(
                 modifier = Modifier.clickable { dropdownExpanded = !dropdownExpanded },
                 verticalAlignment = Alignment.CenterVertically
@@ -108,7 +129,56 @@ fun EditorScreen(
                 }
             } else {
                 Column {
-                    Text(editorUiState.courseInfo?.courseName ?: "def")
+                    val pagerState = rememberPagerState(pageCount = { PagerItems.entries.size })
+                    
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    ) {
+                        PagerItems.entries.forEachIndexed { index, entry ->
+                            Tab(
+                                selected = index == pagerState.currentPage,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                }
+                            ) {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(vertical = 12.dp),
+                                    text = stringResource(entry.titleId)
+                                )
+                            }
+                        }
+                    }
+
+                    HorizontalPager(
+                        modifier = Modifier.fillMaxSize(),
+                        state = pagerState
+                    ) { page ->
+                        when (page) {
+                            PagerItems.STRUCTURE.ordinal -> {
+                                EditorStructureTab(
+                                    onUnrecoverable = onUnrecoverable,
+                                    editorViewModel = editorViewModel
+                                )
+                            }
+                            PagerItems.LESSONS.ordinal -> {
+                                EditorLessonsTab(
+                                    onUnrecoverable = onUnrecoverable,
+                                    editorViewModel = editorViewModel
+                                )
+                            }
+                            PagerItems.TASKS.ordinal -> {
+                                EditorTasksTab(
+                                    onUnrecoverable = onUnrecoverable,
+                                    editorViewModel = editorViewModel
+                                )
+                            }
+                        }
+                    }
                 }
             }
 

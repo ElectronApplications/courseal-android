@@ -22,6 +22,7 @@ fun CoursealTopBar(
     rowModifier: Modifier = Modifier,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Center,
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    dividerEnabled: Boolean = true,
     content: @Composable RowScope.() -> Unit
 ) {
     Column(
@@ -36,6 +37,7 @@ fun CoursealTopBar(
             verticalAlignment = verticalAlignment,
             content = content
         )
-        HorizontalDivider()
+        if (dividerEnabled)
+            HorizontalDivider()
     }
 }

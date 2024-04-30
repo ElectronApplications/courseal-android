@@ -24,7 +24,6 @@ import online.courseal.courseal_android.data.api.coursemanagement.data.Structure
 import online.courseal.courseal_android.data.api.coursemanagement.data.TaskListApiError
 import online.courseal.courseal_android.data.api.coursemanagement.data.TaskListData
 import online.courseal.courseal_android.data.api.usermanagement.CoursealUserManagementService
-import online.courseal.courseal_android.data.api.usermanagement.data.UserManagementApiError
 import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
