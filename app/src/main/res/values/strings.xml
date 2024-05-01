@@ -68,4 +68,9 @@
     <string name="structure">Structure</string>
     <string name="lessons">Lessons</string>
     <string name="tasks">Tasks</string>
+    <string name="no_course_chosen">No course currently chosen</string>
+    <string name="lecture">Lecture</string>
+    <string name="practice">Practice</string>
+    <string name="training">Training</string>
+    <string name="exam">Exam</string>
 </resources>

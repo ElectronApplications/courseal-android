@@ -68,4 +68,9 @@
     <string name="structure">Структура</string>
     <string name="lessons">Занятия</string>
     <string name="tasks">Задачи</string>
+    <string name="no_course_chosen">Курс на данный момент не выбран</string>
+    <string name="lecture">Лекция</string>
+    <string name="practice">Практика</string>
+    <string name="training">Тренировка</string>
+    <string name="exam">Экзамен</string>
 </resources>

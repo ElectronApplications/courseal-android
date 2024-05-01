@@ -228,6 +228,9 @@ fun AppNavigation(
                     navController.navigate(Routes.PROFILE_SETTINGS_PASSWORD.path)
                 },
                 onViewAccounts = {
+                    navController.clearBackStack(Routes.COURSE.path)
+                    navController.clearBackStack(Routes.PROFILE.path)
+                    navController.clearBackStack(Routes.EDITOR.path)
                     navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
                         popUpTo(0)
                     }

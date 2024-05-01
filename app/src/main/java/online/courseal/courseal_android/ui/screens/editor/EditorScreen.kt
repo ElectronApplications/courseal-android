@@ -2,7 +2,6 @@ package online.courseal.courseal_android.ui.screens.editor
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,24 +9,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
@@ -104,7 +96,7 @@ fun EditorScreen(
         modifier = modifier
     ) {
         CoursealTopBar(
-            dividerEnabled = false
+            dividerEnabled = !dropdownExpanded && (editorUiState.loading || editorUiState.courseInfo == null)
         ) {
             Row(
                 modifier = Modifier.clickable { dropdownExpanded = !dropdownExpanded },
@@ -127,7 +119,7 @@ fun EditorScreen(
                 ) {
                     CircularProgressIndicator()
                 }
-            } else {
+            } else if (editorUiState.courseInfo != null) {
                 Column {
                     val pagerState = rememberPagerState(pageCount = { PagerItems.entries.size })
                     
@@ -161,24 +153,38 @@ fun EditorScreen(
                         when (page) {
                             PagerItems.STRUCTURE.ordinal -> {
                                 EditorStructureTab(
+                                    modifier = Modifier.fillMaxSize(),
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )
                             }
                             PagerItems.LESSONS.ordinal -> {
                                 EditorLessonsTab(
+                                    modifier = Modifier.fillMaxSize(),
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )
                             }
                             PagerItems.TASKS.ordinal -> {
                                 EditorTasksTab(
+                                    modifier = Modifier.fillMaxSize(),
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )
                             }
                         }
                     }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_course_chosen)
+                    )
                 }
             }
 
