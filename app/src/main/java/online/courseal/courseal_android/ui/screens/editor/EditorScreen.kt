@@ -43,7 +43,7 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.AnimatedArrowDown
 import online.courseal.courseal_android.ui.components.CoursealTopBar
-import online.courseal.courseal_android.ui.components.CoursealDropdownMenu
+import online.courseal.courseal_android.ui.components.CoursealDropdownScreen
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
@@ -188,7 +188,7 @@ fun EditorScreen(
                 }
             }
 
-            this@Column.CoursealDropdownMenu(
+            this@Column.CoursealDropdownScreen(
                 modifier = Modifier
                     .adaptiveContainerWidth()
                     .verticalScroll(rememberScrollState()),

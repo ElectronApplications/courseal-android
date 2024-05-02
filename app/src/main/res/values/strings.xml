@@ -73,4 +73,9 @@
     <string name="practice">Practice</string>
     <string name="training">Training</string>
     <string name="exam">Exam</string>
+    <string name="add_lesson">Add lesson</string>
+    <string name="view_lesson">View lesson</string>
+    <string name="view_task">View task</string>
+    <string name="create_lesson">Create a new lesson</string>
+    <string name="create_task">Create a new task</string>
 </resources>

@@ -44,14 +44,14 @@ fun AnimatedArrowDown(
 }
 
 @Composable
-fun ColumnScope.CoursealDropdownMenu(
+fun ColumnScope.CoursealDropdownScreen(
     modifier: Modifier = Modifier,
     visible: Boolean,
     setVisible: (Boolean) -> Unit,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Box {
-        this@CoursealDropdownMenu.AnimatedVisibility(
+        this@CoursealDropdownScreen.AnimatedVisibility(
             visible = visible,
             enter = fadeIn(),
             exit = fadeOut()
@@ -68,7 +68,7 @@ fun ColumnScope.CoursealDropdownMenu(
             )
         }
 
-        this@CoursealDropdownMenu.AnimatedVisibility(
+        this@CoursealDropdownScreen.AnimatedVisibility(
             visible = visible
         ) {
             Box {

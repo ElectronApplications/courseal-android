@@ -73,4 +73,9 @@
     <string name="practice">Практика</string>
     <string name="training">Тренировка</string>
     <string name="exam">Экзамен</string>
+    <string name="add_lesson">Добавить занятие</string>
+    <string name="view_lesson">Посмотреть занятие</string>
+    <string name="view_task">Посмотреть задачу</string>
+    <string name="create_lesson">Создать новое занятие</string>
+    <string name="create_task">Создать новую задачу</string>
 </resources>
