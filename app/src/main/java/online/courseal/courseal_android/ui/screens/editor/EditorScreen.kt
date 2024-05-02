@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -63,6 +64,7 @@ enum class PagerItems(val titleId: Int) {
 fun EditorScreen(
     modifier: Modifier = Modifier,
     onCreateCourse: () -> Unit,
+    onEditCourse: (courseId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel = hiltViewModel()
 ) {
@@ -214,15 +216,27 @@ fun EditorScreen(
                                 text = course.courseName,
                                 fontWeight = FontWeight.SemiBold
                             )
-                            Image(
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .width(20.dp),
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = course.courseName,
-                                contentScale = ContentScale.FillWidth,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                            )
+                            Row {
+                                Image(
+                                    modifier = Modifier
+                                        .padding(end = 4.dp)
+                                        .width(20.dp)
+                                        .clickable { onEditCourse(course.courseId) },
+                                    imageVector = Icons.Filled.Edit,
+                                    contentDescription = stringResource(R.string.edit_course),
+                                    contentScale = ContentScale.FillWidth,
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                                )
+                                Image(
+                                    modifier = Modifier
+                                        .padding(start = 4.dp)
+                                        .width(20.dp),
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                    contentDescription = course.courseName,
+                                    contentScale = ContentScale.FillWidth,
+                                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                                )
+                            }
                         }
                     }
                 }

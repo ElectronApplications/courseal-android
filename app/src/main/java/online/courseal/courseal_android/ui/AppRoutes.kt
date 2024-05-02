@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -17,6 +18,7 @@ import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
 import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
+import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
@@ -28,6 +30,7 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScre
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
+import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
 enum class Routes(val path: String) {
     WELCOME("welcome"),
@@ -47,6 +50,8 @@ enum class Routes(val path: String) {
 
     SEARCH_USERS("search-users"),
     SEARCH_COURSES("search-courses"),
+
+    CREATE_EDIT_COURSE("create-edit-course"),
 
     COURSE_INFO("course-info"),
 }
@@ -198,7 +203,7 @@ fun AppNavigation(
             )
         }
 
-        /* Creator Screen */
+        /* Editor Screen */
         coursealRoute(
             route = Routes.EDITOR.path,
             transitionFadeDefault = true,
@@ -206,7 +211,12 @@ fun AppNavigation(
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
             EditorScreen(
-                onCreateCourse = { /* TODO */ },
+                onCreateCourse = {
+                    navController.navigate(Routes.CREATE_EDIT_COURSE.path)
+                },
+                onEditCourse = { courseId ->
+                    navController.navigate("${Routes.CREATE_EDIT_COURSE.path}?isCreating=false&courseId=${courseId}")
+                },
                 onUnrecoverable = onUnrecoverable
             )
         }
@@ -295,6 +305,27 @@ fun AppNavigation(
                 },
                 onUnrecoverable = onUnrecoverable,
                 profileViewModel = parentViewModel
+            )
+        }
+
+        /* Create or edit course Screen */
+        coursealRoute(
+            route = "${Routes.CREATE_EDIT_COURSE.path}?isCreating={isCreating}&courseId={courseId}",
+            arguments = listOf(
+                navArgument("isCreating") { type = NavType.BoolType; defaultValue = true },
+                navArgument("courseId") { type = NavType.IntType; defaultValue = -1 }
+            ),
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.EDITOR.path)
+            }
+            val parentViewModel = hiltViewModel<EditorViewModel>(parentEntry)
+
+            CreateEditCourseScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                editorViewModel = parentViewModel
             )
         }
 

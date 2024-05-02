@@ -76,7 +76,7 @@ class CoursealAuthService @Inject constructor(
 
         // If the first try is not successful we refresh the JWT and try again
         // If it doesn't work the second time then the refresh token is probably invalid
-        for (i in 0 ..< 2) {
+        for (i in 0 ..<3) {
             val resultInner = inner()
 
             return@httpExceptionWrap if (resultInner !is ApiResult.Error || resultInner.errorValue is AuthWrapperError.InnerError) {
