@@ -44,6 +44,7 @@ fun LessonComponent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     lessonType: LessonType,
+    enabled: Boolean = true,
     @FloatRange(from = 0.0, to = 1.0) progress: Float = 1.0f
 ) {
     Box(
@@ -55,19 +56,24 @@ fun LessonComponent(
         Surface(
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(onClick = onClick),
+                .let { if (enabled) it.clickable(onClick = onClick) else it },
             color = MaterialTheme.colorScheme.background
         ) {
             Image(
                 modifier = Modifier
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                LocalCoursealPalette.current.welcomeGradientTop,
-                                LocalCoursealPalette.current.welcomeGradientBottom
+                    .let {
+                        if (enabled)
+                            it.background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        LocalCoursealPalette.current.welcomeGradientTop,
+                                        LocalCoursealPalette.current.welcomeGradientBottom
+                                    )
+                                )
                             )
-                        )
-                    )
+                        else
+                            it.background(MaterialTheme.colorScheme.surface)
+                    }
                     .padding(12.dp)
                     .width(36.dp),
                 contentScale = ContentScale.FillWidth,
@@ -82,7 +88,9 @@ fun LessonComponent(
             )
         }
 
-        val arcColor = LocalCoursealPalette.current.welcomeGradientBottom
+        val arcColor = if (enabled) LocalCoursealPalette.current.welcomeGradientBottom
+            else MaterialTheme.colorScheme.surface
+
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
