@@ -78,4 +78,8 @@
     <string name="view_task">Посмотреть задачу</string>
     <string name="create_lesson">Создать новое занятие</string>
     <string name="create_task">Создать новую задачу</string>
+    <string name="edit_course">Отредактировать курс</string>
+    <string name="course_name">Название курса</string>
+    <string name="course_description">Описание курса</string>
+    <string name="delete_course">Удалить курс</string>
 </resources>

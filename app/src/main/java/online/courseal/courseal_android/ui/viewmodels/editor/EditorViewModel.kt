@@ -204,6 +204,15 @@ class EditorViewModel @Inject constructor(
         }
     }
 
+    fun setNeedUpdate() {
+        _uiState.update {
+            it.copy(
+                loading = true,
+                needUpdate = true
+            )
+        }
+    }
+
     suspend fun switchCourse(courseId: Int) {
         val currentUser = userDao.getCurrentUser()!!
         userDao.updateUser(currentUser.copy(currentCourseId = courseId))

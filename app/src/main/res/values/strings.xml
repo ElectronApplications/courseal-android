@@ -78,4 +78,8 @@
     <string name="view_task">View task</string>
     <string name="create_lesson">Create a new lesson</string>
     <string name="create_task">Create a new task</string>
+    <string name="edit_course">Edit course</string>
+    <string name="course_name">Course name</string>
+    <string name="course_description">Course description</string>
+    <string name="delete_course">Delete the course</string>
 </resources>
