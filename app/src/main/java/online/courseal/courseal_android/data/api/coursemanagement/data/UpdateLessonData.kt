@@ -11,11 +11,6 @@ data class UpdateLessonApiRequest(
     val lesson: CoursealLesson
 )
 
-@Serializable
-data class UpdateLessonApiResponse(
-    @SerialName("lesson_id") val lessonId: Int
-)
-
 enum class UpdateLessonApiError {
     NO_PERMISSIONS,
     UNKNOWN

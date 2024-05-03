@@ -142,7 +142,7 @@ fun CreateEditTaskScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 20.dp),
+                    .padding(top = 12.dp),
                 text = stringResource(R.string.edit_task_body),
                 onClick = onEditTaskBody
             )
@@ -192,7 +192,7 @@ fun CreateEditTaskScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 20.dp)
+                    .padding(top = 12.dp)
             ) {
                 createEditTaskUiState.options.forEachIndexed { index, option ->
                     CoursealOutlinedCardItem(
@@ -237,7 +237,7 @@ fun CreateEditTaskScreen(
                 modifier = Modifier
                     .fillMaxWidth(0.75f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 20.dp),
+                    .padding(top = 12.dp),
                 text = stringResource(R.string.add_option),
                 onClick = {
                     createEditTaskViewModel.addOption()

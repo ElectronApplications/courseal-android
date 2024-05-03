@@ -93,4 +93,8 @@
     <string name="multiple_option">Множественный ответ</string>
     <string name="add_option">Добавить новый ответ</string>
     <string name="delete_option">Удалить ответ</string>
+    <string name="progress_needed">Сколько раз нужно выполнить занятие</string>
+    <string name="edit_lecture_content">Отредактировать текст лекции</string>
+    <string name="remove_task">Убрать задачу</string>
+    <string name="add_task">Добавить задачу</string>
 </resources>

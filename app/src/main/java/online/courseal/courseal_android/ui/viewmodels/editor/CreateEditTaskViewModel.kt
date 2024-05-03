@@ -130,27 +130,23 @@ class CreateEditTaskViewModel @Inject constructor(
     }
 
     fun updateTaskType(type: CoursealTaskType) {
-        updateTask(when (val currentTask = task) {
-            is CoursealTaskMultiple -> {
-                when (type) {
-                    CoursealTaskType.SINGLE -> CoursealTaskSingle(
-                        body = currentTask.body,
-                        options = currentTask.options.map { it.text },
-                        correctOption = 0
-                    )
-                    CoursealTaskType.MULTIPLE -> currentTask
-                }
+        updateTask(when (type) {
+            CoursealTaskType.SINGLE -> when (val currentTask = task) {
+                is CoursealTaskMultiple -> CoursealTaskSingle(
+                    body = currentTask.body,
+                    options = currentTask.options.map { it.text },
+                    correctOption = 0
+                )
+                is CoursealTaskSingle -> currentTask
             }
-            is CoursealTaskSingle -> {
-                when (type) {
-                    CoursealTaskType.SINGLE -> currentTask
-                    CoursealTaskType.MULTIPLE -> CoursealTaskMultiple(
-                        body = currentTask.body,
-                        options = currentTask.options.mapIndexed { index, option ->
-                            TaskMultipleOption(option, index == currentTask.correctOption)
-                        }
-                    )
-                }
+            CoursealTaskType.MULTIPLE -> when (val currentTask = task) {
+                is CoursealTaskMultiple -> currentTask
+                is CoursealTaskSingle -> CoursealTaskMultiple(
+                    body = currentTask.body,
+                    options = currentTask.options.mapIndexed { index, option ->
+                        TaskMultipleOption(option, index == currentTask.correctOption)
+                    }
+                )
             }
         })
     }

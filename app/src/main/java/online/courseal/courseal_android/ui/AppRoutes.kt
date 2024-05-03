@@ -20,6 +20,7 @@ import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditLessonScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditTaskScreen
+import online.courseal.courseal_android.ui.screens.editor.EditLectureContentScreen
 import online.courseal.courseal_android.ui.screens.editor.EditTaskBodyScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
@@ -32,6 +33,7 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScre
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
+import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditLessonViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
@@ -59,6 +61,7 @@ enum class Routes(val path: String) {
     CREATE_EDIT_TASK("create-edit-task"),
 
     EDIT_TASK_BODY("edit-task-body"),
+    EDIT_LECTURE_CONTENT("edit-lecture-content"),
 
     COURSE_INFO("course-info"),
 }
@@ -364,8 +367,28 @@ fun AppNavigation(
 
             CreateEditLessonScreen(
                 onGoBack = { navController.popBackStack() },
+                onEditLectureContent = {
+                    navController.navigate(Routes.EDIT_LECTURE_CONTENT.path)
+                },
                 onUnrecoverable = onUnrecoverable,
                 editorViewModel = parentViewModel
+            )
+        }
+
+        /* Edit lecture content Screen */
+        coursealRoute(
+            route = Routes.EDIT_LECTURE_CONTENT.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.CREATE_EDIT_LESSON.path)
+            }
+            val parentViewModel = hiltViewModel<CreateEditLessonViewModel>(parentEntry)
+
+            EditLectureContentScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                createEditLessonViewModel = parentViewModel
             )
         }
 
@@ -393,6 +416,7 @@ fun AppNavigation(
             )
         }
 
+        /* Edit task body Screen */
         coursealRoute(
             route = Routes.EDIT_TASK_BODY.path,
             setNavBarShown = topLevelViewModel::setNavBarShown
