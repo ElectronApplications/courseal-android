@@ -44,7 +44,6 @@ import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.coursedata.tasks.CoursealTaskMultiple
 import online.courseal.courseal_android.data.coursedata.tasks.CoursealTaskSingle
-import online.courseal.courseal_android.data.coursedata.tasks.TaskMultipleOption
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealErrorButton
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
@@ -58,7 +57,6 @@ import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.editor.CoursealTaskType
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskUiError
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskViewModel
-import online.courseal.courseal_android.ui.viewmodels.editor.EditorUiError
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
