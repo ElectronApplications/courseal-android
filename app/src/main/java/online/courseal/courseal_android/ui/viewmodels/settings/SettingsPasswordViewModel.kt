@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,8 +34,8 @@ class SettingsPasswordViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsPasswordUiState())
     val uiState: StateFlow<SettingsPasswordUiState> = _uiState.asStateFlow()
 
-    private var oldPassword by mutableStateOf("")
-    private var newPassword by mutableStateOf("")
+    private var oldPassword = ""
+    private var newPassword = ""
 
     fun updateOldPassword(oldPassword: String) {
         this.oldPassword = oldPassword

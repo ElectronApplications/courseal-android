@@ -65,6 +65,10 @@ fun EditorScreen(
     modifier: Modifier = Modifier,
     onCreateCourse: () -> Unit,
     onEditCourse: (courseId: Int) -> Unit,
+    onCreateLesson: () -> Unit,
+    onEditLesson: (lessonId: Int) -> Unit,
+    onCreateTask: () -> Unit,
+    onEditTask: (taskId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel = hiltViewModel()
 ) {
@@ -96,6 +100,7 @@ fun EditorScreen(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
     ) {
         CoursealTopBar(
             dividerEnabled = !dropdownExpanded && (editorUiState.loading || editorUiState.courseInfo == null)
@@ -156,6 +161,11 @@ fun EditorScreen(
                             PagerItems.STRUCTURE.ordinal -> {
                                 EditorStructureTab(
                                     modifier = Modifier.fillMaxSize(),
+                                    onShowLessons = {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(PagerItems.LESSONS.ordinal)
+                                        }
+                                    },
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )
@@ -163,6 +173,8 @@ fun EditorScreen(
                             PagerItems.LESSONS.ordinal -> {
                                 EditorLessonsTab(
                                     modifier = Modifier.fillMaxSize(),
+                                    onCreateLesson = onCreateLesson,
+                                    onEditLesson = onEditLesson,
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )
@@ -170,6 +182,8 @@ fun EditorScreen(
                             PagerItems.TASKS.ordinal -> {
                                 EditorTasksTab(
                                     modifier = Modifier.fillMaxSize(),
+                                    onCreateTask = onCreateTask,
+                                    onEditTask = onEditTask,
                                     onUnrecoverable = onUnrecoverable,
                                     editorViewModel = editorViewModel
                                 )

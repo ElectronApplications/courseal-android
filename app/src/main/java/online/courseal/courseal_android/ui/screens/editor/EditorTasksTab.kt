@@ -32,6 +32,8 @@ import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 @Composable
 fun EditorTasksTab(
     modifier: Modifier = Modifier,
+    onCreateTask: () -> Unit,
+    onEditTask: (taskId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel
 ) {
@@ -52,7 +54,7 @@ fun EditorTasksTab(
             ) {
                 tasks.forEach { task ->
                     CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { /* TODO */ },
+                        modifier = Modifier.clickable { onEditTask(task.taskId) },
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -80,7 +82,7 @@ fun EditorTasksTab(
                     .padding(top = 12.dp)
                     .fillMaxWidth(0.85f),
                 text = stringResource(R.string.create_task),
-                onClick = { /* TODO */ }
+                onClick = onCreateTask
             )
         }
     }

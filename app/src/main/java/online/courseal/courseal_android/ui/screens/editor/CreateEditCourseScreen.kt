@@ -30,6 +30,7 @@ import online.courseal.courseal_android.ui.components.CoursealErrorButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.TopBack
+import online.courseal.courseal_android.ui.components.TopCancel
 import online.courseal.courseal_android.ui.components.TopConfirm
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditCourseUiError
@@ -62,7 +63,7 @@ fun CreateEditCourseScreen(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         Row(
@@ -70,7 +71,7 @@ fun CreateEditCourseScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            TopBack(onClick = onGoBack)
+            TopCancel(onClick = onGoBack)
             TopConfirm(
                 enabled = !createEditCourseUiState.makingRequest,
                 onClick = {

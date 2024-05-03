@@ -1,10 +1,6 @@
 package online.courseal.courseal_android.ui.viewmodels.editor
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -12,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.api.coursemanagement.CoursealCourseManagementService
@@ -60,7 +55,7 @@ class EditorViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(EditorUiState())
     val uiState: StateFlow<EditorUiState> = _uiState.asStateFlow()
 
-    private var currentCourseId: Int? by mutableStateOf(null)
+    private var currentCourseId: Int? = null
 
     suspend fun update() {
         currentCourseId = userDao.getCurrentUser()?.currentCourseId

@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -50,8 +47,8 @@ class LoginViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    private var usertag by mutableStateOf("")
-    private var password by mutableStateOf("")
+    private var usertag = ""
+    private var password = ""
 
     private lateinit var server: Server
     private var currentUserId: Long? = null
