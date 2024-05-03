@@ -82,4 +82,15 @@
     <string name="course_name">Название курса</string>
     <string name="course_description">Описание курса</string>
     <string name="delete_course">Удалить курс</string>
+    <string name="edit_task">Редактировать задачу</string>
+    <string name="edit_lesson">Редактировать занятие</string>
+    <string name="task_name">Название задачи</string>
+    <string name="lesson_name">Название занятия</string>
+    <string name="delete_task">Удалить задачу</string>
+    <string name="delete_lesson">Удалить занятие</string>
+    <string name="edit_task_body">Отредактировать тело задачи</string>
+    <string name="single_option">Единственный ответ</string>
+    <string name="multiple_option">Множественный ответ</string>
+    <string name="add_option">Добавить новый ответ</string>
+    <string name="delete_option">Удалить ответ</string>
 </resources>

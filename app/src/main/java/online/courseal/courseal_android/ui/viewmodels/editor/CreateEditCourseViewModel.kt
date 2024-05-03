@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.editor
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +13,6 @@ import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.api.coursemanagement.CoursealCourseManagementService
 import online.courseal.courseal_android.data.database.dao.UserDao
-import online.courseal.courseal_android.ui.OnUnrecoverable
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -48,8 +44,8 @@ class CreateEditCourseViewModel @Inject constructor(
     private var isCreating by Delegates.notNull<Boolean>()
     private var courseId: Int? = null
 
-    private var courseName by mutableStateOf("")
-    private var courseDescription by mutableStateOf("")
+    private var courseName = ""
+    private var courseDescription = ""
 
     init {
         viewModelScope.launch {
@@ -59,7 +55,7 @@ class CreateEditCourseViewModel @Inject constructor(
             var errorUnrecoverableState: UnrecoverableErrorType? = null
 
             if (!isCreating) {
-                courseId = state["courseId"]
+                courseId = state["courseId"]!!
                 when (val courseInfo = courseManagementService.courseInfo(courseId!!)) {
                     is ApiResult.UnrecoverableError -> errorUnrecoverableState = courseInfo.unrecoverableType
                     is ApiResult.Error -> errorState = CreateEditCourseUiError.UNKNOWN
@@ -125,6 +121,7 @@ class CreateEditCourseViewModel @Inject constructor(
 
     suspend fun delete(onGoBack: () -> Unit, editorViewModel: EditorViewModel) {
         _uiState.update { it.copy(makingRequest = true) }
+
         when (val deleteResult = courseManagementService.deleteCourse(courseId!!)) {
             is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = deleteResult.unrecoverableType) }
             is ApiResult.Error -> _uiState.update { it.copy(errorState = CreateEditCourseUiError.UNKNOWN) }

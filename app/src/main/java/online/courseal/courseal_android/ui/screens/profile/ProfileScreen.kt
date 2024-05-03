@@ -91,7 +91,7 @@ fun ProfileScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
     ) {
         if (onViewSettings != null) {
             CoursealTopBar {

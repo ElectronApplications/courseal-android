@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +28,7 @@ class WelcomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(WelcomeUiState())
     val uiState: StateFlow<WelcomeUiState> = _uiState.asStateFlow()
 
-    private var serverUrl: String by mutableStateOf(DEFAULT_SERVER)
+    private var serverUrl: String = DEFAULT_SERVER
 
     fun updateUrl(providedUrl: String) {
         this.serverUrl = providedUrl.ifEmpty { DEFAULT_SERVER }

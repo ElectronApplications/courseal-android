@@ -1,9 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.profile
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,7 +24,7 @@ class SearchUsersViewModel  @Inject constructor(
     private val _uiState = MutableStateFlow(SearchUsersUiState())
     val uiState: StateFlow<SearchUsersUiState> = _uiState.asStateFlow()
 
-    private var searchTerm by mutableStateOf("")
+    private var searchTerm = ""
 
     fun updateSearchTerm(searchTerm: String) {
         this.searchTerm = searchTerm

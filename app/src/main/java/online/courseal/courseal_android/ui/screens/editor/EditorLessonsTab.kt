@@ -32,6 +32,8 @@ import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 @Composable
 fun EditorLessonsTab(
     modifier: Modifier = Modifier,
+    onCreateLesson: () -> Unit,
+    onEditLesson: (lessonId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel
 ) {
@@ -52,7 +54,7 @@ fun EditorLessonsTab(
             ) {
                 lessons.forEach { lesson ->
                     CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { /* TODO */ },
+                        modifier = Modifier.clickable { onEditLesson(lesson.lessonId) },
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
@@ -80,7 +82,7 @@ fun EditorLessonsTab(
                     .padding(top = 12.dp)
                     .fillMaxWidth(0.85f),
                 text = stringResource(R.string.create_lesson),
-                onClick = { /* TODO */ }
+                onClick = onCreateLesson
             )
         }
     }
