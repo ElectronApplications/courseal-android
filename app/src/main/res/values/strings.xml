@@ -82,8 +82,8 @@
     <string name="course_name">Course name</string>
     <string name="course_description">Course description</string>
     <string name="delete_course">Delete the course</string>
-    <string name="edit_task">Edit a task</string>
-    <string name="edit_lesson">Edit a lesson</string>
+    <string name="edit_task">Edit task</string>
+    <string name="edit_lesson">Edit lesson</string>
     <string name="task_name">Task name</string>
     <string name="lesson_name">Lesson name</string>
     <string name="delete_task">Delete the task</string>
@@ -93,4 +93,8 @@
     <string name="multiple_option">Multiple option</string>
     <string name="add_option">Add a new option</string>
     <string name="delete_option">Delete the option</string>
+    <string name="progress_needed">How many times the lesson needs to be done</string>
+    <string name="edit_lecture_content">Edit lecture content</string>
+    <string name="remove_task">Remove the task</string>
+    <string name="add_task">Add a task</string>
 </resources>
