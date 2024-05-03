@@ -29,11 +29,9 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.TopCancel
 import online.courseal.courseal_android.ui.components.TopConfirm
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.profile.ProfileUiError
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.settings.SettingsUsernameUiError
 import online.courseal.courseal_android.ui.viewmodels.settings.SettingsUsernameViewModel
