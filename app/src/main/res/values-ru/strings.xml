@@ -97,4 +97,5 @@
     <string name="edit_lecture_content">Отредактировать текст лекции</string>
     <string name="remove_task">Убрать задачу</string>
     <string name="add_task">Добавить задачу</string>
+    <string name="remove_lesson">Убрать занятие</string>
 </resources>

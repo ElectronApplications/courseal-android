@@ -8,12 +8,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -33,6 +40,7 @@ import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 @Composable
 fun EditorStructureTab(
     modifier: Modifier = Modifier,
+    onEditLesson: (lessonId: Int) -> Unit,
     onShowLessons: () -> Unit,
     onUnrecoverable: OnUnrecoverable,
     editorViewModel: EditorViewModel
@@ -52,7 +60,7 @@ fun EditorStructureTab(
             val lessons = editorUiState.courseLessons
 
             if (structure != null && lessons != null) {
-                structure.toMutableList().apply { add(emptyList()) }.forEach { row ->
+                structure.toMutableList().apply { add(emptyList()) }.forEachIndexed { level, row ->
                     Row(
                         modifier = Modifier
                             .padding(top = 24.dp)
@@ -60,15 +68,18 @@ fun EditorStructureTab(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        row.forEach { lesson ->
+                        row.forEachIndexed { index, lesson ->
                             Column(
                                 modifier = Modifier
                                     .padding(horizontal = 16.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
+                                var editLessonDropdownExpanded by rememberSaveable { mutableStateOf(false) }
                                 val lessonData = lessons.find { it.lessonId == lesson.lessonId }
                                 LessonComponent(
-                                    onClick = { /* TODO */ },
+                                    onClick = {
+                                        editLessonDropdownExpanded = true
+                                    },
                                     lessonType = when (lessonData?.lesson) {
                                         is CoursealLessonLecture -> LessonType.LECTURE
                                         is CoursealLessonPractice -> LessonType.PRACTICE
@@ -83,17 +94,63 @@ fun EditorStructureTab(
                                     text = lessonData?.lessonName ?: "",
                                     fontWeight = FontWeight.SemiBold
                                 )
+
+                                DropdownMenu(
+                                    expanded = editLessonDropdownExpanded,
+                                    onDismissRequest = { editLessonDropdownExpanded = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.edit_lesson)) },
+                                        onClick = {
+                                            editLessonDropdownExpanded = false
+                                            onEditLesson(lessonData!!.lessonId)
+                                        }
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.remove_lesson)) },
+                                        onClick = {
+                                            editLessonDropdownExpanded = false
+                                            editorViewModel.structureRemoveLesson(level, index)
+                                        }
+                                    )
+                                }
                             }
                         }
 
                         if (row.size < 3) {
+                            var addLessonDropdownExpanded by rememberSaveable { mutableStateOf(false) }
+
                             OutlinedIconButton(
                                 modifier = Modifier
                                     .padding(horizontal = 24.dp)
                                     .padding(bottom = 22.dp),
-                                onClick = { /* TODO */ }
+                                onClick = {
+                                    addLessonDropdownExpanded = true
+                                }
                             ) {
                                 Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.add_lesson))
+                            }
+
+                            DropdownMenu(
+                                expanded = addLessonDropdownExpanded,
+                                onDismissRequest = { addLessonDropdownExpanded = false }
+                            ) {
+                                 editorUiState.availableLessons?.forEach { availableLesson ->
+                                    DropdownMenuItem(
+                                        text = { Text(availableLesson.lessonName) },
+                                        onClick = {
+                                            editorViewModel.structureAddLesson(level, availableLesson.lessonId)
+                                        }
+                                    )
+                                }
+                                HorizontalDivider()
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.create_lesson)) },
+                                    onClick = {
+                                        addLessonDropdownExpanded = false
+                                        onShowLessons()
+                                    }
+                                )
                             }
                         }
                     }

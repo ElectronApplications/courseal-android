@@ -1,6 +1,7 @@
 package online.courseal.courseal_android.ui.viewmodels.editor
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
@@ -8,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.data.api.ApiResult
 import online.courseal.courseal_android.data.api.UnrecoverableErrorType
 import online.courseal.courseal_android.data.api.coursemanagement.CoursealCourseManagementService
@@ -42,6 +44,7 @@ data class EditorUiState(
     val courseStructure: List<List<StructureData>>? = null,
     val courseLessons: List<LessonListData>? = null,
     val courseTasks: List<TaskListData>? = null,
+    val availableLessons: List<LessonListData>? = null,
     val errorState: EditorUiError = EditorUiError.NONE,
     val errorUnrecoverableState: UnrecoverableErrorType? = null
 )
@@ -93,7 +96,6 @@ class EditorViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                needUpdate = false,
                 currentCourseId = currentCourseId,
                 courses = courses.await(),
                 canCreateCourses = userInfo.await()?.canCreateCourses ?: false,
@@ -106,7 +108,8 @@ class EditorViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                loading = false
+                loading = false,
+                needUpdate = false
             )
         }
     }
@@ -196,6 +199,8 @@ class EditorViewModel @Inject constructor(
                     errorUnrecoverableState = errorUnrecoverableState
                 )
             }
+
+            updateAvailableLessons()
         }
     }
 
@@ -217,6 +222,65 @@ class EditorViewModel @Inject constructor(
                 loading = true,
                 needUpdate = true
             )
+        }
+    }
+
+    private fun updateAvailableLessons() {
+        val courseLessons = _uiState.value.courseLessons
+        val courseStructure = _uiState.value.courseStructure
+        if (courseLessons != null && courseStructure != null) {
+            _uiState.update {
+                it.copy(
+                    availableLessons = courseLessons.filter { courseLesson ->
+                        !courseStructure.any { level ->
+                            level.any { structureData -> structureData.lessonId == courseLesson.lessonId }
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    private suspend fun updateStructure(newStructure: List<List<StructureData>>) {
+        when (val updateResult =
+                courseManagementService.updateStructure(currentCourseId!!, newStructure)) {
+            is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = updateResult.unrecoverableType) }
+            is ApiResult.Error -> _uiState.update { it.copy(errorState = EditorUiError.UNKNOWN) }
+            is ApiResult.Success -> {}
+        }
+
+        _uiState.update {
+            it.copy(
+                needUpdate = true
+            )
+        }
+    }
+
+    fun structureAddLesson(level: Int, lessonId: Int) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
+
+            val newStructure = _uiState.value.courseStructure!!.toMutableList().apply {
+                if (level >= this.size) {
+                    this.add(listOf(StructureData(lessonId)))
+                } else {
+                    this[level] = this[level].toMutableList().apply { add(StructureData(lessonId)) }
+                }
+            }
+
+            updateStructure(newStructure)
+        }
+    }
+
+    fun structureRemoveLesson(level: Int, index: Int) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
+
+            val newStructure = _uiState.value.courseStructure!!.toMutableList().apply {
+                this[level] = this[level].toMutableList().apply { removeAt(index) }
+            }
+
+            updateStructure(newStructure)
         }
     }
 

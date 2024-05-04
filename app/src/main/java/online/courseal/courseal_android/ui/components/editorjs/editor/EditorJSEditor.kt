@@ -2,7 +2,6 @@ package online.courseal.courseal_android.ui.components.editorjs.editor
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -39,7 +37,6 @@ fun EditorJSEditorComponent(
 
     var pickCallback by rememberSaveable { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        Log.d("HIII", "$it")
         pickCallback?.onReceiveValue(it?.let { result -> arrayOf(result) })
     }
 

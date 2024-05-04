@@ -90,7 +90,7 @@ fun EditorScreen(
         }
     )
 
-    LaunchedEffect(key1 = editorUiState.loading) {
+    LaunchedEffect(key1 = editorUiState.needUpdate) {
         if (editorUiState.needUpdate) {
             editorViewModel.update()
         }
@@ -161,6 +161,7 @@ fun EditorScreen(
                             PagerItems.STRUCTURE.ordinal -> {
                                 EditorStructureTab(
                                     modifier = Modifier.fillMaxSize(),
+                                    onEditLesson = onEditLesson,
                                     onShowLessons = {
                                         coroutineScope.launch {
                                             pagerState.animateScrollToPage(PagerItems.LESSONS.ordinal)
