@@ -88,28 +88,26 @@ fun SettingsUsernameScreen(
                 .adaptiveContainerWidth()
                 .align(Alignment.CenterHorizontally)
         ) {
-            Column(
+            Text(
                 modifier = Modifier
+                    .padding(top = 10.dp)
                     .fillMaxWidth(0.75f)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    text = stringResource(R.string.change_username),
-                    style = MaterialTheme.typography.displayMedium,
-                    textAlign = TextAlign.Center
-                )
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.change_username),
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center
+            )
 
-                CoursealTextField(
-                    modifier = Modifier
-                        .padding(top = 20.dp),
-                    value = settingsUsernameUiState.username,
-                    onValueChange = settingsUsernameViewModel::updateUsername,
-                    label = stringResource(R.string.username),
-                    enabled = !settingsUsernameUiState.makingRequest
-                )
-            }
+            CoursealTextField(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally),
+                value = settingsUsernameUiState.username,
+                onValueChange = settingsUsernameViewModel::updateUsername,
+                label = stringResource(R.string.username),
+                enabled = !settingsUsernameUiState.makingRequest
+            )
         }
     }
 }
