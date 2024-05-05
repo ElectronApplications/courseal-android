@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
+import online.courseal.courseal_android.ui.components.AnimatedArrowDown
 import online.courseal.courseal_android.ui.components.CoursealPrimaryLoadingButton
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
@@ -82,7 +83,6 @@ fun WelcomeScreen(
             )
 
             var advancedVisible by rememberSaveable { mutableStateOf(false) }
-            val arrowRotation by animateFloatAsState(targetValue = if (advancedVisible) -180.0f else 0.0f, label = "arrow rotation")
 
             Row(
                 modifier = Modifier
@@ -90,30 +90,21 @@ fun WelcomeScreen(
                     .padding(all = 5.dp)
                     .clickable {
                         advancedVisible = !advancedVisible
-                    },
+                    }
+                    .padding(all = 10.dp),
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(all = 10.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.connecting_to) + " "
-                    )
+                Text(
+                    text = stringResource(R.string.connecting_to) + " "
+                )
 
-                    Text(
-                        modifier = Modifier.weight(1f, fill = false),
-                        text = welcomeUiState.serverUrl,
-                        textDecoration = TextDecoration.Underline,
-                        overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
-                    )
-                    Icon(
-                        modifier = Modifier
-                            .rotate(arrowRotation),
-                        imageVector = Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = "Expand"
-                    )
-                }
+                Text(
+                    modifier = Modifier.weight(1f, fill = false),
+                    text = welcomeUiState.serverUrl,
+                    textDecoration = TextDecoration.Underline,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+                AnimatedArrowDown(isExpanded = advancedVisible)
             }
 
             AnimatedVisibility(

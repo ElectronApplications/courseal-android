@@ -13,10 +13,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@latest"></script>
 
     <script src="https://cdn.jsdelivr.net/gh/mdgaziur/EditorJS-LaTeX@latest/dist/editorjs-latex.bundle-min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/mdgaziur/EditorJS-LaTeX@latest/dist/editorjs-latex.bundle.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.12.0/katex.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
 
     <style>
         [data-theme=light] {
@@ -34,6 +39,7 @@
 
         body {
             color: var(--fg-color);
+            font-family: "Nunito", sans-serif;
         }
 
         .ce-toolbar__plus,
@@ -107,6 +113,15 @@
                 code: {
                     class: CodeTool,
                     inlineToolbar: true
+                },
+                embed: {
+                    class: Embed,
+                    inlineToolbar: true,
+                    config: {
+                        services: {
+                            youtube: true
+                        }
+                    }
                 },
                 math: {
                     class: EJLaTeX,

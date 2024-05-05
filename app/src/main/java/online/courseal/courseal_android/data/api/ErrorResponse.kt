@@ -27,4 +27,5 @@ enum class ErrorResponseType {
     @SerialName("no-permissions") NO_PERMISSIONS,
     @SerialName("lesson-not-found") LESSON_NOT_FOUND,
     @SerialName("lesson-token-invalid") LESSON_TOKEN_INVALID,
+    @SerialName("unknown") UNKNOWN
 }

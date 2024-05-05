@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
@@ -15,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import online.courseal.courseal_android.ui.OnUnrecoverable
-import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.TopCancel
 import online.courseal.courseal_android.ui.components.TopConfirm
 
@@ -27,6 +27,7 @@ fun SettingsPictureScreen(
 ) {
     Column(
         modifier = modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))

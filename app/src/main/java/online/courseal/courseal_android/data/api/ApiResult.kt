@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.data.api
 
+import android.util.Log
 import java.io.IOException
 import java.nio.channels.UnresolvedAddressException
 
@@ -35,6 +36,7 @@ suspend fun<T, E> httpExceptionWrap(unknownError: E, request: suspend () -> ApiR
     return try {
         request()
     } catch(e: Exception) {
+        Log.e("courseal httpExceptionWrap", "${e.message}")
         when (e) {
             is IOException, is UnresolvedAddressException -> ApiResult.UnrecoverableError(
                 UnrecoverableErrorType.SERVER_NOT_RESPONDING

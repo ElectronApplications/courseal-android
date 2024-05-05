@@ -17,6 +17,7 @@ import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSBlock
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSCode
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSContent
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSDelimiter
+import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSEmbed
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSHeader
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSImage
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSLatex
@@ -72,5 +73,6 @@ fun EditorJSBlockComponent(
         is EditorJSQuote -> EditorJSQuoteComponent(modifier = modifier, data = block.data)
         is EditorJSWarning -> EditorJSWarningComponent(modifier = modifier, data = block.data)
         is EditorJSLatex -> EditorJSLatexComponent(modifier = modifier, data = block.data)
+        is EditorJSEmbed -> { /* TODO */ }
     }
 }

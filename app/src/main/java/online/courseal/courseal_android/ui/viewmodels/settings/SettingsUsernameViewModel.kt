@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels.settings
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +35,7 @@ class SettingsUsernameViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SettingsUsernameUiState())
     val uiState: StateFlow<SettingsUsernameUiState> = _uiState.asStateFlow()
 
-    private var username by mutableStateOf("")
+    private var username = ""
 
     init {
         viewModelScope.launch {
@@ -73,8 +70,8 @@ class SettingsUsernameViewModel @Inject constructor(
                 ChangeNameApiError.UNKNOWN -> _uiState.update { it.copy(errorState = SettingsUsernameUiError.UNKNOWN) }
             }
             is ApiResult.Success -> {
+                profileViewModel.setNeedUpdate()
                 onGoBack()
-                profileViewModel.update()
             }
         }
         _uiState.update { it.copy(makingRequest = false) }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -28,11 +29,9 @@ import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.ErrorDialog
-import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.TopCancel
 import online.courseal.courseal_android.ui.components.TopConfirm
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.profile.ProfileUiError
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.settings.SettingsUsernameUiError
 import online.courseal.courseal_android.ui.viewmodels.settings.SettingsUsernameViewModel
@@ -63,6 +62,7 @@ fun SettingsUsernameScreen(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
@@ -88,28 +88,26 @@ fun SettingsUsernameScreen(
                 .adaptiveContainerWidth()
                 .align(Alignment.CenterHorizontally)
         ) {
-            Column(
+            Text(
                 modifier = Modifier
+                    .padding(top = 10.dp)
                     .fillMaxWidth(0.75f)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    text = stringResource(R.string.change_username),
-                    style = MaterialTheme.typography.displayMedium,
-                    textAlign = TextAlign.Center
-                )
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.change_username),
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center
+            )
 
-                CoursealTextField(
-                    modifier = Modifier
-                        .padding(top = 20.dp),
-                    value = settingsUsernameUiState.username,
-                    onValueChange = settingsUsernameViewModel::updateUsername,
-                    label = stringResource(R.string.username),
-                    enabled = !settingsUsernameUiState.makingRequest
-                )
-            }
+            CoursealTextField(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally),
+                value = settingsUsernameUiState.username,
+                onValueChange = settingsUsernameViewModel::updateUsername,
+                label = stringResource(R.string.username),
+                enabled = !settingsUsernameUiState.makingRequest
+            )
         }
     }
 }
