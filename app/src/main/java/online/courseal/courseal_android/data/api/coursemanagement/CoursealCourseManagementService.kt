@@ -40,9 +40,7 @@ import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateCou
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateCourseApiRequest
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateLessonApiError
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateLessonApiRequest
-import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateLessonApiResponse
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateStructureApiError
-import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateStructureData
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateTaskApiError
 import online.courseal.courseal_android.data.api.coursemanagement.data.UpdateTaskApiRequest
 import online.courseal.courseal_android.data.coursedata.lessons.CoursealLesson
@@ -267,8 +265,8 @@ class CoursealCourseManagementService @Inject constructor(
     }
 
     suspend fun updateLesson(courseId: Int, lessonId: Int, lessonName: String, progressNeeded: Int, lesson: CoursealLesson):
-            ApiResult<UpdateLessonApiResponse, UpdateLessonApiError> = authService.authWrap(UpdateLessonApiError.UNKNOWN) {
-        val response = httpClient.post(courseManagementUrl()) {
+            ApiResult<Unit, UpdateLessonApiError> = authService.authWrap(UpdateLessonApiError.UNKNOWN) {
+        val response = httpClient.put(courseManagementUrl()) {
             url {
                 appendPathSegments("$courseId", "lesson", "$lessonId")
             }
@@ -283,7 +281,7 @@ class CoursealCourseManagementService @Inject constructor(
         }
 
         return@authWrap if (response.status.value in 200..299)
-            ApiResult.Success(response.body())
+            ApiResult.Success(Unit)
         else when (response.body<ErrorResponse>().error) {
             ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
             ErrorResponseType.NO_PERMISSIONS -> ApiResult.Error(AuthWrapperError.InnerError(UpdateLessonApiError.NO_PERMISSIONS))
@@ -323,7 +321,7 @@ class CoursealCourseManagementService @Inject constructor(
         }
     }
 
-    suspend fun updateStructure(courseId: Int, structure: List<List<UpdateStructureData>>): ApiResult<Unit, UpdateStructureApiError> = authService.authWrap(UpdateStructureApiError.UNKNOWN) {
+    suspend fun updateStructure(courseId: Int, structure: List<List<StructureData>>): ApiResult<Unit, UpdateStructureApiError> = authService.authWrap(UpdateStructureApiError.UNKNOWN) {
         val response = httpClient.put(courseManagementUrl()) {
             url {
                 appendPathSegments("$courseId", "structure")
@@ -333,7 +331,7 @@ class CoursealCourseManagementService @Inject constructor(
         }
 
         return@authWrap if (response.status.value in 200..299)
-            ApiResult.Success(response.body())
+            ApiResult.Success(Unit)
         else when (response.body<ErrorResponse>().error) {
             ErrorResponseType.JWT_INVALID -> ApiResult.Error(AuthWrapperError.JWTInvalid())
             ErrorResponseType.NO_PERMISSIONS -> ApiResult.Error(AuthWrapperError.InnerError(UpdateStructureApiError.NO_PERMISSIONS))

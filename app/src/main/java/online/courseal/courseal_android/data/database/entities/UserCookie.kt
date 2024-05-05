@@ -18,7 +18,7 @@ import io.ktor.http.Cookie
         )
     ],
     indices = [
-        Index(value = ["cookie_name"], unique = true)
+        Index(value = ["cookie_name", "user_id"], unique = true)
     ]
 )
 data class UserCookie(

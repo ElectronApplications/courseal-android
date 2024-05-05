@@ -24,6 +24,7 @@ import online.courseal.courseal_android.data.api.usermanagement.data.UserManagem
 import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Inject
 import kotlin.coroutines.coroutineContext
+import kotlin.properties.Delegates
 
 enum class ProfileUiError {
     USER_NOT_FOUND,
@@ -33,6 +34,7 @@ enum class ProfileUiError {
 
 data class ProfileUiState(
     val loading: Boolean = true,
+    val needUpdate: Boolean = false,
     val isCurrent: Boolean = false,
     val userPublicInfo: UserApiResponse? = null,
     val userPrivateInfo: UserManagementApiResponse? = null,
@@ -51,22 +53,33 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
+    private var isCurrent by Delegates.notNull<Boolean>()
+    private lateinit var usertag: String
+
     init {
         viewModelScope.launch {
-            update()
+            val currentUser = userDao.getCurrentUser()
+
+            val (isCurrent, usertag) = if (state.get<Boolean>("isCurrent")!!) {
+                Pair(true, currentUser!!.usertag)
+            } else {
+                val usertag: String = state["usertag"]!!
+                Pair(currentUser?.usertag == usertag, usertag)
+            }
+
+            this@ProfileViewModel.isCurrent = isCurrent
+            this@ProfileViewModel.usertag = usertag
+
+            _uiState.update {
+                it.copy(
+                    isCurrent = isCurrent,
+                    needUpdate = true
+                )
+            }
         }
     }
 
     suspend fun update() {
-        val currentUser = userDao.getCurrentUser()
-
-        val (isCurrent, usertag) = if (state.get<Boolean>("isCurrent")!!) {
-            Pair(true, currentUser!!.usertag)
-        } else {
-            val usertag: String = state["usertag"]!!
-            Pair(currentUser?.usertag == usertag, usertag)
-        }
-
         var errorState = ProfileUiError.NONE
         var errorUnrecoverableState: UnrecoverableErrorType? = null
 
@@ -125,6 +138,7 @@ class ProfileViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 loading = false,
+                needUpdate = false,
                 isCurrent = isCurrent,
                 userPublicInfo = userPublicInfo.await(),
                 userPrivateInfo = userPrivateInfo.await(),
@@ -133,6 +147,10 @@ class ProfileViewModel @Inject constructor(
                 errorUnrecoverableState = errorUnrecoverableState
             )
         }
+    }
+
+    fun setNeedUpdate() {
+        _uiState.update { it.copy(needUpdate = true) }
     }
 
     fun hideError() {

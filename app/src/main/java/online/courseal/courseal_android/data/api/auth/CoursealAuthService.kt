@@ -76,7 +76,7 @@ class CoursealAuthService @Inject constructor(
 
         // If the first try is not successful we refresh the JWT and try again
         // If it doesn't work the second time then the refresh token is probably invalid
-        for (i in 0 until 2) {
+        for (i in 0 ..<3) {
             val resultInner = inner()
 
             return@httpExceptionWrap if (resultInner !is ApiResult.Error || resultInner.errorValue is AuthWrapperError.InnerError) {
@@ -86,7 +86,7 @@ class CoursealAuthService @Inject constructor(
                     is ApiResult.UnrecoverableError -> ApiResult.UnrecoverableError(resultRefresh.unrecoverableType)
                     is ApiResult.Error -> when (resultRefresh.errorValue) {
                         RefreshApiError.INVALID -> break
-                        RefreshApiError.UNKNOWN -> continue // Still not sure if the refresh token is invalid
+                        RefreshApiError.UNKNOWN -> ApiResult.UnrecoverableError(UnrecoverableErrorType.OTHER_UNRECOVERABLE)
                     }
 
                     is ApiResult.Success -> continue // Go for the second try

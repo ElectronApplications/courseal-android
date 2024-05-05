@@ -1,0 +1,246 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "26f411e80d277ba72697e9f9aa843c44",
+    "entities": [
+      {
+        "tableName": "User",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `usertag` TEXT NOT NULL, `logged_in` INTEGER NOT NULL, `server_id` INTEGER NOT NULL, `current_course_id` INTEGER, `current_editor_course_id` INTEGER, FOREIGN KEY(`server_id`) REFERENCES `Server`(`server_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usertag",
+            "columnName": "usertag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "loggedIn",
+            "columnName": "logged_in",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentCourseId",
+            "columnName": "current_course_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currentEditorCourseId",
+            "columnName": "current_editor_course_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "user_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_User_usertag_server_id",
+            "unique": true,
+            "columnNames": [
+              "usertag",
+              "server_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_User_usertag_server_id` ON `${TABLE_NAME}` (`usertag`, `server_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Server",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "server_id"
+            ],
+            "referencedColumns": [
+              "server_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "CurrentUser",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`single` INTEGER NOT NULL, `user_id` INTEGER, PRIMARY KEY(`single`), FOREIGN KEY(`user_id`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "single",
+            "columnName": "single",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "single"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "User",
+            "onDelete": "SET NULL",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "user_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "UserCookie",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_cookie_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `request_url` TEXT NOT NULL, `cookie_name` TEXT NOT NULL, `cookie` TEXT NOT NULL, `user_id` INTEGER NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `User`(`user_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "userCookieId",
+            "columnName": "user_cookie_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "requestUrl",
+            "columnName": "request_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cookieName",
+            "columnName": "cookie_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cookie",
+            "columnName": "cookie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "user_cookie_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_UserCookie_cookie_name_user_id",
+            "unique": true,
+            "columnNames": [
+              "cookie_name",
+              "user_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_UserCookie_cookie_name_user_id` ON `${TABLE_NAME}` (`cookie_name`, `user_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "User",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "user_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Server",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`server_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `server_url` TEXT NOT NULL, `server_name` TEXT NOT NULL, `server_description` TEXT NOT NULL, `server_registration_enabled` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "serverId",
+            "columnName": "server_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverUrl",
+            "columnName": "server_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverName",
+            "columnName": "server_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverDescription",
+            "columnName": "server_description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverRegistrationEnabled",
+            "columnName": "server_registration_enabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "server_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_Server_server_url",
+            "unique": true,
+            "columnNames": [
+              "server_url"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_Server_server_url` ON `${TABLE_NAME}` (`server_url`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '26f411e80d277ba72697e9f9aa843c44')"
+    ]
+  }
+}

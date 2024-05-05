@@ -1,8 +1,5 @@
 package online.courseal.courseal_android.ui.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -41,7 +38,7 @@ class TopLevelViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TopLevelUiState())
     val uiState: StateFlow<TopLevelUiState> = _uiState.asStateFlow()
 
-    private var startDestination by mutableStateOf(Routes.WELCOME)
+    private var startDestination = Routes.WELCOME
     init {
         viewModelScope.launch {
             setLoading(true)

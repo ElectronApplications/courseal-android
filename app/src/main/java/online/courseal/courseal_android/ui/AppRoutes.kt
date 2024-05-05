@@ -16,6 +16,12 @@ import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
 import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
+import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
+import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
+import online.courseal.courseal_android.ui.screens.editor.CreateEditLessonScreen
+import online.courseal.courseal_android.ui.screens.editor.CreateEditTaskScreen
+import online.courseal.courseal_android.ui.screens.editor.EditLectureContentScreen
+import online.courseal.courseal_android.ui.screens.editor.EditTaskBodyScreen
 import online.courseal.courseal_android.ui.screens.editor.EditorScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileCoursesScreen
 import online.courseal.courseal_android.ui.screens.profile.ProfileScreen
@@ -27,6 +33,9 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScre
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
+import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditLessonViewModel
+import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskViewModel
+import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
 
 enum class Routes(val path: String) {
     WELCOME("welcome"),
@@ -46,6 +55,13 @@ enum class Routes(val path: String) {
 
     SEARCH_USERS("search-users"),
     SEARCH_COURSES("search-courses"),
+
+    CREATE_EDIT_COURSE("create-edit-course"),
+    CREATE_EDIT_LESSON("create-edit-lesson"),
+    CREATE_EDIT_TASK("create-edit-task"),
+
+    EDIT_TASK_BODY("edit-task-body"),
+    EDIT_LECTURE_CONTENT("edit-lecture-content"),
 
     COURSE_INFO("course-info"),
 }
@@ -197,14 +213,34 @@ fun AppNavigation(
             )
         }
 
-        /* Creator Screen */
+        /* Editor Screen */
         coursealRoute(
             route = Routes.EDITOR.path,
             transitionFadeDefault = true,
             navBarDefault = NavBarOptions.SHOW,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            EditorScreen()
+            EditorScreen(
+                onCreateCourse = {
+                    navController.navigate(Routes.CREATE_EDIT_COURSE.path)
+                },
+                onEditCourse = { courseId ->
+                    navController.navigate("${Routes.CREATE_EDIT_COURSE.path}?isCreating=false&courseId=${courseId}")
+                },
+                onCreateLesson = {
+                    navController.navigate(Routes.CREATE_EDIT_LESSON.path)
+                },
+                onEditLesson = { lessonId ->
+                    navController.navigate("${Routes.CREATE_EDIT_LESSON.path}?isCreating=false&lessonId=${lessonId}")
+                },
+                onCreateTask = {
+                    navController.navigate(Routes.CREATE_EDIT_TASK.path)
+                },
+                onEditTask = { taskId ->
+                    navController.navigate("${Routes.CREATE_EDIT_TASK.path}?isCreating=false&taskId=${taskId}")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Profile's settings Screen */
@@ -224,6 +260,9 @@ fun AppNavigation(
                     navController.navigate(Routes.PROFILE_SETTINGS_PASSWORD.path)
                 },
                 onViewAccounts = {
+                    navController.clearBackStack(Routes.COURSE.path)
+                    navController.clearBackStack(Routes.PROFILE.path)
+                    navController.clearBackStack(Routes.EDITOR.path)
                     navController.navigate("${Routes.ACCOUNTS.path}?transitionFade=true") {
                         popUpTo(0)
                     }
@@ -291,6 +330,109 @@ fun AppNavigation(
             )
         }
 
+        /* Create or edit course Screen */
+        coursealRoute(
+            route = "${Routes.CREATE_EDIT_COURSE.path}?isCreating={isCreating}&courseId={courseId}",
+            arguments = listOf(
+                navArgument("isCreating") { type = NavType.BoolType; defaultValue = true },
+                navArgument("courseId") { type = NavType.IntType; defaultValue = -1 }
+            ),
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.EDITOR.path)
+            }
+            val parentViewModel = hiltViewModel<EditorViewModel>(parentEntry)
+
+            CreateEditCourseScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                editorViewModel = parentViewModel
+            )
+        }
+
+        /* Create or edit lesson Screen */
+        coursealRoute(
+            route = "${Routes.CREATE_EDIT_LESSON.path}?isCreating={isCreating}&lessonId={lessonId}",
+            arguments = listOf(
+                navArgument("isCreating") { type = NavType.BoolType; defaultValue = true },
+                navArgument("lessonId") { type = NavType.IntType; defaultValue = -1 }
+            ),
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.EDITOR.path)
+            }
+            val parentViewModel = hiltViewModel<EditorViewModel>(parentEntry)
+
+            CreateEditLessonScreen(
+                onGoBack = { navController.popBackStack() },
+                onEditLectureContent = {
+                    navController.navigate(Routes.EDIT_LECTURE_CONTENT.path)
+                },
+                onUnrecoverable = onUnrecoverable,
+                editorViewModel = parentViewModel
+            )
+        }
+
+        /* Edit lecture content Screen */
+        coursealRoute(
+            route = Routes.EDIT_LECTURE_CONTENT.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.CREATE_EDIT_LESSON.path)
+            }
+            val parentViewModel = hiltViewModel<CreateEditLessonViewModel>(parentEntry)
+
+            EditLectureContentScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                createEditLessonViewModel = parentViewModel
+            )
+        }
+
+        /* Create or edit task Screen */
+        coursealRoute(
+            route = "${Routes.CREATE_EDIT_TASK.path}?isCreating={isCreating}&taskId={taskId}",
+            arguments = listOf(
+                navArgument("isCreating") { type = NavType.BoolType; defaultValue = true },
+                navArgument("taskId") { type = NavType.IntType; defaultValue = -1 }
+            ),
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.EDITOR.path)
+            }
+            val parentViewModel = hiltViewModel<EditorViewModel>(parentEntry)
+
+            CreateEditTaskScreen(
+                onGoBack = { navController.popBackStack() },
+                onEditTaskBody = {
+                    navController.navigate(Routes.EDIT_TASK_BODY.path)
+                },
+                onUnrecoverable = onUnrecoverable,
+                editorViewModel = parentViewModel
+            )
+        }
+
+        /* Edit task body Screen */
+        coursealRoute(
+            route = Routes.EDIT_TASK_BODY.path,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.CREATE_EDIT_TASK.path)
+            }
+            val parentViewModel = hiltViewModel<CreateEditTaskViewModel>(parentEntry)
+
+            EditTaskBodyScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                createEditTaskViewModel = parentViewModel
+            )
+        }
+
         /* Search users Screen */
         coursealRoute(
             route = Routes.SEARCH_USERS.path,
@@ -321,7 +463,13 @@ fun AppNavigation(
             ),
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            // TODO
+            CourseInfoScreen(
+                onGoBack = { navController.popBackStack() },
+                onOpenProfile = { usertag ->
+                    navController.navigate("${Routes.PROFILE.path}?usertag=$usertag&canGoBack=true")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
     }
 }

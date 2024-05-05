@@ -35,9 +35,9 @@ fun EditorJSEditorComponent(
 ) {
     val isDark = isSystemInDarkTheme()
 
-    var pickResult by remember { mutableStateOf<Uri?>(null) }
+    var pickCallback by remember { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        pickResult = it
+        pickCallback?.onReceiveValue(it?.let { result -> arrayOf(result) })
     }
 
     AndroidView(
@@ -60,12 +60,9 @@ fun EditorJSEditorComponent(
                         filePathCallback: ValueCallback<Array<Uri>>?,
                         fileChooserParams: FileChooserParams?
                     ): Boolean {
+                        pickCallback = filePathCallback
                         pickMedia.launch(PickVisualMediaRequest(mediaType = ActivityResultContracts.PickVisualMedia.ImageOnly))
-                        if (pickResult != null) {
-                            filePathCallback?.onReceiveValue(arrayOf(pickResult!!))
-                            return true
-                        }
-                        return false
+                        return true
                     }
                 }
 

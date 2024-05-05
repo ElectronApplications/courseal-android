@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -60,6 +61,7 @@ fun SettingsPasswordScreen(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
@@ -85,37 +87,37 @@ fun SettingsPasswordScreen(
                 .adaptiveContainerWidth()
                 .align(Alignment.CenterHorizontally)
         ) {
-            Column(
+            Text(
                 modifier = Modifier
+                    .padding(top = 10.dp)
                     .fillMaxWidth(0.75f)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    text = stringResource(R.string.change_password),
-                    style = MaterialTheme.typography.displayMedium,
-                    textAlign = TextAlign.Center
-                )
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(R.string.change_password),
+                style = MaterialTheme.typography.displayMedium,
+                textAlign = TextAlign.Center
+            )
 
-                CoursealPasswordField(
-                    modifier = Modifier
-                        .padding(top = 20.dp),
-                    value = settingsPasswordUiState.oldPassword,
-                    onValueChange = settingsPasswordViewModel::updateOldPassword,
-                    label = stringResource(R.string.old_password),
-                    enabled = !settingsPasswordUiState.makingRequest
-                )
+            CoursealPasswordField(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally),
+                value = settingsPasswordUiState.oldPassword,
+                onValueChange = settingsPasswordViewModel::updateOldPassword,
+                label = stringResource(R.string.old_password),
+                enabled = !settingsPasswordUiState.makingRequest
+            )
 
-                CoursealPasswordField(
-                    modifier = Modifier
-                        .padding(top = 10.dp),
-                    value = settingsPasswordUiState.newPassword,
-                    onValueChange = settingsPasswordViewModel::updateNewPassword,
-                    label = stringResource(R.string.new_password),
-                    enabled = !settingsPasswordUiState.makingRequest
-                )
-            }
+            CoursealPasswordField(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally),
+                value = settingsPasswordUiState.newPassword,
+                onValueChange = settingsPasswordViewModel::updateNewPassword,
+                label = stringResource(R.string.new_password),
+                enabled = !settingsPasswordUiState.makingRequest
+            )
         }
     }
 }
