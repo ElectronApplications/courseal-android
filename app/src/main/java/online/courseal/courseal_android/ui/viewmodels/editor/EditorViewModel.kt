@@ -61,7 +61,7 @@ class EditorViewModel @Inject constructor(
     private var currentCourseId: Int? = null
 
     suspend fun update() {
-        currentCourseId = userDao.getCurrentUser()?.currentCourseId
+        currentCourseId = userDao.getCurrentUser()?.currentEditorCourseId
 
         var errorState = EditorUiError.NONE
         var errorUnrecoverableState: UnrecoverableErrorType? = null
@@ -201,6 +201,16 @@ class EditorViewModel @Inject constructor(
             }
 
             updateAvailableLessons()
+        } else {
+            _uiState.update {
+                it.copy(
+                    courseInfo = null,
+                    courseStructure = null,
+                    courseLessons = null,
+                    courseTasks = null,
+                    availableLessons = null
+                )
+            }
         }
     }
 
@@ -215,7 +225,7 @@ class EditorViewModel @Inject constructor(
 
     suspend fun switchCourse(courseId: Int) {
         val currentUser = userDao.getCurrentUser()!!
-        userDao.updateUser(currentUser.copy(currentCourseId = courseId))
+        userDao.updateUser(currentUser.copy(currentEditorCourseId = courseId))
 
         _uiState.update {
             it.copy(

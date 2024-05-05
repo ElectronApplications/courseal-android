@@ -100,7 +100,7 @@ class CreateEditCourseViewModel @Inject constructor(
                 is ApiResult.Error -> _uiState.update { it.copy(errorState = CreateEditCourseUiError.UNKNOWN) }
                 is ApiResult.Success -> {
                     val currentUser = userDao.getCurrentUser()!!
-                    userDao.updateUser(currentUser.copy(currentCourseId = createResult.successValue.courseId))
+                    userDao.updateUser(currentUser.copy(currentEditorCourseId = createResult.successValue.courseId))
                     editorViewModel.setNeedUpdate()
                     onGoBack()
                 }
@@ -126,6 +126,10 @@ class CreateEditCourseViewModel @Inject constructor(
             is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = deleteResult.unrecoverableType) }
             is ApiResult.Error -> _uiState.update { it.copy(errorState = CreateEditCourseUiError.UNKNOWN) }
             is ApiResult.Success -> {
+                if (courseId == editorViewModel.uiState.value.currentCourseId) {
+                    val currentUser = userDao.getCurrentUser()!!
+                    userDao.updateUser(currentUser.copy(currentEditorCourseId = null))
+                }
                 editorViewModel.setNeedUpdate()
                 onGoBack()
             }

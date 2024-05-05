@@ -3,6 +3,8 @@ package online.courseal.courseal_android.ui.screens.editor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.coursedata.lessons.CoursealLessonExam
@@ -63,15 +66,16 @@ fun EditorStructureTab(
                 structure.toMutableList().apply { add(emptyList()) }.forEachIndexed { level, row ->
                     Row(
                         modifier = Modifier
-                            .padding(top = 24.dp)
+                            .padding(top = 28.dp)
                             .align(Alignment.CenterHorizontally),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement = Arrangement.Center
                     ) {
                         row.forEachIndexed { index, lesson ->
                             Column(
                                 modifier = Modifier
-                                    .padding(horizontal = 16.dp),
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .padding(horizontal = 12.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 var editLessonDropdownExpanded by rememberSaveable { mutableStateOf(false) }
@@ -90,9 +94,11 @@ fun EditorStructureTab(
                                 )
                                 Text(
                                     modifier = Modifier
-                                        .padding(top = 6.dp),
+                                        .padding(top = 8.dp)
+                                        .align(Alignment.CenterHorizontally),
                                     text = lessonData?.lessonName ?: "",
-                                    fontWeight = FontWeight.SemiBold
+                                    fontWeight = FontWeight.SemiBold,
+                                    textAlign = TextAlign.Center
                                 )
 
                                 DropdownMenu(
@@ -118,39 +124,46 @@ fun EditorStructureTab(
                         }
 
                         if (row.size < 3) {
-                            var addLessonDropdownExpanded by rememberSaveable { mutableStateOf(false) }
-
-                            OutlinedIconButton(
+                            Column(
                                 modifier = Modifier
-                                    .padding(horizontal = 24.dp)
-                                    .padding(bottom = 22.dp),
-                                onClick = {
-                                    addLessonDropdownExpanded = true
-                                }
+                                    .padding(horizontal = 12.dp)
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.add_lesson))
-                            }
+                                var addLessonDropdownExpanded by rememberSaveable { mutableStateOf(false) }
 
-                            DropdownMenu(
-                                expanded = addLessonDropdownExpanded,
-                                onDismissRequest = { addLessonDropdownExpanded = false }
-                            ) {
-                                 editorUiState.availableLessons?.forEach { availableLesson ->
+                                OutlinedIconButton(
+                                    modifier = Modifier
+                                        .padding(top = 12.dp),
+                                    onClick = {
+                                        addLessonDropdownExpanded = true
+                                    }
+                                ) {
+                                    Icon(imageVector = Icons.Filled.Add, contentDescription = stringResource(R.string.add_lesson))
+                                }
+
+                                DropdownMenu(
+                                    expanded = addLessonDropdownExpanded,
+                                    onDismissRequest = { addLessonDropdownExpanded = false }
+                                ) {
+                                    editorUiState.availableLessons?.forEach { availableLesson ->
+                                        DropdownMenuItem(
+                                            text = { Text(availableLesson.lessonName) },
+                                            onClick = {
+                                                editorViewModel.structureAddLesson(level, availableLesson.lessonId)
+                                            }
+                                        )
+                                    }
+                                    HorizontalDivider()
                                     DropdownMenuItem(
-                                        text = { Text(availableLesson.lessonName) },
+                                        text = { Text(stringResource(R.string.create_lesson)) },
                                         onClick = {
-                                            editorViewModel.structureAddLesson(level, availableLesson.lessonId)
+                                            addLessonDropdownExpanded = false
+                                            onShowLessons()
                                         }
                                     )
                                 }
-                                HorizontalDivider()
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.create_lesson)) },
-                                    onClick = {
-                                        addLessonDropdownExpanded = false
-                                        onShowLessons()
-                                    }
-                                )
                             }
                         }
                     }
