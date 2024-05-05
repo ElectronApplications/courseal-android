@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +35,7 @@ fun EditorJSEditorComponent(
 ) {
     val isDark = isSystemInDarkTheme()
 
-    var pickCallback by rememberSaveable { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
+    var pickCallback by remember { mutableStateOf<ValueCallback<Array<Uri>>?>(null) }
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) {
         pickCallback?.onReceiveValue(it?.let { result -> arrayOf(result) })
     }
