@@ -98,4 +98,6 @@
     <string name="remove_task">Remove the task</string>
     <string name="add_task">Add a task</string>
     <string name="remove_lesson">Remove the lesson</string>
+    <string name="view_course">View course</string>
+    <string name="find_courses">Find other courses</string>
 </resources>

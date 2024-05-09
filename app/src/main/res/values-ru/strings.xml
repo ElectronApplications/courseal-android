@@ -98,4 +98,6 @@
     <string name="remove_task">Убрать задачу</string>
     <string name="add_task">Добавить задачу</string>
     <string name="remove_lesson">Убрать занятие</string>
+    <string name="view_course">Посмотреть курс</string>
+    <string name="find_courses">Найти другие курсы</string>
 </resources>
