@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -55,7 +57,6 @@ fun SearchCoursesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         TopBack(onClick = onGoBack)
@@ -94,26 +95,28 @@ fun SearchCoursesScreen(
                     .padding(top = 12.dp)
                     .fillMaxWidth(0.85f)
             ) {
-                searchCoursesUiState.courses.forEach { course ->
-                    CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { onViewCourse(course.courseId) },
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .weight(1f, fill = false),
-                            text = course.courseName,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Image(
-                            modifier = Modifier
-                                .padding(start = 4.dp)
-                                .width(20.dp),
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = course.courseName,
-                            contentScale = ContentScale.FillWidth,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                        )
+                LazyColumn {
+                    items(searchCoursesUiState.courses) { course ->
+                        CoursealOutlinedCardItem(
+                            modifier = Modifier.clickable { onViewCourse(course.courseId) },
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .weight(1f, fill = false),
+                                text = course.courseName,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Image(
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                                    .width(20.dp),
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = course.courseName,
+                                contentScale = ContentScale.FillWidth,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                        }
                     }
                 }
             }
