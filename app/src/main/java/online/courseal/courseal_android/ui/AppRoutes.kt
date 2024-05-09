@@ -183,7 +183,18 @@ fun AppNavigation(
             navBarDefault = NavBarOptions.SHOW,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            CourseScreen()
+            CourseScreen(
+                onSearchCourses = {
+                    navController.navigate(Routes.SEARCH_COURSES.path)
+                },
+                onViewCourse = { courseId ->
+                    navController.navigate("${Routes.COURSE_INFO.path}?courseId=${courseId}")
+                },
+                onStartLesson = { lessonId ->
+                    // TODO
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Profile Screen */

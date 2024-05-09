@@ -58,6 +58,8 @@ fun EditorLessonsTab(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
+                            modifier = Modifier
+                                .weight(1f, fill = false),
                             text = lesson.lessonName,
                             fontWeight = FontWeight.SemiBold
                         )

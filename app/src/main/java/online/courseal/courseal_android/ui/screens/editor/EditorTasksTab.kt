@@ -58,6 +58,8 @@ fun EditorTasksTab(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
+                            modifier = Modifier
+                                .weight(1f, fill = false),
                             text = task.taskName,
                             fontWeight = FontWeight.SemiBold
                         )
