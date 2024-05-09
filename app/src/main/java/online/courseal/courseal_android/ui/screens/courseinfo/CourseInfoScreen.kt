@@ -40,6 +40,7 @@ import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
 import online.courseal.courseal_android.ui.components.ErrorDialog
 import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
+import online.courseal.courseal_android.ui.viewmodels.course.CourseViewModel
 import online.courseal.courseal_android.ui.viewmodels.courseinfo.CourseInfoUiError
 import online.courseal.courseal_android.ui.viewmodels.courseinfo.CourseInfoViewModel
 
@@ -49,7 +50,8 @@ fun CourseInfoScreen(
     onGoBack: () -> Unit,
     onOpenProfile: (usertag: String) -> Unit,
     onUnrecoverable: OnUnrecoverable,
-    courseInfoViewModel: CourseInfoViewModel = hiltViewModel()
+    courseInfoViewModel: CourseInfoViewModel = hiltViewModel(),
+    courseViewModel: CourseViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     val courseInfoUiState by courseInfoViewModel.uiState.collectAsState()
@@ -106,7 +108,7 @@ fun CourseInfoScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
                             .align(Alignment.CenterHorizontally)
-                            .padding(top = 4.dp),
+                            .padding(top = 8.dp),
                         text = courseInfo.courseDescription,
                     )
 
@@ -114,13 +116,13 @@ fun CourseInfoScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.85f)
                             .align(Alignment.CenterHorizontally)
-                            .padding(top = 12.dp),
+                            .padding(top = 16.dp),
                         text = if (courseInfoUiState.isEnrolled != true)
                             stringResource(R.string.enroll) else stringResource(R.string.already_enrolled),
                         enabled = courseInfoUiState.isEnrolled != true && !courseInfoUiState.enrolling,
                         onClick = {
                             coroutineScope.launch {
-                                courseInfoViewModel.enroll()
+                                courseInfoViewModel.enroll(courseViewModel)
                             }
                         }
                     )

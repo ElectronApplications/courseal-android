@@ -17,6 +17,7 @@ import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
 import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
+import online.courseal.courseal_android.ui.screens.courseinfo.SearchCoursesScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditLessonScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditTaskScreen
@@ -33,6 +34,7 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScre
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
+import online.courseal.courseal_android.ui.viewmodels.course.CourseViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditLessonViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
@@ -188,7 +190,7 @@ fun AppNavigation(
                     navController.navigate(Routes.SEARCH_COURSES.path)
                 },
                 onViewCourse = { courseId ->
-                    navController.navigate("${Routes.COURSE_INFO.path}?courseId=${courseId}")
+                    navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
                 },
                 onStartLesson = { lessonId ->
                     // TODO
@@ -463,7 +465,13 @@ fun AppNavigation(
             route = Routes.SEARCH_COURSES.path,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            // TODO
+            SearchCoursesScreen(
+                onGoBack = {navController.popBackStack() },
+                onViewCourse = { courseId ->
+                    navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Course info Screen  */
@@ -473,13 +481,19 @@ fun AppNavigation(
                 navArgument("courseId") { type = NavType.IntType }
             ),
             setNavBarShown = topLevelViewModel::setNavBarShown
-        ) {
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.COURSE.path)
+            }
+
+            val parentViewModel = hiltViewModel<CourseViewModel>(parentEntry)
             CourseInfoScreen(
                 onGoBack = { navController.popBackStack() },
                 onOpenProfile = { usertag ->
                     navController.navigate("${Routes.PROFILE.path}?usertag=$usertag&canGoBack=true")
                 },
-                onUnrecoverable = onUnrecoverable
+                onUnrecoverable = onUnrecoverable,
+                courseViewModel = parentViewModel
             )
         }
     }

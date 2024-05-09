@@ -147,7 +147,8 @@ fun CourseScreen(
                                 coroutineScope.launch {
                                     courseViewModel.switchCourse(course.courseId)
                                 }
-                            }
+                            },
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
                                 modifier = Modifier
