@@ -49,6 +49,17 @@ fun EditorTasksTab(
     ) {
         val tasks = editorUiState.courseTasks
 
+        if (editorUiState.courseInfo != null) {
+            CoursealPrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(0.85f),
+                text = stringResource(R.string.create_task),
+                onClick = onCreateTask
+            )
+        }
+
         if (tasks != null) {
             CoursealOutlinedCard(
                 modifier = Modifier
@@ -81,17 +92,6 @@ fun EditorTasksTab(
                     }
                 }
             }
-        }
-
-        if (editorUiState.courseInfo != null) {
-            CoursealPrimaryButton(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 12.dp)
-                    .fillMaxWidth(0.85f),
-                text = stringResource(R.string.create_task),
-                onClick = onCreateTask
-            )
         }
     }
 }

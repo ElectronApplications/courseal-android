@@ -49,6 +49,17 @@ fun EditorLessonsTab(
     ) {
         val lessons = editorUiState.courseLessons
 
+        if (editorUiState.courseInfo != null) {
+            CoursealPrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(0.85f),
+                text = stringResource(R.string.create_lesson),
+                onClick = onCreateLesson
+            )
+        }
+
         if (lessons != null) {
             CoursealOutlinedCard(
                 modifier = Modifier
@@ -81,17 +92,6 @@ fun EditorLessonsTab(
                     }
                 }
             }
-        }
-
-        if (editorUiState.courseInfo != null) {
-            CoursealPrimaryButton(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 12.dp)
-                    .fillMaxWidth(0.85f),
-                text = stringResource(R.string.create_lesson),
-                onClick = onCreateLesson
-            )
         }
     }
 }
