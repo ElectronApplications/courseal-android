@@ -1,4 +1,4 @@
-package online.courseal.courseal_android.ui.screens.profile
+package online.courseal.courseal_android.ui.screens.courseinfo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,31 +21,36 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.ui.OnUnrecoverable
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCard
 import online.courseal.courseal_android.ui.components.CoursealOutlinedCardItem
+import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
+import online.courseal.courseal_android.ui.components.CoursealTextField
 import online.courseal.courseal_android.ui.components.TopBack
 import online.courseal.courseal_android.ui.components.adaptiveContainerWidth
-import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
+import online.courseal.courseal_android.ui.viewmodels.courseinfo.SearchCoursesViewModel
 
 @Composable
-fun ProfileCoursesScreen(
+fun SearchCoursesScreen(
     modifier: Modifier = Modifier,
     onGoBack: () -> Unit,
-    onOpenCourse: (courseId: Int) -> Unit,
+    onViewCourse: (courseId: Int) -> Unit,
     onUnrecoverable: OnUnrecoverable,
-    profileViewModel: ProfileViewModel
+    searchCoursesViewModel: SearchCoursesViewModel = hiltViewModel()
 ) {
-    val profileUiState by profileViewModel.uiState.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+    val searchCoursesUiState by searchCoursesViewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -57,30 +62,41 @@ fun ProfileCoursesScreen(
 
         Column(
             modifier = Modifier
-                .padding(top = 12.dp)
                 .align(Alignment.CenterHorizontally)
+                .padding(top = 12.dp)
                 .adaptiveContainerWidth()
         ) {
-            val userPublicInfo = profileUiState.userPublicInfo!!
-
-            Text(
+            CoursealTextField(
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
-                    .align(Alignment.CenterHorizontally),
-                text = stringResource(R.string.user_courses, userPublicInfo.username),
-                style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center
+                    .align(Alignment.CenterHorizontally)
+                    .fillMaxWidth(0.85f),
+                value = searchCoursesUiState.searchTerm,
+                onValueChange = searchCoursesViewModel::updateSearchTerm,
+                label = stringResource(R.string.course_name)
+            )
+
+            CoursealPrimaryButton(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(0.85f),
+                text = stringResource(R.string.search),
+                onClick = {
+                    coroutineScope.launch {
+                        searchCoursesViewModel.search(onUnrecoverable)
+                    }
+                }
             )
 
             CoursealOutlinedCard(
                 modifier = Modifier
-                    .fillMaxWidth(0.85f)
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(0.85f)
             ) {
-                userPublicInfo.courses.forEach { course ->
+                searchCoursesUiState.courses.forEach { course ->
                     CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { onOpenCourse(course.courseId) },
+                        modifier = Modifier.clickable { onViewCourse(course.courseId) },
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
