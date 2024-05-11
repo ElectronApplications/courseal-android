@@ -113,7 +113,12 @@ fun CourseScreen(
                 }
             } else if (courseUiState.courseInfo != null) {
                 Column {
-                    // TODO
+                    CourseStructureTab(
+                        modifier = Modifier.fillMaxSize(),
+                        onStartLesson = onStartLesson,
+                        onUnrecoverable = onUnrecoverable,
+                        courseViewModel = courseViewModel
+                    )
                 }
             } else {
                 Column(
