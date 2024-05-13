@@ -16,6 +16,7 @@ import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
 import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
+import online.courseal.courseal_android.ui.screens.course.LessonStartScreen
 import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
 import online.courseal.courseal_android.ui.screens.courseinfo.SearchCoursesScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
@@ -66,6 +67,8 @@ enum class Routes(val path: String) {
     EDIT_LECTURE_CONTENT("edit-lecture-content"),
 
     COURSE_INFO("course-info"),
+
+    LESSON_START("lesson-start")
 }
 
 @Composable
@@ -193,7 +196,7 @@ fun AppNavigation(
                     navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
                 },
                 onStartLesson = { lessonId ->
-                    // TODO
+                    navController.navigate("${Routes.LESSON_START.path}/${lessonId}")
                 },
                 onUnrecoverable = onUnrecoverable
             )
@@ -494,6 +497,21 @@ fun AppNavigation(
                 },
                 onUnrecoverable = onUnrecoverable,
                 courseViewModel = parentViewModel
+            )
+        }
+
+        /* Lesson start Screen */
+        coursealRoute(
+            route = "${Routes.LESSON_START.path}/{lessonId}",
+            arguments = listOf(
+                navArgument("lessonId") { type = NavType.IntType }
+            ),
+            navBarDefault = NavBarOptions.HIDE,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) {
+            LessonStartScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable
             )
         }
     }

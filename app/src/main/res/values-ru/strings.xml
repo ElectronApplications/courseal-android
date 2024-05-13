@@ -100,4 +100,6 @@
     <string name="remove_lesson">Убрать занятие</string>
     <string name="view_course">Посмотреть курс</string>
     <string name="find_courses">Найти другие курсы</string>
+    <string name="want_to_leave">Вы уверены, что хотите выйти?</string>
+    <string name="progress_lost">Ваш прогресс будет потерян</string>
 </resources>

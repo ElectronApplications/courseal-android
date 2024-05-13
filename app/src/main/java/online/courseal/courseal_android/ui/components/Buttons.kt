@@ -85,11 +85,11 @@ fun CoursealSelectableButton(
     modifier: Modifier = Modifier,
     text: String,
     selected: Boolean,
-    setSelected: (Boolean) -> Unit
+    onClick: () -> Unit
 ) {
     OutlinedButton(
         modifier = modifier,
-        onClick = { setSelected(!selected) },
+        onClick = onClick,
         shape = RoundedCornerShape(size = 10.dp),
         contentPadding = PaddingValues(all = 13.dp),
         colors = ButtonDefaults.outlinedButtonColors(
