@@ -5,14 +5,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskMultipleExamAnswer
 import online.courseal.courseal_android.data.coursedata.examtasks.CoursealExamTaskMultiple
@@ -34,8 +32,6 @@ fun LessonTaskMultipleScreen(
     content: TaskMultipleAnswer,
     lessonStartViewModel: LessonStartViewModel
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     Column(
         modifier = modifier
     ) {
@@ -89,20 +85,18 @@ fun LessonTaskMultipleScreen(
                 .padding(top = 12.dp),
             text = stringResource(R.string.confirm),
             onClick = {
-                coroutineScope.launch {
-                    val answer = when (content) {
-                        is TaskMultipleAnswer.PracticeTrainingTask -> {
-                            val correctOptions = content.task.options
-                                .mapIndexed { index, option -> Pair(index, option) }
-                                .filter { it.second.isCorrect }
-                                .map { it.first }
+                val answer = when (content) {
+                    is TaskMultipleAnswer.PracticeTrainingTask -> {
+                        val correctOptions = content.task.options
+                            .mapIndexed { index, option -> Pair(index, option) }
+                            .filter { it.second.isCorrect }
+                            .map { it.first }
 
-                            TaskAnswer.PracticeTrainingAnswer(selectedOptions.toSet() == correctOptions.toSet())
-                        }
-                        is TaskMultipleAnswer.ExamTask -> TaskAnswer.ExamAnswer(TaskMultipleExamAnswer(selectedOptions))
+                        TaskAnswer.PracticeTrainingAnswer(selectedOptions.toSet() == correctOptions.toSet())
                     }
-                    lessonStartViewModel.saveAnswer(answer)
+                    is TaskMultipleAnswer.ExamTask -> TaskAnswer.ExamAnswer(TaskMultipleExamAnswer(selectedOptions))
                 }
+                lessonStartViewModel.saveAnswer(answer)
             }
         )
     }

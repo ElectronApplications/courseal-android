@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -73,7 +75,6 @@ fun LessonStartScreen(
     lessonStartViewModel: LessonStartViewModel = hiltViewModel(),
     courseViewModel: CourseViewModel
 ) {
-    val coroutineScope = rememberCoroutineScope()
     val lessonStartUiState by lessonStartViewModel.uiState.collectAsState()
 
     if (lessonStartUiState.errorUnrecoverableState != null) {
@@ -124,7 +125,23 @@ fun LessonStartScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
-            TopCancel(onClick = onGoBack)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TopCancel(onClick = onGoBack)
+
+                val progress = lessonStartUiState.tasksProgress
+                if (progress != null) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 10.dp, end = 15.dp, start = 5.dp),
+                        progress = { progress }
+                    )
+                }
+            }
 
             if (lessonStartUiState.loading) {
                 Column(
@@ -195,6 +212,13 @@ fun LessonStartScreen(
                                 style = MaterialTheme.typography.headlineMedium
                             )
 
+                            Text(
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .fillMaxWidth(0.85f),
+                                text = "XP ${content.xp}",
+                            )
+
                             CoursealPrimaryButton(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
@@ -253,9 +277,7 @@ fun LessonStartScreen(
                                 .padding(12.dp),
                             text = stringResource(R.string.correct),
                             onClick = {
-                                coroutineScope.launch {
-                                    lessonStartViewModel.hideTaskCorrect()
-                                }
+                                lessonStartViewModel.hideTaskCorrect()
                             }
                         )
                     } else if (lessonStartUiState.taskCorrect == false) {
@@ -266,9 +288,7 @@ fun LessonStartScreen(
                                 .padding(24.dp),
                             text = stringResource(R.string.wrong_answer),
                             onClick = {
-                                coroutineScope.launch {
-                                    lessonStartViewModel.hideTaskCorrect()
-                                }
+                                lessonStartViewModel.hideTaskCorrect()
                             }
                         )
                     }

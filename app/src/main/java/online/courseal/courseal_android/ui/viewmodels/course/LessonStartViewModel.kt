@@ -55,6 +55,7 @@ data class LessonStartUiState(
     val loading: Boolean = true,
     val currentContent: LessonStartUiContent? = null,
     val taskCorrect: Boolean? = null,
+    val tasksProgress: Float? = null,
     val errorState: LessonStartUiError = LessonStartUiError.NONE,
     val errorUnrecoverableState: UnrecoverableErrorType? = null
 )
@@ -71,6 +72,7 @@ class LessonStartViewModel @Inject constructor(
     private var courseId by Delegates.notNull<Int>()
     private var lessonId by Delegates.notNull<Int>()
     private var tasks: TasksApiResponse? = null
+    private var tasksAmount: Int? = null
 
     private var currentTask: Int? = null
 
@@ -109,12 +111,18 @@ class LessonStartViewModel @Inject constructor(
                     is EnrollTasksExam -> EnrollTasksCompleteExam(emptyList())
                 }
 
+                tasksAmount = when (tasks.tasks) {
+                    is EnrollTasksLecture -> null
+                    is EnrollTasksExam -> tasks.tasks.tasks.size
+                    is EnrollTasksPracticeTraining -> tasks.tasks.tasks.size
+                }
+
                 getNextTask(false)
             }
         }
     }
 
-    private suspend fun getNextTask(postponeCurrent: Boolean) {
+    private fun getNextTask(postponeCurrent: Boolean) {
         if (postponeCurrent)
             tasksStack.addLast(currentTask!!)
 
@@ -126,7 +134,8 @@ class LessonStartViewModel @Inject constructor(
                         is EnrollTasksLecture -> LessonStartUiContent.LectureContent(tasks.lectureContent)
                         is EnrollTasksExam -> LessonStartUiContent.TaskContent(LessonTask.ExamTask(tasks.tasks[currentTask!!].task))
                         is EnrollTasksPracticeTraining -> LessonStartUiContent.TaskContent(LessonTask.PracticeTrainingTask(tasks.tasks[currentTask!!].task))
-                    }
+                    },
+                    tasksProgress = tasksAmount?.let { amount -> (amount - tasksStack.size - 1).toFloat() / amount  }
                 )
             }
         } else {
@@ -134,7 +143,7 @@ class LessonStartViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveAnswer(answer: TaskAnswer) {
+    fun saveAnswer(answer: TaskAnswer) {
          when (answer) {
             is TaskAnswer.PracticeTrainingAnswer -> {
                 val currentAnswers = answers as EnrollTasksCompletePracticeTraining
@@ -161,28 +170,29 @@ class LessonStartViewModel @Inject constructor(
         }
     }
 
-    suspend fun finishLesson() {
-        _uiState.update { it.copy(loading = true) }
+    fun finishLesson() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
 
-        when (val finishResult = courseEnrollmentService.completeTasks(courseId, lessonId, tasks!!.lessonToken, answers)) {
-            is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = finishResult.unrecoverableType) }
-            is ApiResult.Error -> _uiState.update { it.copy(errorState = LessonStartUiError.UNKNOWN) }
-            is ApiResult.Success -> {
-                _uiState.update {
-                    it.copy(
-                        currentContent = LessonStartUiContent.ResultsContent(
-                            xp = finishResult.successValue.xp,
-                            completed = finishResult.successValue.completed
+            when (val finishResult = courseEnrollmentService.completeTasks(courseId, lessonId, tasks!!.lessonToken, answers)) {
+                is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = finishResult.unrecoverableType) }
+                is ApiResult.Error -> _uiState.update { it.copy(errorState = LessonStartUiError.UNKNOWN) }
+                is ApiResult.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            currentContent = LessonStartUiContent.ResultsContent(
+                                xp = finishResult.successValue.xp,
+                                completed = finishResult.successValue.completed
+                            ),
+                            loading = false
                         )
-                    )
+                    }
                 }
             }
         }
-
-        _uiState.update { it.copy(loading = false) }
     }
 
-    suspend fun hideTaskCorrect() {
+    fun hideTaskCorrect() {
         val correct = _uiState.value.taskCorrect
         _uiState.update { it.copy(taskCorrect = null) }
         getNextTask(correct == false)
