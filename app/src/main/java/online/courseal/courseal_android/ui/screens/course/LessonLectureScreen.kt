@@ -4,14 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import online.courseal.courseal_android.R
 import online.courseal.courseal_android.data.coursedata.editorjs.EditorJSContent
 import online.courseal.courseal_android.ui.components.CoursealPrimaryButton
@@ -24,8 +20,6 @@ fun LessonLectureScreen(
     content: EditorJSContent,
     lessonStartViewModel: LessonStartViewModel
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     Column(
         modifier = modifier
     ) {
@@ -43,9 +37,7 @@ fun LessonLectureScreen(
                 .padding(top = 12.dp),
             text = stringResource(R.string.confirm),
             onClick = {
-                coroutineScope.launch {
-                    lessonStartViewModel.finishLesson()
-                }
+                lessonStartViewModel.finishLesson()
             }
         )
     }
