@@ -102,4 +102,11 @@
     <string name="find_courses">Найти другие курсы</string>
     <string name="want_to_leave">Вы уверены, что хотите выйти?</string>
     <string name="progress_lost">Ваш прогресс будет потерян</string>
+    <string name="dismiss">Отменить</string>
+    <string name="choose_correct_answer">Выберите правильный ответ</string>
+    <string name="choose_correct_answers">Выберите все правильные ответы</string>
+    <string name="correct">Верно!</string>
+    <string name="wrong_answer">Неправильный ответ</string>
+    <string name="lesson_not_passed">Занятие не пройдено</string>
+    <string name="lesson_passed">Занятие пройдено</string>
 </resources>

@@ -508,10 +508,16 @@ fun AppNavigation(
             ),
             navBarDefault = NavBarOptions.HIDE,
             setNavBarShown = topLevelViewModel::setNavBarShown
-        ) {
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.COURSE.path)
+            }
+            val parentViewModel = hiltViewModel<CourseViewModel>(parentEntry)
+
             LessonStartScreen(
                 onGoBack = { navController.popBackStack() },
-                onUnrecoverable = onUnrecoverable
+                onUnrecoverable = onUnrecoverable,
+                courseViewModel = parentViewModel
             )
         }
     }

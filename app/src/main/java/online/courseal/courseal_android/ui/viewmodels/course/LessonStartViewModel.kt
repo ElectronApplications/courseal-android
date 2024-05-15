@@ -22,16 +22,10 @@ import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.Enro
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.EnrollTasksCompleteLecture
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.EnrollTasksCompletePracticeTraining
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskExamAnswer
-import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskMultipleExamAnswer
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskPracticeTrainingAnswer
-import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskSingleExamAnswer
 import online.courseal.courseal_android.data.coursedata.enrolltaskscomplete.TaskTypeExamAnswer
 import online.courseal.courseal_android.data.coursedata.examtasks.CoursealExamTask
-import online.courseal.courseal_android.data.coursedata.examtasks.CoursealExamTaskMultiple
-import online.courseal.courseal_android.data.coursedata.examtasks.CoursealExamTaskSingle
-import online.courseal.courseal_android.data.coursedata.examtasks.ExamTaskMultipleOption
-import online.courseal.courseal_android.data.coursedata.tasks.CoursealTaskMultiple
-import online.courseal.courseal_android.data.coursedata.tasks.CoursealTaskSingle
+import online.courseal.courseal_android.data.coursedata.tasks.CoursealTask
 import online.courseal.courseal_android.data.database.dao.UserDao
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -41,17 +35,26 @@ enum class LessonStartUiError {
     NONE
 }
 
+sealed class LessonTask {
+    class PracticeTrainingTask(val content: CoursealTask) : LessonTask()
+    class ExamTask(val content: CoursealExamTask) : LessonTask()
+}
+
+sealed class TaskAnswer {
+    class PracticeTrainingAnswer(val isCorrect: Boolean) : TaskAnswer()
+    class ExamAnswer(val answer: TaskTypeExamAnswer) : TaskAnswer()
+}
+
 sealed class LessonStartUiContent {
     class LectureContent(val content: EditorJSContent) : LessonStartUiContent()
-    class TaskContent(val content: CoursealExamTask) : LessonStartUiContent()
-    class ResultsContent(val xp: Int, val score: Float?) : LessonStartUiContent()
+    class TaskContent(val task: LessonTask) : LessonStartUiContent()
+    class ResultsContent(val xp: Int, val completed: Boolean) : LessonStartUiContent()
 }
 
 data class LessonStartUiState(
     val loading: Boolean = true,
     val currentContent: LessonStartUiContent? = null,
-    val confirmEnabled: Boolean = false,
-    val selectedOptions: List<Int> = emptyList(),
+    val taskCorrect: Boolean? = null,
     val errorState: LessonStartUiError = LessonStartUiError.NONE,
     val errorUnrecoverableState: UnrecoverableErrorType? = null
 )
@@ -70,7 +73,6 @@ class LessonStartViewModel @Inject constructor(
     private var tasks: TasksApiResponse? = null
 
     private var currentTask: Int? = null
-    private var selectedOptions: List<Int> = emptyList()
 
     private lateinit var tasksStack: ArrayDeque<Int>
     private lateinit var answers: EnrollTasksComplete
@@ -107,48 +109,23 @@ class LessonStartViewModel @Inject constructor(
                     is EnrollTasksExam -> EnrollTasksCompleteExam(emptyList())
                 }
 
-                updateCurrent()
+                getNextTask(false)
             }
         }
     }
 
-    private suspend fun updateCurrent() {
+    private suspend fun getNextTask(postponeCurrent: Boolean) {
+        if (postponeCurrent)
+            tasksStack.addLast(currentTask!!)
+
         currentTask = tasksStack.removeFirstOrNull()
         if (currentTask != null) {
-            selectedOptions = emptyList()
             _uiState.update {
                 it.copy(
                     currentContent = when (val tasks = tasks!!.tasks) {
-                        is EnrollTasksLecture -> LessonStartUiContent.LectureContent(
-                            content = tasks.lectureContent
-                        )
-                        is EnrollTasksExam -> LessonStartUiContent.TaskContent(
-                            content = tasks.tasks[currentTask!!].task
-                        )
-                        is EnrollTasksPracticeTraining -> LessonStartUiContent.TaskContent(
-                            content = when (val practiceTask = tasks.tasks[currentTask!!].task) {
-                                is CoursealTaskSingle -> CoursealExamTaskSingle(
-                                    body = practiceTask.body,
-                                    options = practiceTask.options
-                                )
-                                is CoursealTaskMultiple -> CoursealExamTaskMultiple(
-                                    body = practiceTask.body,
-                                    options = practiceTask.options.map { option -> ExamTaskMultipleOption(option.text) }
-                                )
-                            }
-                        )
-                    },
-                    selectedOptions = selectedOptions
-                )
-            }
-
-            _uiState.update {
-                it.copy(
-                    confirmEnabled = when (val content = _uiState.value.currentContent) {
-                        is LessonStartUiContent.LectureContent -> true
-                        is LessonStartUiContent.ResultsContent -> true
-                        is LessonStartUiContent.TaskContent -> content.content is CoursealExamTaskMultiple
-                        null -> false
+                        is EnrollTasksLecture -> LessonStartUiContent.LectureContent(tasks.lectureContent)
+                        is EnrollTasksExam -> LessonStartUiContent.TaskContent(LessonTask.ExamTask(tasks.tasks[currentTask!!].task))
+                        is EnrollTasksPracticeTraining -> LessonStartUiContent.TaskContent(LessonTask.PracticeTrainingTask(tasks.tasks[currentTask!!].task))
                     }
                 )
             }
@@ -157,72 +134,58 @@ class LessonStartViewModel @Inject constructor(
         }
     }
 
-    suspend fun confirmAnswer() {
-        when (_uiState.value.currentContent) {
-            is LessonStartUiContent.LectureContent -> updateCurrent()
-            is LessonStartUiContent.TaskContent -> {
-                when (val currentAnswers = answers) {
-                    is EnrollTasksCompleteLecture -> {}
-                    is EnrollTasksCompletePracticeTraining -> {
-                        val task = (tasks!!.tasks as EnrollTasksPracticeTraining).tasks[currentTask!!].task
-                        val correct = when (task) {
-                            is CoursealTaskSingle -> selectedOptions.getOrNull(0) == task.correctOption
-                            is CoursealTaskMultiple -> {
-                                val correctOptions = task.options
-                                    .mapIndexed { index, option -> Pair(index, option.isCorrect) }
-                                    .filter { it.second }
-                                    .map { it.first }
-                                selectedOptions.toSet() == correctOptions.toSet()
-                            }
-                        }
+    suspend fun saveAnswer(answer: TaskAnswer) {
+         when (answer) {
+            is TaskAnswer.PracticeTrainingAnswer -> {
+                val currentAnswers = answers as EnrollTasksCompletePracticeTraining
 
-                        answers = currentAnswers.copy(tasks = currentAnswers.tasks.toMutableList().apply { add(
-                            TaskPracticeTrainingAnswer(currentTask!!, correct)
-                        ) })
-                    }
-                    is EnrollTasksCompleteExam -> {
-                        val task = (tasks!!.tasks as EnrollTasksPracticeTraining).tasks[currentTask!!].task
-                        val answer: TaskTypeExamAnswer = when (task) {
-                            is CoursealTaskSingle -> TaskSingleExamAnswer(selectedOptions.getOrElse(0) { 0 })
-                            is CoursealTaskMultiple -> TaskMultipleExamAnswer(selectedOptions)
-                        }
-                        answers = currentAnswers.copy(tasks = currentAnswers.tasks.toMutableList().apply { add(
-                            TaskExamAnswer(currentTask!!, answer)
-                        ) })
-                    }
+                if (!currentAnswers.tasks.any { it.taskId == currentTask }) {
+                    answers = currentAnswers.copy(
+                        tasks = currentAnswers.tasks.toMutableList().apply { add(
+                            TaskPracticeTrainingAnswer(currentTask!!, answer.isCorrect)
+                        ) }
+                    )
                 }
-                updateCurrent()
+
+                _uiState.update { it.copy(taskCorrect = answer.isCorrect) }
             }
-            is LessonStartUiContent.ResultsContent -> TODO()
-            null -> {}
+            is TaskAnswer.ExamAnswer -> {
+                val currentAnswers = answers as EnrollTasksCompleteExam
+                answers = currentAnswers.copy(
+                    tasks = currentAnswers.tasks.toMutableList().apply {
+                        add(TaskExamAnswer(currentTask!!, answer.answer))
+                    }
+                )
+                getNextTask(false)
+            }
         }
     }
 
-    fun selectOption(index: Int) {
-        val isSingle = when (val tasks = tasks!!.tasks) {
-            is EnrollTasksLecture -> true
-            is EnrollTasksPracticeTraining -> tasks.tasks[currentTask!!].task is CoursealTaskSingle
-            is EnrollTasksExam -> tasks.tasks[currentTask!!].task is CoursealExamTaskSingle
+    suspend fun finishLesson() {
+        _uiState.update { it.copy(loading = true) }
+
+        when (val finishResult = courseEnrollmentService.completeTasks(courseId, lessonId, tasks!!.lessonToken, answers)) {
+            is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = finishResult.unrecoverableType) }
+            is ApiResult.Error -> _uiState.update { it.copy(errorState = LessonStartUiError.UNKNOWN) }
+            is ApiResult.Success -> {
+                _uiState.update {
+                    it.copy(
+                        currentContent = LessonStartUiContent.ResultsContent(
+                            xp = finishResult.successValue.xp,
+                            completed = finishResult.successValue.completed
+                        )
+                    )
+                }
+            }
         }
 
-        selectedOptions = if (isSingle) {
-            if (index in selectedOptions) emptyList() else listOf(index)
-        } else {
-            if (index in selectedOptions)
-                selectedOptions.toMutableList().apply { remove(index) }
-            else
-                selectedOptions.toMutableList().apply { add(index) }
-        }
-        _uiState.update {
-            it.copy(
-                selectedOptions = selectedOptions,
-                confirmEnabled = !isSingle || selectedOptions.isNotEmpty()
-            )
-        }
+        _uiState.update { it.copy(loading = false) }
     }
 
-    private suspend fun finishLesson() {
-        courseEnrollmentService.completeTasks(courseId, lessonId, tasks!!.lessonToken, answers)
+    suspend fun hideTaskCorrect() {
+        val correct = _uiState.value.taskCorrect
+        _uiState.update { it.copy(taskCorrect = null) }
+        getNextTask(correct == false)
     }
 
     fun hideError() {
