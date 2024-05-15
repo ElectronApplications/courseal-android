@@ -102,4 +102,11 @@
     <string name="find_courses">Find other courses</string>
     <string name="want_to_leave">Are you sure you want to leave?</string>
     <string name="progress_lost">Your progress will be lost</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="choose_correct_answer">Choose the correct answer</string>
+    <string name="choose_correct_answers">Choose all correct answers</string>
+    <string name="correct">Correct!</string>
+    <string name="wrong_answer">Wrong answer</string>
+    <string name="lesson_passed">Lesson passed</string>
+    <string name="lesson_not_passed">Lesson not passed</string>
 </resources>
