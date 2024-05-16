@@ -113,6 +113,7 @@ class CreateEditLessonViewModel @Inject constructor(
             it.copy(
                 isCreating = isCreating,
                 lessonName = lessonName,
+                progressNeeded = progressNeeded,
                 makingRequest = false
             )
         }

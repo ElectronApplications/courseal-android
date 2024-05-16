@@ -40,12 +40,10 @@ fun EditorJSContentComponent(
     modifier: Modifier = Modifier,
     content: EditorJSContent
 ) {
-    SelectionContainer {
-        Column(
-            modifier = modifier
-                .verticalScroll(rememberScrollState())
-        ) {
-            Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
+    SelectionContainer(
+        modifier = modifier
+    ) {
+        Column {
             for (block in content.blocks) {
                 EditorJSBlockComponent(
                     modifier = Modifier

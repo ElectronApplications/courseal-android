@@ -21,8 +21,7 @@ fun EditorJSImageComponent(
     ) {
         AsyncImage(
             modifier = Modifier.fillMaxWidth(),
-            contentScale = if (data.stretched)
-                ContentScale.FillWidth else ContentScale.Fit,
+            contentScale = ContentScale.FillWidth,
             model = data.file.url,
             contentDescription = data.caption
         )

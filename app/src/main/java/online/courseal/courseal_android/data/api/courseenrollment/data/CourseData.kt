@@ -15,12 +15,21 @@ data class CourseEnrollInfoApiResponse(
 
 @Serializable
 data class CourseEnrollLessonData(
+    val type: CourseEnrollLessonType,
     @SerialName("lesson_id") val lessonId: Int,
     @SerialName("lesson_name") val lessonName: String,
     @SerialName("lesson_progress") val lessonProgress: Int,
     @SerialName("lesson_progress_needed") val lessonProgressNeeded: Int,
     @SerialName("can_be_done") val canBeDone: Boolean
 )
+
+@Serializable
+enum class CourseEnrollLessonType {
+    @SerialName("lecture") LECTURE,
+    @SerialName("practice") PRACTICE,
+    @SerialName("training") TRAINING,
+    @SerialName("exam") EXAM
+}
 
 enum class CourseEnrollInfoApiError {
     COURSE_NOT_FOUND,

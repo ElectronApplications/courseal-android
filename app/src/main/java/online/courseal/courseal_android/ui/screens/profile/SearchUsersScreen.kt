@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -48,7 +50,6 @@ fun SearchUsersScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         Spacer(modifier = Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
         TopBack(onClick = onGoBack)
@@ -87,25 +88,27 @@ fun SearchUsersScreen(
                     .padding(top = 12.dp)
                     .fillMaxWidth(0.85f)
             ) {
-                searchUsersUiState.users.forEach { user ->
-                    CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { onOpenProfile(user.usertag) },
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f, fill = false)
+                LazyColumn {
+                    items(searchUsersUiState.users) {user ->
+                        CoursealOutlinedCardItem(
+                            modifier = Modifier.clickable { onOpenProfile(user.usertag) },
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
+                            Column(
+                                modifier = Modifier.weight(1f, fill = false)
+                            ) {
+                                Text(
+                                    text = user.username,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "@${user.usertag}"
+                                )
+                            }
                             Text(
-                                text = user.username,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = "@${user.usertag}"
+                                text = "${user.xp} XP"
                             )
                         }
-                        Text(
-                            text = "${user.xp} XP"
-                        )
                     }
                 }
             }

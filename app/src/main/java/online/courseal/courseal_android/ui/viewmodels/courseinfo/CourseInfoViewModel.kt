@@ -17,6 +17,7 @@ import online.courseal.courseal_android.data.api.course.data.CourseApiError
 import online.courseal.courseal_android.data.api.course.data.CourseApiResponse
 import online.courseal.courseal_android.data.api.courseenrollment.CoursealCourseEnrollmentService
 import online.courseal.courseal_android.data.api.courseenrollment.data.CourseEnrollApiError
+import online.courseal.courseal_android.ui.viewmodels.course.CourseViewModel
 import javax.inject.Inject
 
 enum class CourseInfoUiError {
@@ -95,7 +96,7 @@ class CourseInfoViewModel @Inject constructor(
         }
     }
 
-    suspend fun enroll() {
+    suspend fun enroll(courseViewModel: CourseViewModel) {
         _uiState.update { it.copy(enrolling = true) }
         when (val result = courseEnrollmentService.courseEnroll(courseId)) {
             is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = result.unrecoverableType) }
@@ -103,7 +104,11 @@ class CourseInfoViewModel @Inject constructor(
                 CourseEnrollApiError.COURSE_NOT_FOUND -> _uiState.update { it.copy(errorState = CourseInfoUiError.COURSE_NOT_FOUND) }
                 CourseEnrollApiError.UNKNOWN -> _uiState.update { it.copy(errorState = CourseInfoUiError.UNKNOWN) }
             }
-            is ApiResult.Success -> _uiState.update { it.copy(isEnrolled = true) }
+            is ApiResult.Success -> {
+                _uiState.update { it.copy(isEnrolled = true) }
+                courseViewModel.setNeedUpdate()
+                courseViewModel.switchCourse(courseId)
+            }
         }
         _uiState.update { it.copy(enrolling = false) }
     }
