@@ -1,5 +1,6 @@
 package online.courseal.courseal_android.ui.viewmodels.course
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -147,11 +148,11 @@ class LessonStartViewModel @Inject constructor(
          when (answer) {
             is TaskAnswer.PracticeTrainingAnswer -> {
                 val currentAnswers = answers as EnrollTasksCompletePracticeTraining
-
-                if (!currentAnswers.tasks.any { it.taskId == currentTask }) {
+                val taskId = (tasks!!.tasks as EnrollTasksPracticeTraining).tasks[currentTask!!].taskId
+                if (!currentAnswers.tasks.any { it.taskId == taskId }) {
                     answers = currentAnswers.copy(
                         tasks = currentAnswers.tasks.toMutableList().apply { add(
-                            TaskPracticeTrainingAnswer(currentTask!!, answer.isCorrect)
+                            TaskPracticeTrainingAnswer(taskId, answer.isCorrect)
                         ) }
                     )
                 }
@@ -160,9 +161,10 @@ class LessonStartViewModel @Inject constructor(
             }
             is TaskAnswer.ExamAnswer -> {
                 val currentAnswers = answers as EnrollTasksCompleteExam
+                val taskId = (tasks!!.tasks as EnrollTasksExam).tasks[currentTask!!].taskId
                 answers = currentAnswers.copy(
                     tasks = currentAnswers.tasks.toMutableList().apply {
-                        add(TaskExamAnswer(currentTask!!, answer.answer))
+                        add(TaskExamAnswer(taskId, answer.answer))
                     }
                 )
                 getNextTask(false)
@@ -173,7 +175,6 @@ class LessonStartViewModel @Inject constructor(
     fun finishLesson() {
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true) }
-
             when (val finishResult = courseEnrollmentService.completeTasks(courseId, lessonId, tasks!!.lessonToken, answers)) {
                 is ApiResult.UnrecoverableError -> _uiState.update { it.copy(errorUnrecoverableState = finishResult.unrecoverableType) }
                 is ApiResult.Error -> _uiState.update { it.copy(errorState = LessonStartUiError.UNKNOWN) }

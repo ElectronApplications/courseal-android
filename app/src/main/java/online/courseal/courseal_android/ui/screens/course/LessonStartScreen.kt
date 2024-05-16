@@ -130,7 +130,7 @@ fun LessonStartScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TopCancel(onClick = onGoBack)
+                TopCancel(onClick = { warningShown = true })
 
                 val progress = lessonStartUiState.tasksProgress
                 if (progress != null) {
@@ -216,7 +216,8 @@ fun LessonStartScreen(
                                 modifier = Modifier
                                     .align(Alignment.CenterHorizontally)
                                     .fillMaxWidth(0.85f),
-                                text = "XP ${content.xp}",
+                                text = "XP: ${content.xp}",
+                                textAlign = TextAlign.Center
                             )
 
                             CoursealPrimaryButton(
