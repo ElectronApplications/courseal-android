@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.MaterialTheme
@@ -45,36 +49,6 @@ fun EditorTasksTab(
     ) {
         val tasks = editorUiState.courseTasks
 
-        if (tasks != null) {
-            CoursealOutlinedCard(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = 12.dp)
-                    .fillMaxWidth(0.85f)
-            ) {
-                tasks.forEach { task ->
-                    CoursealOutlinedCardItem(
-                        modifier = Modifier.clickable { onEditTask(task.taskId) },
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = task.taskName,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Image(
-                            modifier = Modifier
-                                .padding(start = 4.dp)
-                                .width(20.dp),
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = stringResource(R.string.view_task),
-                            contentScale = ContentScale.FillWidth,
-                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-                        )
-                    }
-                }
-            }
-        }
-
         if (editorUiState.courseInfo != null) {
             CoursealPrimaryButton(
                 modifier = Modifier
@@ -84,6 +58,40 @@ fun EditorTasksTab(
                 text = stringResource(R.string.create_task),
                 onClick = onCreateTask
             )
+        }
+
+        if (tasks != null) {
+            CoursealOutlinedCard(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 12.dp)
+                    .fillMaxWidth(0.85f)
+            ) {
+                LazyColumn {
+                    items(tasks) {  task ->
+                        CoursealOutlinedCardItem(
+                            modifier = Modifier.clickable { onEditTask(task.taskId) },
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .weight(1f, fill = false),
+                                text = task.taskName,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Image(
+                                modifier = Modifier
+                                    .padding(start = 4.dp)
+                                    .width(20.dp),
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = stringResource(R.string.view_task),
+                                contentScale = ContentScale.FillWidth,
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

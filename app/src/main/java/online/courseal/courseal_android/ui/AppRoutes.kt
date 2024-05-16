@@ -16,7 +16,9 @@ import online.courseal.courseal_android.ui.screens.auth.AccountsScreen
 import online.courseal.courseal_android.ui.screens.auth.LoginScreen
 import online.courseal.courseal_android.ui.screens.auth.RegistrationScreen
 import online.courseal.courseal_android.ui.screens.course.CourseScreen
+import online.courseal.courseal_android.ui.screens.course.LessonStartScreen
 import online.courseal.courseal_android.ui.screens.courseinfo.CourseInfoScreen
+import online.courseal.courseal_android.ui.screens.courseinfo.SearchCoursesScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditCourseScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditLessonScreen
 import online.courseal.courseal_android.ui.screens.editor.CreateEditTaskScreen
@@ -33,6 +35,7 @@ import online.courseal.courseal_android.ui.screens.settings.SettingsUsernameScre
 import online.courseal.courseal_android.ui.screens.welcome.WelcomeScreen
 import online.courseal.courseal_android.ui.viewmodels.profile.ProfileViewModel
 import online.courseal.courseal_android.ui.viewmodels.TopLevelViewModel
+import online.courseal.courseal_android.ui.viewmodels.course.CourseViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditLessonViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.CreateEditTaskViewModel
 import online.courseal.courseal_android.ui.viewmodels.editor.EditorViewModel
@@ -64,6 +67,8 @@ enum class Routes(val path: String) {
     EDIT_LECTURE_CONTENT("edit-lecture-content"),
 
     COURSE_INFO("course-info"),
+
+    LESSON_START("lesson-start")
 }
 
 @Composable
@@ -183,7 +188,18 @@ fun AppNavigation(
             navBarDefault = NavBarOptions.SHOW,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            CourseScreen()
+            CourseScreen(
+                onSearchCourses = {
+                    navController.navigate(Routes.SEARCH_COURSES.path)
+                },
+                onViewCourse = { courseId ->
+                    navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
+                },
+                onStartLesson = { lessonId ->
+                    navController.navigate("${Routes.LESSON_START.path}/${lessonId}")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Profile Screen */
@@ -452,7 +468,13 @@ fun AppNavigation(
             route = Routes.SEARCH_COURSES.path,
             setNavBarShown = topLevelViewModel::setNavBarShown
         ) {
-            // TODO
+            SearchCoursesScreen(
+                onGoBack = {navController.popBackStack() },
+                onViewCourse = { courseId ->
+                    navController.navigate("${Routes.COURSE_INFO.path}/${courseId}")
+                },
+                onUnrecoverable = onUnrecoverable
+            )
         }
 
         /* Course info Screen  */
@@ -462,13 +484,40 @@ fun AppNavigation(
                 navArgument("courseId") { type = NavType.IntType }
             ),
             setNavBarShown = topLevelViewModel::setNavBarShown
-        ) {
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.COURSE.path)
+            }
+
+            val parentViewModel = hiltViewModel<CourseViewModel>(parentEntry)
             CourseInfoScreen(
                 onGoBack = { navController.popBackStack() },
                 onOpenProfile = { usertag ->
                     navController.navigate("${Routes.PROFILE.path}?usertag=$usertag&canGoBack=true")
                 },
-                onUnrecoverable = onUnrecoverable
+                onUnrecoverable = onUnrecoverable,
+                courseViewModel = parentViewModel
+            )
+        }
+
+        /* Lesson start Screen */
+        coursealRoute(
+            route = "${Routes.LESSON_START.path}/{lessonId}",
+            arguments = listOf(
+                navArgument("lessonId") { type = NavType.IntType }
+            ),
+            navBarDefault = NavBarOptions.HIDE,
+            setNavBarShown = topLevelViewModel::setNavBarShown
+        ) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(Routes.COURSE.path)
+            }
+            val parentViewModel = hiltViewModel<CourseViewModel>(parentEntry)
+
+            LessonStartScreen(
+                onGoBack = { navController.popBackStack() },
+                onUnrecoverable = onUnrecoverable,
+                courseViewModel = parentViewModel
             )
         }
     }

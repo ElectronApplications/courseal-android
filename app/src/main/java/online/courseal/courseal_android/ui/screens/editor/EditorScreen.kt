@@ -228,6 +228,8 @@ fun EditorScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
+                                modifier = Modifier
+                                    .weight(1f, fill = false),
                                 text = course.courseName,
                                 fontWeight = FontWeight.SemiBold
                             )

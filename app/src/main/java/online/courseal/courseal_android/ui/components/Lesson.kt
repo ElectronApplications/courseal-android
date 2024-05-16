@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -75,12 +78,12 @@ fun LessonComponent(
                     .padding(12.dp)
                     .width(36.dp),
                 contentScale = ContentScale.FillWidth,
-                painter = when (lessonType) {
+                painter = if (enabled) when (lessonType) {
                     LessonType.LECTURE -> painterResource(R.drawable.baseline_menu_book_24)
                     LessonType.PRACTICE -> painterResource(R.drawable.baseline_target_24)
                     LessonType.TRAINING -> painterResource(R.drawable.baseline_exercise_24)
                     LessonType.EXAM -> painterResource(R.drawable.baseline_edit_note_24)
-                },
+                } else rememberVectorPainter(Icons.Filled.Lock),
                 contentDescription = stringResource(lessonType.nameId),
                 colorFilter = ColorFilter.tint(LocalCoursealPalette.current.onWelcomeGradient)
             )
